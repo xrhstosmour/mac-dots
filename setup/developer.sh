@@ -12,12 +12,11 @@ DEVELOPER_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import functions and flags.
 source "$DEVELOPER_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
-# Copy `Git` configuration file.
-log_info "Copying 'Git' configuration..."
-cp "$DEVELOPER_SCRIPT_DIRECTORY/../.gitconfig" ~
+# Copy `Git` configuration file and configure credentials.
+if [ ! -f ~/.gitconfig ]; then
+  log_info "Copying 'Git' configuration..."
+  cp "$DEVELOPER_SCRIPT_DIRECTORY/../.gitconfig" ~
 
-# Configure `Git` user credentials in the `.gitconfig` file.
-if ! git config --global user.name &>/dev/null || ! git config --global user.email &>/dev/null || ! grep -q "^\[user\]" ~/.gitconfig 2>/dev/null; then
   log_info "Configuring 'Git'..."
   read -p "Enter your 'Git' name: " git_name
   read -p "Enter your 'Git' email: " git_email
@@ -28,7 +27,7 @@ if ! git config --global user.name &>/dev/null || ! git config --global user.ema
     echo "	email = $git_email"
   } | cat - ~/.gitconfig > ~/.gitconfig.tmp && mv ~/.gitconfig.tmp ~/.gitconfig
 else
-  log_info "'Git' credentials are already configured."
+  log_info "'Git' is already configured."
 fi
 log_divider
 

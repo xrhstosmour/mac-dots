@@ -81,7 +81,7 @@ apply_system_configuration() {
     # Remove unneeded default applications from the Applications folder.
     # Apps protected by `SIP` (Books, Chess, Dictionary, News, Podcasts, Stocks, TV, Music, Stickies, Siri, Reminders, Photo Booth, Games) cannot be removed.
     log_info "Removing unneeded default applications from /Applications..."
-    for app in "GarageBand" "iMovie" "Pages" "Keynote" "Voice Memos"; do
+    for app in "GarageBand" "iMovie" "Voice Memos"; do
         # Check /Applications first.
         if [ -d "/Applications/$app.app" ]; then
             sudo rm -rf "/Applications/$app.app" 2>/dev/null && log_info "Removed $app.app from /Applications." || log_info "Could not remove $app.app from /Applications."
@@ -90,7 +90,7 @@ apply_system_configuration() {
 
     # Remove leftover user/library data for deleted apps.
     log_info "Removing leftover Library data for deleted apps..."
-    for dir in "~/Library/Containers/com.apple.iWork.Pages" "~/Library/Containers/com.apple.iWork.Keynote" "~/Library/Containers/com.apple.iWork.Numbers" "~/Library/Containers/com.apple.voicememos" "~/Library/Containers/com.apple.garageband" "~/Library/Containers/com.apple.iMovie"; do
+    for dir in "~/Library/Containers/com.apple.voicememos" "~/Library/Containers/com.apple.garageband" "~/Library/Containers/com.apple.iMovie"; do
         eval expanded_dir=$dir
         if [ -d "$expanded_dir" ]; then
             rm -rf "$expanded_dir"

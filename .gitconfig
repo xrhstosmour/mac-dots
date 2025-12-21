@@ -1,6 +1,3 @@
-[user]
-	name = Christos Mourtogiannis
-	email = c.mourtogiannis@gmail.com
 [pull]
 	rebase = true
 [merge]

@@ -23,10 +23,6 @@ sed '/^log_\w\+()/,/^}/d;/log_\w\+ /d;/^source /d' "$INSTALL_SCRIPT_DIRECTORY/ut
 # Give execute permission to all scripts in the directory.
 chmod +x ~/.config/scripts/*.sh
 
-log_info "Copying 'Git' configuration..."
-cp "$INSTALL_SCRIPT_DIRECTORY/.gitconfig" ~
-log_divider
-
 # Configure `macOS`.
 log_info "Starting 'macOS' configuration..."
 sh configure.sh

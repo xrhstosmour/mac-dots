@@ -8,6 +8,7 @@ function keybindings_cheat_sheet --description "Display all keybindings with des
     echo "    GLOBE → CMD"
     echo "    OPT/ALT ↔ CTRL"
     echo "    Right SHIFT → DELETE"
+    echo "    § → ~"
     echo ""
     echo "  External (Non-Apple):"
     echo "    CTRL → CMD"

@@ -9,7 +9,7 @@ set -e
 SOUND_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import constant variables.
-source "$SOUND_SCRIPT_DIRECTORY/../../helpers/logs.sh"
+source "$SOUND_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Function to apply Sound configuration.
 # Usage:

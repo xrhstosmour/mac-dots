@@ -9,7 +9,7 @@ set -e
 APPEARANCE_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import constant variables.
-source "$APPEARANCE_SCRIPT_DIRECTORY/../../helpers/logs.sh"
+source "$APPEARANCE_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Function to apply Appearance configuration.
 # Usage:

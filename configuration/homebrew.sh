@@ -10,7 +10,7 @@ set -e
 HOMEBREW_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions and flags.
-source "$HOMEBREW_SCRIPT_DIRECTORY/../../helpers/logs.sh"
+source "$HOMEBREW_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Declare `Homebrew` constants.
 HOMEBREW_INSTALL_URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"

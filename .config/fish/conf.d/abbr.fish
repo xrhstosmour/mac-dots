@@ -84,11 +84,30 @@ abbr ghcprs "github_my_prs closed"
 
 # `Docker` abbreviations.
 abbr d "docker"
+abbr dc "docker compose"
+abbr dcu "docker compose up --build -d"
+abbr dcd "docker compose down"
+abbr de "docker compose exec --it /bin/bash"
+abbr dcp "docker compose down -v --remove-orphans && echo y | docker system prune -a --volumes"
 
-# `OS`-specific abbreviations.
-set kernel_name (uname -s)
-if test "$kernel_name" = "Darwin"
-    source $HOME/.config/fish/conf.d/macos/abbr.fish
-else
-    source $HOME/.config/fish/conf.d/linux/abbr.fish
-end
+# System abbreviations.
+abbr us "brew update && brew upgrade && brew upgrade --cask && mas upgrade"
+abbr pi "brew install"
+abbr pr "brew uninstall"
+abbr ip "printf 'IPv4 (en0): %s\n' $(ipconfig getifaddr en0)"
+abbr ks "sudo killall coreaudiod bluetoothd bluetoothaudiod"
+abbr po "sudo shutdown -h now"
+abbr zzz "sudo pmset sleepnow"
+
+# Services abbreviations.
+abbr sc "sudo launchctl"
+abbr scsts "sudo launchctl list"
+abbr sci "sudo launchctl print"
+abbr scstr "sudo launchctl load"
+abbr sce "sudo launchctl load -w"
+abbr scstp "sudo launchctl unload"
+abbr scd "sudo launchctl unload -w"
+abbr scrr "sudo launchctl kickstart -k"
+
+# Emulators abbreviations.
+abbr des "disable_android_emulators_audio"

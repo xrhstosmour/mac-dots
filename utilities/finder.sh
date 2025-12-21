@@ -9,7 +9,7 @@ set -e
 FINDER_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions and flags.
-source "$FINDER_SCRIPT_DIRECTORY/../../helpers/logs.sh"
+source "$FINDER_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Function to apply `Finder` configuration.
 # Usage:

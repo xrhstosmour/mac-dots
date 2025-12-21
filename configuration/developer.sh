@@ -10,7 +10,7 @@ set -e
 DEVELOPER_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions and flags.
-source "$DEVELOPER_SCRIPT_DIRECTORY/../../helpers/logs.sh"
+source "$DEVELOPER_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Install developer tools.
 if ! xcode-select -p &>/dev/null; then

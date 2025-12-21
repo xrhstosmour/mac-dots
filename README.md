@@ -1,11 +1,11 @@
 # Dotfiles Utilities
 
-This repository configures system settings across `macOS` and `Arch Linux` via seamless shell scripts.
+This repository configures macOS system settings via seamless shell scripts.
 
 ## Overview
 
 - Copy dotfiles to `~/.config` and `.gitconfig` to the home directory.
-- Detect operating system and automatically invoke `macOS` or Arch `Arch Linux` setup.
+- Automatically setup macOS system configuration.
 
 ## `macOS` Configuration
 
@@ -50,25 +50,11 @@ This repository configures system settings across `macOS` and `Arch Linux` via s
   - `TV`
   - `Music`
 
-## `Arch Linux` Configuration
-
-- **Package Management**: Install utilities and applications via `paru` from `packages/linux/*.txt`.
-- **Power Management**: Disable `GNOME` sleep on AC power.
-- **Clock**: Configure format, date, seconds display, and weekday.
-- **Window Management**: Set button layout, disable hot corners, configure workspaces.
-- **Theming**: Apply font, icon theme, wallpaper, and dark mode.
-- **Input**: Load custom `GNOME` keybindings; configure keyboard layout and touchpad click method.
-- **System Cleanup**: Remove unneeded `GNOME` packages.
-- **Applications**: Set favorite apps, startup scripts, `GNOME` extensions; enable GDM service.
-
 ## ToDos
 
 - Disable True Tone on `macOS`.
 - Disable Automatically Adjust Brightness on `macOS`.
 - Skip display changes if resolution is already non-default.
-- Configure desktop vs. server environment on `Arch Linux`.
-- Integrate missing settings from the `arch-tuner` repository on `Arch Linux`.
-- Check if we can replace `utm` with `quickemu` & `quickgui`.
 - Cycle through active windows/applications using `Globe+Tab` (internal) or `Ctrl+Tab` (external) on `macOS`.
 - Add keybindings to trigger system shutdown and restart on `macOS`.
 

@@ -1,7 +1,7 @@
 local wezterm = require 'wezterm'
 
 -- Define the function that applies font configuration.
-local function apply_configuraton(configuration)
+local function apply_configuration(configuration)
     configuration.font = wezterm.font("Fira Code", {
         weight = "Medium",
         stretch = "SemiExpanded",
@@ -11,4 +11,4 @@ local function apply_configuraton(configuration)
     configuration.bold_brightens_ansi_colors = true
 end
 
-return apply_configuraton
+return apply_configuration

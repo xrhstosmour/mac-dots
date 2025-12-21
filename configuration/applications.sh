@@ -11,12 +11,12 @@ set -e
 APPLICATIONS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions and flags.
-source "$APPLICATIONS_SCRIPT_DIRECTORY/../../helpers/logs.sh"
+source "$APPLICATIONS_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Declare application configuration sources, destinations and names.
 APPLICATIONS_SOURCES=(
-  "$APPLICATIONS_SCRIPT_DIRECTORY/../../settings/macos/aerospace.toml"
-  "$APPLICATIONS_SCRIPT_DIRECTORY/../../settings/macos/org.p0deje.Maccy.plist.xml"
+  "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/aerospace.toml"
+  "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/org.p0deje.Maccy.plist.xml"
 )
 
 APPLICATIONS_DESTINATIONS=(

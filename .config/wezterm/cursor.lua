@@ -1,7 +1,7 @@
 -- Define the function that applies cursor configuration.
-local function apply_configuraton(configuration)
+local function apply_configuration(configuration)
     configuration.cursor_blink_rate = 250
     configuration.force_reverse_video_cursor = true
 end
 
-return apply_configuraton
+return apply_configuration

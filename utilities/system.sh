@@ -9,7 +9,7 @@ set -e
 SYSTEM_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import constant variables.
-source "$SYSTEM_SCRIPT_DIRECTORY/../../helpers/logs.sh"
+source "$SYSTEM_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Function to apply System configuration.
 # Usage:

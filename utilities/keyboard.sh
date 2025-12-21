@@ -9,7 +9,7 @@ set -e
 KEYBOARD_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import constant variables.
-source "$KEYBOARD_SCRIPT_DIRECTORY/../../helpers/logs.sh"
+source "$KEYBOARD_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Function to apply Keyboard configuration.
 #

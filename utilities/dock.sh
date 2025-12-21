@@ -9,7 +9,7 @@ set -e
 DOCK_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions and flags.
-source "$DOCK_SCRIPT_DIRECTORY/../../helpers/logs.sh"
+source "$DOCK_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Function to apply `Dock` configuration.
 # Usage:

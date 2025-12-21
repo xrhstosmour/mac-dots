@@ -2,22 +2,26 @@ local wezterm = require 'wezterm'
 local constants = require 'constants'
 
 -- Define the function that applies tabs configuration.
-local function apply_configuraton(configuration)
+local function apply_configuration(configuration)
     configuration.use_fancy_tab_bar = true
     configuration.tab_max_width = 100
     configuration.enable_tab_bar = true
     configuration.hide_tab_bar_if_only_one_tab = true
     configuration.show_tab_index_in_tab_bar = false
-    configuration.window_frame = {
-        font_size = configuration.font_size
-    }
+    configuration.window_frame = { font_size = configuration.font_size }
     configuration.colors.tab_bar = {
-        new_tab = { bg_color = constants.palette.transparent, fg_color = constants.palette.dark_gray },
-        new_tab_hover = { bg_color = constants.palette.transparent, fg_color = constants.palette.white },
+        new_tab = {
+            bg_color = constants.palette.transparent,
+            fg_color = constants.palette.dark_gray
+        },
+        new_tab_hover = {
+            bg_color = constants.palette.transparent,
+            fg_color = constants.palette.white
+        },
         active_tab = {
             bg_color = constants.palette.gray,
             fg_color = constants.palette.white,
-            intensity = "Bold",
+            intensity = "Bold"
         },
         inactive_tab = {
             bg_color = constants.palette.dark_gray,
@@ -50,4 +54,4 @@ local function apply_configuraton(configuration)
     end)
 end
 
-return apply_configuraton
+return apply_configuration

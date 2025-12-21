@@ -10,7 +10,7 @@ set -e
 SHELL_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions and flags.
-source "$SHELL_SCRIPT_DIRECTORY/../../helpers/logs.sh"
+source "$SHELL_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Declare `Fish` constants.
 FISH_PATH="/opt/homebrew/bin/fish"

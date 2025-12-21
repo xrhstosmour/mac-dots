@@ -9,7 +9,7 @@ set -e
 MENU_BAR_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions and flags.
-source "$MENU_BAR_SCRIPT_DIRECTORY/../../helpers/logs.sh"
+source "$MENU_BAR_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Function to apply `Menu Bar` configuration.
 # Usage:

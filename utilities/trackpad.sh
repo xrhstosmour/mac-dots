@@ -9,7 +9,7 @@ set -e
 TRACKPAD_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import constant variables.
-source "$TRACKPAD_SCRIPT_DIRECTORY/../../helpers/logs.sh"
+source "$TRACKPAD_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Function to apply Trackpad configuration.
 # Usage:

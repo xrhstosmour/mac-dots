@@ -1,8 +1,5 @@
 # Add `Homebrew`'s binary directory to the `PATH` environment variable.
-set kernel_name (uname -s)
-if test "$kernel_name" = "Darwin"
-  fish_add_path "/opt/homebrew/bin/"
-end
+fish_add_path "/opt/homebrew/bin/"
 
 # Disable `Homebrew` environment update hints.
 set -gx HOMEBREW_NO_ENV_HINTS 1
@@ -29,14 +26,6 @@ source $HOME/.config/fish/constants/colors.fish
 source $HOME/.config/fish/functions/files.fish
 source $HOME/.config/fish/functions/git.fish
 source $HOME/.config/fish/functions/logs.fish
-
-# Source `Linux` specific `Fish` functions.
-if test "$kernel_name" = "Linux"
-  source $HOME/.config/fish/functions/copy.fish
-  source $HOME/.config/fish/functions/trashy.fish
-end
-
-# Source `macOS` specific `Fish` functions.
-if test "$kernel_name" = "Darwin"
-  source $HOME/.config/fish/functions/emulators.fish
-end
+source $HOME/.config/fish/functions/copy.fish
+source $HOME/.config/fish/functions/trashy.fish
+source $HOME/.config/fish/functions/emulators.fish

@@ -10,36 +10,36 @@ set -e
 CONFIGURE_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions and flags.
-source "$CONFIGURE_SCRIPT_DIRECTORY/../helpers/logs.sh"
+source "$CONFIGURE_SCRIPT_DIRECTORY/helpers/logs.sh"
 
 # Install developer tools & programming languages.
-sh macos/scripts/developer.sh
+sh configuration/developer.sh
 sh utilities/development.sh
 
 # Install and configure `Homebrew`.
-sh macos/scripts/homebrew.sh
+sh configuration/homebrew.sh
 
 # Install dependencies and applications.
 log_info "Installing needed dependencies and applications..."
-brew bundle install --file=packages/macos/Brewfile
+brew bundle install --file=packages/Brewfile
 
 # Install `Mac App Store` applications.
-# Loop through the list of app IDs in `packages/macos/store_applications_ids.txt`.
+# Loop through the list of app IDs in `packages/store_applications_ids.txt`.
 if command -v mas &>/dev/null; then
     while IFS= read -r application_id || [[ -n "$application_id" ]]; do
     # Skip empty lines and comments.
         [[ -z "$application_id" || "$application_id" =~ ^# ]] && continue
 
         mas purchase "$application_id"
-    done <packages/macos/store_applications_ids.txt
+    done <packages/store_applications_ids.txt
 fi
 
 # Restore installed applications' configurations.
-sh macos/scripts/applications.sh
+sh configuration/applications.sh
 log_divider
 
 # Configure shell.
-sh macos/scripts/shell.sh
+sh configuration/shell.sh
 
 # Configure `macOS` Preferences.
-sh macos/scripts/preferences.sh
+sh configuration/preferences.sh

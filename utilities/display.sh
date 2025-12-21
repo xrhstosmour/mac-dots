@@ -9,7 +9,7 @@ set -e
 DISPLAY_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import constant variables.
-source "$DISPLAY_SCRIPT_DIRECTORY/../../helpers/logs.sh"
+source "$DISPLAY_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Function to apply Display configuration.
 # Usage:

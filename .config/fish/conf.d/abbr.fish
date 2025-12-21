@@ -31,7 +31,7 @@ abbr hs "atuin search -i"
 abbr cl "clear"
 abbr rmdp "keep_best_file | xargs rm -v"
 abbr dl "aria2c -x 10 "
-abbr st "gg"
+abbr ct "gg"
 abbr fm "spf"
 
 # `Git` abbreviations.

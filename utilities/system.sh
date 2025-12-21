@@ -38,6 +38,10 @@ apply_system_configuration() {
     defaults write com.apple.Siri StatusMenuVisible -bool false
     defaults write com.apple.assistant.support "Assistant Enabled" -bool false
 
+    # Disable `Spotlight` from `Menu Bar`.
+    log_info "Disabling 'Spotlight' from menu bar..."
+    defaults write com.apple.spotlightui MenuItemHidden -bool true
+
     # Disabling `Reopen Windows When Logging Back`.
     log_info "Disabling 'Reopen Windows When Logging Back'..."
     defaults write com.apple.loginwindow TALLogoutSavesState -bool false

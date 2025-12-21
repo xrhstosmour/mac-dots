@@ -13,11 +13,11 @@ CONFIGURE_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$CONFIGURE_SCRIPT_DIRECTORY/helpers/logs.sh"
 
 # Install developer tools & programming languages.
-sh configuration/developer.sh
+sh setup/developer.sh
 sh utilities/development.sh
 
 # Install and configure `Homebrew`.
-sh configuration/homebrew.sh
+sh setup/homebrew.sh
 
 # Install dependencies and applications.
 log_info "Installing needed dependencies and applications..."
@@ -35,11 +35,11 @@ if command -v mas &>/dev/null; then
 fi
 
 # Restore installed applications' configurations.
-sh configuration/applications.sh
+sh setup/applications.sh
 log_divider
 
 # Configure shell.
-sh configuration/shell.sh
+sh setup/shell.sh
 
 # Configure `macOS` Preferences.
-sh configuration/preferences.sh
+sh setup/preferences.sh

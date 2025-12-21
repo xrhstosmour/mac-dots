@@ -164,6 +164,9 @@ cmd-quote = 'exec-and-forget open -a "/System/Applications/System Settings.app"'
 ctrl-t = 'exec-and-forget open -a "/Applications/Sublime Text.app"'
 cmd-t = 'exec-and-forget open -a "/Applications/Sublime Text.app"'
 
+# ctrl-what = 'exec-and-forget open -a "/Applications/Perplexity.app"'
+# cmd-what = 'exec-and-forget open -a "/Applications/Perplexity.app"'
+
 ctrl-semicolon = 'exec-and-forget osascript ~/.config/scripts/open_wezterm.scpt'
 cmd-semicolon = 'exec-and-forget osascript ~/.config/scripts/open_wezterm.scpt'
 

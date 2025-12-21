@@ -29,9 +29,7 @@ if ! git config --global user.name &>/dev/null || ! git config --global user.ema
   } | cat - ~/.gitconfig > ~/.gitconfig.tmp && mv ~/.gitconfig.tmp ~/.gitconfig
 else
   log_info "'Git' credentials are already configured."
-  log_divider
 fi
-log_success "'Git' configuration copied to home directory."
 log_divider
 
 # Install developer tools.

@@ -1,26 +1,98 @@
 # Dotfiles
 
-This repository configures `macOS` system settings via seamless shell scripts.
+macOS system configuration via shell scripts.
 
-## Changes
+## Features
 
-- **Developer Setup**: `Xcode` Command Line Tools, `Homebrew`, `Fish` shell.
-- **System Configuration**: `Finder`, Dock, Menu Bar, Display, Audio, Trackpad.
-- **Keyboard Management**: Key remapping with `LaunchAgent` persistence.
-- **Window Manager**: `AeroSpace` with dual keyboard support (internal/external).
-- **Appearance**: Themes, wallpapers, dark mode.
-- **Security**: Firewall, stealth mode, file-sharing whitelist.
-- **Cleanup**: Remove default `macOS` applications.
+- Developer Setup
+  - Setup: `Xcode`, `Homebrew`, `Git`, `Fish`, `Starship`, `mise`
+  - Languages: `.NET Core`, `Go`, `Java`, `Node.js`, `Python`, `Ruby`
+- System configuration (`Finder`, Dock, Menu Bar, Display, Audio, Trackpad)
+- Keyboard remapping with persistence and cheat sheet
+- Window/Tiling manager (`AeroSpace`)
+- Appearance (themes, wallpapers, dark mode)
+- Security (firewall, stealth mode, file-sharing whitelist)
+- Cleanup (remove default macOS applications)
 
-## Setup
+## Requirements
+
+- macOS 12+ (Intel or Apple Silicon)
+
+## Installation
 
 Execute with administrative privileges: `./install.sh`
 
-## Permissions Required
+The installer will prompt for approvals before making changes.
 
-- **Input Monitoring**: `System Settings` → `Privacy & Security` → `Input Monitoring`.
-  - `/usr/bin/hidutil`, `/usr/bin/sudo`.
-- **Accessibility**: `System Settings` → `Privacy & Security` → `Accessibility`.
-  - Required for `AeroSpace` and Spotlight functionality.
-- **Full Disk Access**: `System Settings` → `Privacy & Security` → `Full Disk Access`.
-  - Required for system cleanup and file modifications.
+## Packages
+
+**CLI Tools**
+
+- `aria2`
+- `atuin`
+- `bat`
+- `bottom`
+- `displayplacer`
+- `eva`
+- `eza`
+- `fastfetch`
+- `fd`
+- `fdupes`
+- `ffmpeg`
+- `fish`
+- `fisher`
+- `fzf`
+- `gh`
+- `goto-ssh`
+- `helix`
+- `jless`
+- `mas`
+- `mise`
+- `scrcpy`
+- `sd`
+- `starship`
+- `superfile`
+- `telnet`
+- `tig`
+- `xh`
+- `zoxide`
+
+**GUI Apps**
+
+- `1password`
+- `1password-cli`
+- `android-platform-tools`
+- `aerospace`
+- `brave-browser`
+- `docker`
+- `filen`
+- `font-fira-code`
+- `google-chrome`
+- `jordanbaird-ice`
+- `kdiff3`
+- `localsend`
+- `maccy`
+- `macfuse`
+- `nordvpn`
+- `obsidian`
+- `postman`
+- `signal`
+- `spotify`
+- `sublime-text`
+- `syncthing`
+- `utm`
+- `veracrypt`
+- `viber`
+- `visual-studio-code`
+- `vlc`
+- `wailbrew`
+- `wezterm`
+- `whatsapp`
+
+**App Store**: `Perplexity AI`, `Amphetamine`
+
+## Permissions
+
+- **Input Monitoring**: `System Settings` → `Privacy & Security` → `Input Monitoring`
+- **Accessibility**: `System Settings` → `Privacy & Security` → `Accessibility`
+- **Full Disk Access**: `System Settings` → `Privacy & Security` → `Full Disk Access`

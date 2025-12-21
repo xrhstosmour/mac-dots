@@ -55,7 +55,7 @@ cask 'mediosz/tap/swipeaerospace'
 cask 'nikitabobko/tap/aerospace'
 cask 'nordvpn'
 cask 'obsidian'
-# TODO: Install Perplexity via Homebrew or MacOS App Store cli.
+# TODO: Check if we can replace `postman` with `bruno`.
 cask 'postman'
 cask 'signal'
 cask 'spotify'

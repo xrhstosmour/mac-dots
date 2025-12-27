@@ -94,6 +94,19 @@ The installer will prompt for approvals before making changes.
 
 ## Permissions
 
-- **Input Monitoring**: `System Settings` → `Privacy & Security` → `Input Monitoring`
-- **Accessibility**: `System Settings` → `Privacy & Security` → `Accessibility`
 - **Full Disk Access**: `System Settings` → `Privacy & Security` → `Full Disk Access`
+  - Terminal used for running the installation script.
+  - `WezTerm`
+- **Developer Tools**: `System Settings` → `Privacy & Security` → `Developer Tools`
+  - `WezTerm`
+  - `Visual Studio Code`
+- **Input Monitoring**: `System Settings` → `Privacy & Security` → `Input Monitoring`
+  - `/usr/bin/hidutil`, for keyboard remapping scripts.
+  - `/usr/bin/sudo`, for keyboard remapping scripts.
+- **Accessibility**: `System Settings` → `Privacy & Security` → `Accessibility`
+  - Terminal used for running the installation script.
+  - `AeroSpace`
+  - `Ice`
+  - `Maccy`
+  - `SwipeAeroSpace`
+  - `WezTerm`

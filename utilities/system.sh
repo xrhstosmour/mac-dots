@@ -17,6 +17,10 @@ source "$SYSTEM_SCRIPT_DIRECTORY/../helpers/logs.sh"
 apply_system_configuration() {
     log_info "Applying System configuration..."
 
+    # Enable `sudo` authentication using `Touch ID` on supported MacBooks.
+    log_info "Enabling 'sudo' authentication using 'Touch ID'..."
+    sed -e 's/^#auth/auth/' /etc/pam.d/sudo_local.template | sudo tee /etc/pam.d/sudo_local
+
     # Turn off `Bluetooth`, if you don't have a mouse/keyboard/headphone connected.
     log_info "Turning off 'Bluetooth' when not using a mouse/keyboard/headphone..."
     sudo defaults write /Library/Preferences/com.apple.Bluetooth ControllerPowerState -int 0

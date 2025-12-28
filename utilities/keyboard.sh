@@ -13,7 +13,7 @@ source "$KEYBOARD_SCRIPT_DIRECTORY/../helpers/logs.sh"
 
 # Function to apply Keyboard configuration.
 #
-# ! IMPORTANT: Head to `System Settings → Privacy & Security → Input Monitoring` and:
+# ! Head to `System Settings → Privacy & Security → Input Monitoring` and:
 # !     - Grant permission to `/usr/bin/hidutil`.
 # !     - Grant permission to `usr/bin/sudo`.
 #

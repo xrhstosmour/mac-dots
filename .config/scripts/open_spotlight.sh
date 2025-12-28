@@ -1,5 +1,5 @@
 #!/bin/bash
-# ! IMPORTANT: You need to grant `System Settings → Privacy & Security → Accessibility` permissions to the application running this script for it to work properly.
+# ! You need to grant `System Settings → Privacy & Security → Accessibility` permissions to the application running this script for it to work properly.
 
 # Disable `emoji` picker shortcuts.
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 190 '{enabled = 0;}' 2>/dev/null

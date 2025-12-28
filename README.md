@@ -111,4 +111,4 @@ The installer will prompt for approvals before making changes.
   - `Maccy`
   - `SwipeAeroSpace`
   - `WezTerm`
-- **GitHub CLI Authentication**: Run `gh auth login` to authenticate with `GitHub CLI` before using corresponding abbreviations/functions.
+- **GitHub CLI**: Run `gh auth login` to authenticate with `GitHub CLI` before using corresponding abbreviations/functions.

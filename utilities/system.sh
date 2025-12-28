@@ -46,6 +46,10 @@ apply_system_configuration() {
     log_info "Disabling 'Spotlight' from menu bar..."
     defaults write com.apple.spotlightui MenuItemHidden -bool true
 
+    # Disable `AirDrop`.
+    log_info "Disabling 'AirDrop'..."
+    defaults write com.apple.sharingd DiscoverableMode -string "Off"
+
     # Disabling `Reopen Windows When Logging Back`.
     log_info "Disabling 'Reopen Windows When Logging Back'..."
     defaults write com.apple.loginwindow TALLogoutSavesState -bool false

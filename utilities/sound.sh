@@ -29,10 +29,6 @@ apply_sound_configuration() {
     log_info "Reducing latency for 'Bluetooth' headphones/headsets..."
     sudo defaults write bluetoothaudiod "Enable AAC codec" -bool true
 
-    # Disable `AirDrop`.
-    log_info "Disabling 'AirDrop'..."
-    defaults write com.apple.sharingd DiscoverableMode -string "Off"
-
     # Disable speech recognition
     log_info "Disabling speech recognition..."
     sudo defaults write "com.apple.speech.recognition.AppleSpeechRecognition.prefs" StartSpeakableItems -bool false

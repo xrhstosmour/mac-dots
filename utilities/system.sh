@@ -124,10 +124,10 @@ apply_system_configuration() {
     desired_login_items=("1Password" "Filen" "Google Drive" "Maccy" "SwipeAeroSpace" "Syncthing")
 
     # Get all current `Login Items` names.
-    current_login_items=$(osascript -e 'tell application "System Events" to get the name of every login item' | tr ', ' '\n')
+    current_login_items=$(osascript -e 'tell application "System Events" to get the name of every login item' | sed 's/, /\n/g')
 
     # Remove `Login Items` that are not in the desired list.
-    for current_login_item in $current_login_items; do
+    while IFS= read -r current_login_item; do
         if [ -n "$current_login_item" ]; then
             # Check if the current item is in the desired list.
             item_found=false
@@ -143,12 +143,12 @@ apply_system_configuration() {
                 osascript -e "tell application \"System Events\" to delete login item \"$current_login_item\""
             fi
         fi
-    done
+    done <<< "$current_login_items"
 
     # Add desired applications to `Login Items` if not already there.
     items_to_add=0
     for application in "${desired_login_items[@]}"; do
-        if ! osascript -e 'tell application "System Events" to get the name of every login item' | tr ', ' '\n' | grep -Fxq "$application"; then
+        if ! osascript -e 'tell application "System Events" to get the name of every login item' | sed 's/, /\n/g' | grep -Fxq "$application"; then
             log_info "Adding '$application' to 'Login Items'..."
             osascript -e "tell application \"System Events\" to make login item at end with properties {name: \"$application\", path:\"/Applications/$application.app\", hidden:true}"
             ((items_to_add++))

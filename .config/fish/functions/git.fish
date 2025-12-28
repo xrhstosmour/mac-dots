@@ -119,7 +119,7 @@ function git_auto_fix_up
             # Print the commit hash and message.
             echo -e "$BOLD_YELLOW$commit_hash$NO_COLOR $BOLD_GREEN|$NO_COLOR $commit_message"
         end
-    end | fzf --multi --ansi --bind 'enter:execute(git commit --fixup {1} --no-verify)+abort,tab:execute(git diff {1}^!),?:toggle-preview' --preview '
+    end | fzf --multi --ansi --bind 'enter:execute(git commit --fixup {1} --no-verify)+abort,tab:execute(git diff {1}^! | less -R),?:toggle-preview' --preview '
 
         # Keep the commit hash and message.
         set commit_hash {1}
@@ -182,7 +182,7 @@ function git_stash_list
 
         # Print the branch related to the stash and its message.
         echo -e "$BOLD_YELLOW$stash_hash$NO_COLOR $BOLD_GREEN|$NO_COLOR $stash_message"
-    end | fzf --ansi --bind 'enter:execute(git stash apply (git log -g stash --format="%h %gd" | grep -m 1 {1} | awk "{print \$2}"))+abort,delete:execute(git stash drop (git log -g stash --format="%h %gd" | grep -m 1 {1} | awk "{print \$2}"))+abort,tab:execute(git stash show -p {1}),?:toggle-preview' --preview '
+    end | fzf --ansi --bind 'enter:execute(git stash apply (git log -g stash --format="%h %gd" | grep -m 1 {1} | awk "{print \$2}"))+abort,delete:execute(git stash drop (git log -g stash --format="%h %gd" | grep -m 1 {1} | awk "{print \$2}"))+abort,tab:execute(git stash show -p {1} | less -R),?:toggle-preview' --preview '
         # Extract stash hash and message from the selection.
         set stash_hash {1}
         set stash_message (echo {2..} | cut -d"|" -f2- | sed "s/^ //")
@@ -257,7 +257,7 @@ function git_log_current_branch
 
         # Print the commit hash and message.
         echo -e "$BOLD_YELLOW$commit_hash$NO_COLOR $BOLD_GREEN|$NO_COLOR $commit_message"
-    end | fzf --ansi --bind 'enter:execute(git reset --hard {1})+abort,tab:execute(git diff {1}^!),?:toggle-preview' --preview '
+    end | fzf --ansi --bind 'enter:execute(git reset --hard {1})+abort,tab:execute(git diff {1}^! | less -R),?:toggle-preview' --preview '
         # Extract commit hash and message from the selection.
         set commit_hash {1}
         set commit_message (echo {2..} | cut -d"|" -f2- | sed "s/^ //")
@@ -378,7 +378,7 @@ function git_list_branches
         else
             echo -e "$BOLD_GREEN$line$NO_COLOR"
         end
-    end | fzf --ansi --bind 'enter:execute(git checkout {1})+abort,delete:execute(git branch -D {1})+abort,tab:execute(git diff {1})+abort,?:toggle-preview' --preview '
+    end | fzf --ansi --bind 'enter:execute(git checkout {1})+abort,delete:execute(git branch -D {1})+abort,tab:execute(git diff {1} | less -R),?:toggle-preview' --preview '
         set branch_name {1}
         set author (git log -1 --pretty=format:"%an" $branch_name)
         set date (git log -1 --pretty=format:"%ad" --date=format-local:"%d/%m/%Y at %H:%M:%S" $branch_name)

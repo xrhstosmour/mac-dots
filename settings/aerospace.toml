@@ -128,7 +128,7 @@ alt-left = 'workspace prev'
 # Move workspace to next monitor.
 alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
-# TODO: Cycle through active windows/applications using `Globe+Tab` (internal) or `Ctrl+Tab` (external).
+# TODO: Cycle through active windows/applications using `OPT+Tab` (internal) or `ALT+Tab` (external).
 
 # Reload environment.
 alt-backslash = 'exec-and-forget ~/.config/scripts/reload_environment.sh'

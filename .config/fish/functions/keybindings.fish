@@ -57,7 +57,7 @@ function keybindings_cheat_sheet --description "Display all keybindings with des
     echo "⚙️  SYSTEM ACTIONS"
     echo "  - CTRL + Space                  Switch input source"
     echo "  - CTRL + .                      Spotlight search"
-    echo "  - CTRL + -                      Lock screen"
+    echo "  - CTRL + SHIFT + L              Lock screen"
     echo ""
 
     # Service Mode.

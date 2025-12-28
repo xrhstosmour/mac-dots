@@ -46,6 +46,7 @@ cask 'brave-browser'
 # TODO: Maybe replace `docker-desktop` with `podman-desktop` to support kubernetes too.
 cask 'docker-desktop'
 cask 'filen'
+cask 'flameshot'
 cask 'font-fira-code'
 cask 'google-chrome'
 cask 'kdiff3'

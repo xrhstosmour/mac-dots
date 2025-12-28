@@ -94,7 +94,7 @@ The installer will prompt for approvals before making changes.
 
 **App Store**: `Perplexity AI`, `Amphetamine`
 
-## Permissions
+## Permissions/Requirements
 
 - **Full Disk Access**: `System Settings` → `Privacy & Security` → `Full Disk Access`
   - Terminal used for running the installation script.
@@ -111,3 +111,4 @@ The installer will prompt for approvals before making changes.
   - `Maccy`
   - `SwipeAeroSpace`
   - `WezTerm`
+- **GitHub CLI Authentication**: Run `gh auth login` to authenticate with `GitHub CLI` before using corresponding abbreviations/functions.

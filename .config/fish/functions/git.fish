@@ -1,3 +1,5 @@
+# ! You need to run `gh auth login` to authenticate with `GitHub CLI` before using functions using the `gh` package.
+
 # Function to stash changes with a default name.
 # Usage:
 #   git_stash "Stash message" or git_stash
@@ -664,4 +666,48 @@ function github_my_prs
     end)
 
     echo "$formatted_output" | fzf --ansi --bind 'enter:execute(gh pr view (echo {} | grep -oE "[0-9]+" | head -1) --json url --template "{{.url}}" | xargs open)+abort'
+end
+
+# Function to create a `GitHub PR` with a predefined template.
+# If no title is provided, the current branch name will be used.
+# Upon successful creation, the PR link will be displayed.
+# Usage:
+#   github_create_pr "PR Title"
+#   github_create_pr (uses branch name as title)
+function github_create_pr
+    # Use provided title or branch name if no title given.
+    set pr_title "$argv[1]"
+    if test -z "$pr_title"
+        set pr_title (git rev-parse --abbrev-ref HEAD)
+    end
+
+    set pr_body "**What**:
+
+This PR ...
+
+**Why**:
+
+Resolves [task_id](https://link/to/task_id).
+
+**How**:
+
+-
+
+**Testing**:
+
+-"
+
+    log_info "Creating '$pr_title' PR..."
+
+    # Create the `PR` and get the `URL`.
+    set pr_url (gh pr create --title "$pr_title" --body "$pr_body" 2>&1)
+
+    if test $status -eq 0
+        log_success "PR created successfully!"
+        log_info "PR URL: $pr_url"
+        return 0
+    else
+        log_error "Failed to create PR!"
+        return 1
+    end
 end

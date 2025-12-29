@@ -17,16 +17,19 @@ source "$APPLICATIONS_SCRIPT_DIRECTORY/../helpers/logs.sh"
 APPLICATIONS_SOURCES=(
   "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/aerospace.toml"
   "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/org.p0deje.Maccy.plist.xml"
+  "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/flameshot.ini"
 )
 
 APPLICATIONS_DESTINATIONS=(
   "$HOME/.config/aerospace/aerospace.toml"
   "$HOME/Library/Containers/org.p0deje.Maccy/Data/Library/Preferences/org.p0deje.Maccy.plist"
+  "$HOME/.config/flameshot/flameshot.ini"
 )
 
 APPLICATIONS_NAMES=(
   "Aerospace"
   "Maccy"
+  "Flameshot"
 )
 
 # Loop over all arrays in parallel.

@@ -30,3 +30,4 @@ source $HOME/.config/fish/functions/copy.fish
 source $HOME/.config/fish/functions/trashy.fish
 source $HOME/.config/fish/functions/emulators.fish
 source $HOME/.config/fish/functions/keybindings.fish
+source $HOME/.config/fish/functions/aliases.fish

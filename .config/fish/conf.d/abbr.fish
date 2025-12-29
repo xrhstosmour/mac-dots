@@ -6,6 +6,7 @@ abbr eff "code ~/.config/fish/functions"
 # System abbreviations.
 abbr ff "fastfetch"
 abbr kbcs "keybindings_cheat_sheet"
+abbr alcs "aliases_cheat_sheet"
 abbr us "brew update && brew upgrade && brew upgrade --cask && brew cleanup && mas upgrade && mo update"
 abbr cs "mo clean && mo optimize"
 abbr pi "brew install"

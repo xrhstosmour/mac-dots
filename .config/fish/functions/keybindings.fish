@@ -44,6 +44,7 @@ function keybindings_cheat_sheet --description "Display all keybindings with des
     echo "🚀 APPLICATIONS:"
     echo "  - SUPER + B                      Google Chrome"
     echo "  - SUPER + E                      Visual Studio Code"
+    echo "  - SUPER + I                      Docker daemon"
     echo "  - SUPER + M                      Spotify"
     echo "  - SUPER + K                      Obsidian"
     echo "  - SUPER + /                      Perplexity"

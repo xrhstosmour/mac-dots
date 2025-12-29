@@ -151,6 +151,9 @@ cmd-b = 'exec-and-forget open -a "/Applications/Google Chrome.app"'
 ctrl-e = 'exec-and-forget open -a "/Applications/Visual Studio Code.app"'
 cmd-e = 'exec-and-forget open -a "/Applications/Visual Studio Code.app"'
 
+ctrl-i = 'exec-and-forget open --background -a Docker'
+cmd-i = 'exec-and-forget open --background -a Docker'
+
 ctrl-backtick = 'exec-and-forget open -a Finder'
 cmd-backtick = 'exec-and-forget open -a Finder'
 

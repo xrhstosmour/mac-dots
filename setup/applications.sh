@@ -44,12 +44,17 @@ for i in "${!APPLICATIONS_SOURCES[@]}"; do
     killall "$process_name" 2>/dev/null || true
     killall cfprefsd 2>/dev/null || true
 
+    # Create destination directory.
+    mkdir -p "$(dirname "$destination")"
+
     # If the source is a `.plist.xml`, convert to binary `plist`.
     if [[ "$source" == *.plist.xml ]]; then
       plutil -convert binary1 -o "$destination" "$source"
+    elif [[ "$source" == *.ini ]]; then
+      # If the source is a `.ini` file, expand variables before copying.
+      envsubst < "$source" > "$destination"
     else
       # For regular files, just copy them to their destination.
-      mkdir -p "$(dirname "$destination")"
       cp "$source" "$destination"
     fi
   fi

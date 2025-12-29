@@ -27,7 +27,7 @@ function keybindings_cheat_sheet --description "Display all keybindings with des
     echo "  - ALT + H/J/K/L                Focus left/down/up/right"
     echo "  - ALT + SHIFT + H/J/K/L        Move window"
     echo "  - ALT + SHIFT + ↑↓←→           Join with window"
-    echo "  - ALT + SHIFT + -/=            Resize window"
+    echo "  - ALT + SHIFT + -/+            Resize window"
     echo ""
 
     # Workspace Management.
@@ -58,9 +58,9 @@ function keybindings_cheat_sheet --description "Display all keybindings with des
 
     # System Actions.
     echo "⚙️  SYSTEM ACTIONS"
-    echo "  - CTRL + Space                  Switch input source"
-    echo "  - CTRL + .                      Spotlight search"
-    echo "  - CTRL + SHIFT + L              Lock screen"
+    echo "  - SUPER + Space                  Switch input source"
+    echo "  - SUPER + .                      Spotlight search"
+    echo "  - SUPER + SHIFT + L              Lock screen"
     echo ""
 
     # Service Mode.

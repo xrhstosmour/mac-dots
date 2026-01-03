@@ -28,13 +28,15 @@ end
 -- WezTerm keybindings:
 -- For external keyboards and Linux systems we are going to use CTRL.
 -- For internal macOS keyboards we are going to use Globe, which is remapped to CMD.
---   CTRL/Globe+C: Copy selection if present, else send SIGINT to terminal.
+--   CTRL/Globe+C: Copy selection if present, else send `SIGINT` to terminal.
 --   CTRL/Globe+V: Paste from clipboard.
 --   CTRL/Globe+D: Split pane horizontally.
 --   CTRL/Globe+T: New terminal tab.
 --   CTRL/Globe+N: New terminal window.
 --   CTRL/Globe+X: Close current pane if more than one exists.
 --   CTRL/Globe+W: Close current tab.
+--   CTRL/Globe+Numbers: Switch to tab by number.
+--   CTRL/Globe+Right/Left square brackets: Switch to previous/next tab.
 return function(config)
     local is_macos = wezterm.target_triple:find("apple") ~= nil
     local mod = is_macos and "CMD" or "CTRL"

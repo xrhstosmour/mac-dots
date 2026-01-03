@@ -177,7 +177,7 @@ cmd-backslash = 'exec-and-forget ~/.config/scripts/lock_screen.sh'
 ctrl-shift-b = 'exec-and-forget open -a Screenshot'
 cmd-shift-b = 'exec-and-forget open -a Screenshot'
 
-# TODO: Add keybindings to trigger system shutdown (SUPER + SHIFT + ESC) and restart (SUPER + SHIFT + BACKSPACE).
+# TODO: Add keybindings to trigger system shutdown (SUPER + Esc) and restart (SUPER + Right square bracket).
 
 # 'service' binding mode declaration.
 [mode.service.binding]

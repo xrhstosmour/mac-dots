@@ -60,7 +60,7 @@ function keybindings_cheat_sheet --description "Display all keybindings with des
     echo "⚙️  SYSTEM ACTIONS"
     echo "  - SUPER + Space                  Switch input source"
     echo "  - SUPER + .                      Spotlight search"
-    echo "  - SUPER + SHIFT + L              Lock screen"
+    echo "  - SUPER + Backslash              Lock screen"
     echo ""
 
     # Service Mode.

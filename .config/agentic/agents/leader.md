@@ -93,23 +93,9 @@ These thoughts are incorrect and must be ignored:
 ## Session Budget
 
 Long sessions burn tokens because every API call re-sends the full conversation
-history. For instance a 47-hour session with 697 messages cost $40 in a single project. Follow
-these hard rules to prevent context bloat:
+history. For instance a 47-hour session with 697 messages cost $40 in a single project. Follow the compaction triggers in `instructions/standards.md`'s Context Management section, plus this delegation-specific rule:
 
-- Compact after every 2-3 delegated task completions. Do not wait for the context warning to fire.
-- Compact after every PR merge or major phase transition.
-- No session should span multiple calendar days. If resuming work the next day, start a fresh session. The previous session's summary carries forward.
-- If a session has been idle for more than 30 minutes, compact before the next delegation. Idle gaps force expensive cache rebuilds.
 - Never queue more than 3 delegations without compacting between them. Each delegation feeds its full output back into the leader context.
-- When the context warning fires, compact immediately. Do not defer, do not start new work, do not rationalize one more small task first.
-
-| Trigger | Action |
-| ------- | ------ |
-| 2-3 delegated tasks completed | Compact |
-| PR merged or phase complete | Compact |
-| Resuming after idle > 30 minutes | Compact |
-| Context warning fires | Compact immediately |
-| Calendar day changed | Start fresh session |
 
 ## Role
 

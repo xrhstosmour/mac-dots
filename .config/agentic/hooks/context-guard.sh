@@ -14,7 +14,7 @@ if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
 
   size_warn_bytes=850000
   idle_warn_seconds=7200
-  growth_cooldown_bytes=100000
+  growth_cooldown_bytes=255000
 
   if [ "$size_bytes" -gt "$size_warn_bytes" ] || [ "$idle_seconds" -gt "$idle_warn_seconds" ]; then
     # Cooldown marker so this doesn't re-fire the handoff instruction every single turn

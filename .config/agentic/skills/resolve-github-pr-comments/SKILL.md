@@ -137,7 +137,7 @@ If reactions are not applied, stop and return to Step 3.
 For each VALID comment:
 
 1. Edit relevant files to address the single comment (one comment → one focused change where possible).
-2. Run lint/syntax checks and quick tests; address any failures immediately.
+2. Run lint/syntax checks and quick tests. Address any failures immediately.
 3. Present the changes (`file:line - preview`) to the user for review.
 4. Obtain user approval before proceeding to the next change.
 

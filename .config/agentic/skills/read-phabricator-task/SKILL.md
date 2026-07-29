@@ -230,7 +230,7 @@ curl -s -X POST "$PHAB/api/user.whoami" \
 - Task links: `https://phabricator.<sub>.<domain>/T<id>`
 - User links: `https://phabricator.<sub>.<domain>/p/<username>/`
 - Project links: `https://phabricator.<sub>.<domain>/tag/<slug>/`
-- API takes numeric IDs, e.g. `242861`, not `T242861`.
+- API takes numeric IDs, such as `242861`, not `T242861`.
 
 ## Pagination
 

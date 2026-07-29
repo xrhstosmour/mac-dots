@@ -78,22 +78,22 @@ Skills are loaded by agents and triggered via commands.
 
 | Skill | Command | Purpose |
 | ----- | ------ | ------- |
-| `manage_github_pr` | `/manage-github-pr` | Create a `PR` with structured description, split commits, feature branch, auto-assign, and labels, also reviews/edits/comments on existing PRs |
-| `resolve_github_pr_comments` | `/resolve-github-pr-comments` | Review `PR` comments, assess validity, make fixup commits, push, reply with `SHA` links |
-| `review_github_pr` | `/review-github-pr` | Multi-agent `PR` review, spawns agents in parallel, can post inline comments |
+| `manage-github-pr` | `/manage-github-pr` | Create a `PR` with structured description, split commits, feature branch, auto-assign, and labels, also reviews/edits/comments on existing PRs |
+| `resolve-github-pr-comments` | `/resolve-github-pr-comments` | Review `PR` comments, assess validity, make fixup commits, push, reply with `SHA` links |
+| `review-github-pr` | `/review-github-pr` | Multi-agent `PR` review, spawns agents in parallel, can post inline comments |
 
 ### Diagnostic Skills
 
 | Skill | Command | Purpose |
 | ----- | ------ | ------- |
 | `diagnose` | `/diagnose` | Disciplined diagnosis loop: reproduce, minimise, hypothesise, instrument, fix, regression-test |
-| `technical_analysis` | `/technical-analysis` | Structured technical analysis with method-level changes, notes, estimation, and architecture deepening opportunities |
+| `technical-analysis` | `/technical-analysis` | Structured technical analysis with method-level changes, notes, estimation, and architecture deepening opportunities |
 
 ### Design Skills
 
 | Skill | Command | Purpose |
 | ----- | ------ | ------- |
-| `interface_design` | Loaded by the `designer` agent, no dedicated command | Craft-first UI design guidance: visual hierarchy, design tokens, states, component checklist |
+| `interface-design` | Loaded by the `designer` agent, no dedicated command | Craft-first UI design guidance: visual hierarchy, design tokens, states, component checklist |
 
 ### Utility Skills
 
@@ -101,13 +101,13 @@ Skills are loaded by agents and triggered via commands.
 | ----- | ------ | ------- |
 | `caveman` | `/caveman` | Ultra-compressed communication mode, cuts token usage by dropping filler while keeping technical accuracy |
 | `handoff` | `/handoff` | Compact conversation into a handoff document for fresh agent sessions |
-| `agent_models` | `/agent-models` | Research, rank, and apply model updates across all agents and configs for any provider |
+| `agent-models` | `/agent-models` | Research, rank, and apply model updates across all agents and configs for any provider |
 
 ### Task Management Skills
 
 | Skill | Command | Purpose |
 | ----- | ------- | ------- |
-| `manage_phabricator_task` | `/manage-phabricator-task` | Create and edit Phabricator tasks via the `Conduit` API |
+| `manage-phabricator-task` | `/manage-phabricator-task` | Create and edit Phabricator tasks via the `Conduit` API |
 
 ### Tool Skills
 

@@ -36,7 +36,7 @@ permission:
 
 For each changed code path, ask:
 
-Execution multiplier — how many times does this run?
+Execution multiplier: how many times does this run?
 
 - Once: low risk.
 - Once per item in a loop: medium risk.

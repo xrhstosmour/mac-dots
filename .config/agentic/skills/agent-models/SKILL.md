@@ -131,13 +131,13 @@ Use the capability data collected above to rank models. Do not guess or rely on 
 
 ### Cost consciousness
 
-Do not overuse expensive models. In a single-provider setup (e.g. Anthropic-only), assign the most expensive model (e.g. Opus) to at most one role, typically reviewer. Everything else uses the mid-tier model (e.g. Sonnet). Only use the cheapest model (e.g. Haiku) for roles where speed matters more than quality (tester, compaction).
+Do not overuse expensive models. In a single-provider setup (for example Anthropic-only), assign the most expensive model (such as Opus) to at most one role, typically reviewer. Everything else uses the mid-tier model (such as Sonnet). Only use the cheapest model (such as Haiku) for roles where speed matters more than quality (tester, compaction).
 
 When building the proposal, show a table with:
 - Each role
 - The proposed model
 - The capability evidence from `models.dev` or the Go rate table
-- A one-line reason (e.g. "largest context window", "highest rate limit", "different vendor from implementor")
+- A one-line reason (such as "largest context window", "highest rate limit", "different vendor from implementor")
 
 Important: Do not assign the same model to adjacent pipeline roles (implementor + reviewer). Use different vendors so the review catches blind spots.
 
@@ -168,7 +168,7 @@ claude:tester:model:haiku
 | Tool | Fields | Lines per agent |
 |------|--------|----------------|
 | OpenCode | `model`, `variant` (use `-` if none) | `opencode:<agent>:model:...` + `opencode:<agent>:variant:...` |
-| Claude Code | `model` (use aliases: `sonnet`, `opus`, `haiku`, not full IDs), `effort` (omit line entirely if not supported, e.g. Haiku) | `claude:<agent>:model:...` + optional `claude:<agent>:effort:...` |
+| Claude Code | `model` (use aliases: `sonnet`, `opus`, `haiku`, not full IDs), `effort` (omit line entirely if not supported, such as Haiku) | `claude:<agent>:model:...` + optional `claude:<agent>:effort:...` |
 
 ### Apply steps
 

@@ -35,7 +35,7 @@ Defaults disguise themselves as infrastructure, the parts that feel like they ju
 - Typography feels like a container. But type isn't holding your design, it is your design. The weight of a headline, the personality of a label, the texture of a paragraph shape how the product feels before anyone reads a word. Reaching for your usual font means you're not designing.
 - Navigation feels like scaffolding. But navigation is the product, where you are, where you can go, what matters. A page floating in space is a component demo, not software.
 - Data feels like presentation. But a number on screen is not design. What does it mean to the person looking? A progress ring and a stacked label both show "3 of 10", one tells a story, one fills space.
-- Token names feel like implementation detail. But `--ink` and `--parchment` evoke a world; `--gray-700` and `--surface-2` evoke a template. Someone reading only your tokens should guess what product this is.
+- Token names feel like implementation detail. But `--ink` and `--parchment` evoke a world. `--gray-700` and `--surface-2` evoke a template. Someone reading only your tokens should guess what product this is.
 
 There are no structural decisions. Everything is design. The moment you stop asking "why this?" is the moment defaults take over.
 
@@ -80,11 +80,11 @@ The Apple/Linear move: weight and color do more hierarchy work than size. A sing
 
 ### Density is a decision, expressed in px
 
-Linear is tight; Stripe is airy. Neither is default, both are chosen, and the choice is the same number repeated everywhere. Decide the density up front and name the values: a tool panel at 12–16px padding feels workbench-tight; the same card at 24px feels like a brochure. Pick deliberately, then hold it.
+Linear is tight. Stripe is airy. Neither is default, both are chosen, and the choice is the same number repeated everywhere. Decide the density up front and name the values: a tool panel at 12–16px padding feels workbench-tight. The same card at 24px feels like a brochure. Pick deliberately, then hold it.
 
 ### Spatial rhythm, breathe unevenly
 
-Great interfaces don't space everything equally. Dense control zones give way to open content; heavy elements balance against light ones; the eye travels with purpose. Monotone layouts, same card size, same gap, same density everywhere, are the sound of no one deciding. Group tightly-related things, then put real air between groups.
+Great interfaces don't space everything equally. Dense control zones give way to open content. Heavy elements balance against light ones. The eye travels with purpose. Monotone layouts, same card size, same gap, same density everywhere, are the sound of no one deciding. Group tightly-related things, then put real air between groups.
 
 ### Proportions speak
 
@@ -93,23 +93,23 @@ A 280px sidebar next to full-width content says "navigation serves content." A 3
 ### Distribution and restraint (the "expensive" look)
 
 - ~60/30/10: a dominant neutral surface, a secondary tone, and ~10% accent. Color is a scarce resource, most of the screen is structure.
-- One accent, used with intention, beats five colors used without thought. Gray builds structure; color communicates (status, action, identity). Unmotivated color is noise.
+- One accent, used with intention, beats five colors used without thought. Gray builds structure. Color communicates (status, action, identity). Unmotivated color is noise.
 - Hierarchy through space and weight, not lines. Reach for whitespace and tonal shift before borders and dividers. The most premium interfaces are mostly invisible structure.
-- Optical sizing on large type: tighten letter-spacing as type gets bigger (headings slightly negative tracking); loosen line-height on body for readability (~1.5). Tight type reads as crafted; default tracking on a 32px heading reads as a document.
+- Optical sizing on large type: tighten letter-spacing as type gets bigger (headings slightly negative tracking). Loosen line-height on body for readability (~1.5). Tight type reads as crafted. Default tracking on a 32px heading reads as a document.
 
 ## 6. Infinite Expression
 
-Every pattern has infinite expressions, no two interfaces should look the same. A metric display could be a hero number, inline stat, sparkline, gauge, progress bar, comparison delta, or trend badge. Same sidebar width, same card grid, same icon-left-number-big-label-small metric boxes every time signals AI-generated immediately and is forgettable. Linear's cards don't look like Notion's; Vercel's metrics don't look like Stripe's. Same concepts, infinite expressions. Before building, ask: what's the ONE thing users do here, and what product solves a similar problem brilliantly?
+Every pattern has infinite expressions, no two interfaces should look the same. A metric display could be a hero number, inline stat, sparkline, gauge, progress bar, comparison delta, or trend badge. Same sidebar width, same card grid, same icon-left-number-big-label-small metric boxes every time signals AI-generated immediately and is forgettable. Linear's cards don't look like Notion's. Vercel's metrics don't look like Stripe's. Same concepts, infinite expressions. Before building, ask: what's the ONE thing users do here, and what product solves a similar problem brilliantly?
 
 ## 7. Color Lives Somewhere
 
-Every product exists in a world, and that world has colors. Before reaching for a palette, walk into the physical version of this space, what materials, what light, what objects? Your palette should feel like it came FROM somewhere, not applied TO something. Temperature is one axis; also ask quiet or loud, dense or spacious, serious or playful, geometric or organic. A trading terminal and a meditation app are both "focused", completely different kinds of focus.
+Every product exists in a world, and that world has colors. Before reaching for a palette, walk into the physical version of this space, what materials, what light, what objects? Your palette should feel like it came FROM somewhere, not applied TO something. Temperature is one axis. Also ask quiet or loud, dense or spacious, serious or playful, geometric or organic. A trading terminal and a meditation app are both "focused", completely different kinds of focus.
 
 ## 8. Craft Foundations
 
 ### Surface elevation
 
-Surfaces stack: base, then increasing levels. Each jump is only a few percentage points of lightness, dark mode base → +7% → +9% → +12%; light mode stays light and adds shadow instead. You can barely see one step in isolation, but stacked, the hierarchy emerges.
+Surfaces stack: base, then increasing levels. Each jump is only a few percentage points of lightness, dark mode base → +7% → +9% → +12%. Light mode stays light and adds shadow instead. You can barely see one step in isolation, but stacked, the hierarchy emerges.
 
 - Sidebars: same background as canvas, not a different color. Different colors fragment the space. A subtle border is enough.
 - Dropdowns/popovers: one level above their parent surface, or they blend in and layering is lost.
@@ -117,7 +117,7 @@ Surfaces stack: base, then increasing levels. Each jump is only a few percentage
 
 ### Borders
 
-Should disappear when you're not looking for them, but be findable when you need structure. Low-opacity rgba blends with the background and defines an edge without demanding attention; solid hex borders look harsh by comparison. Dark mode lives around `rgba(255,255,255,0.06–0.12)`, light mode slightly higher. Build a progression, standard, softer separation, emphasis, focus-ring, and match intensity to the importance of the boundary.
+Should disappear when you're not looking for them, but be findable when you need structure. Low-opacity rgba blends with the background and defines an edge without demanding attention. Solid hex borders look harsh by comparison. Dark mode lives around `rgba(255,255,255,0.06–0.12)`, light mode slightly higher. Build a progression, standard, softer separation, emphasis, focus-ring, and match intensity to the importance of the boundary.
 
 ### The squint test
 
@@ -145,16 +145,16 @@ The most common way AI degrades a codebase: it hand-rolls what already exists. A
 
 ### Controls: native → primitive → hand-roll
 
-1. Native `HTML` first where it works. A `<button>` is a button; an `<a>` is a link; `<input type="text">`, `<dialog>`, `<details>` exist. Never `<div onClick>` something the platform already provides, you lose focus, keyboard, and semantics for free.
+1. Native `HTML` first where it works. A `<button>` is a button. An `<a>` is a link. `<input type="text">`, `<dialog>`, `<details>` exist. Never `<div onClick>` something the platform already provides, you lose focus, keyboard, and semantics for free.
 2. A battle-tested headless primitive for anything stateful and hard to get right, select, combobox, dialog, popover, tooltip, dropdown menu, tabs, date picker. These ship keyboard navigation, focus management, `ARIA`, and collision/positioning that take days to reproduce.
 3. Hand-roll only as a genuine last resort, no primitive fits, or there's no dependency budget. Then you owe the complete behavior contract: keyboard nav, focus trap/return, full `ARIA` roles and state, click-outside, and scroll-lock for overlays. A styled control missing these is broken.
 
 ### Styling: system → component → token → utility
 
 1. If the project has a design system, use it. `shadcn/Button`, a `CVA` variant set, a theme, a component library, use `<Button variant="…">` before writing a one-off. Match the codebase's styling convention.
-2. When a styled element repeats, extract a component. The same utility string on nine buttons is duplication, not design. One component owns it; call sites stay clean. Extract on the second real reuse, not the first.
+2. When a styled element repeats, extract a component. The same utility string on nine buttons is duplication, not design. One component owns it. Call sites stay clean. Extract on the second real reuse, not the first.
 3. Bind to semantic tokens, not hardcoded literals. `bg-card border-border text-muted-foreground`, not `bg-white border-gray-200 text-gray-500`. Hardcoded raw values break theming and dark mode.
-4. Inline utilities are for genuine one-offs, a layout nudge used once. The tell of slop is the same long className sprayed everywhere; that's a missing component or token.
+4. Inline utilities are for genuine one-offs, a layout nudge used once. The tell of slop is the same long className sprayed everywhere. That's a missing component or token.
 
 ## 11. Design System Essentials
 
@@ -165,7 +165,7 @@ The most common way AI degrades a codebase: it hand-rolls what already exists. A
 - Depth, choose ONE and commit. Borders-only (clean, technical, dense tools) · subtle shadows (approachable) · layered shadows (premium, dimensional) · surface-color shifts (tints, no shadows). Don't mix strategies.
 - Border radius, a scale. Small for inputs/buttons, medium for cards, large for modals. Don't mix sharp and soft randomly.
 - Control tokens. Inputs/selects/checkboxes get dedicated background, border, and focus tokens, don't reuse surface tokens, so you can tune controls independently.
-- Dark mode. Shadows are weak on dark, lean on borders. Desaturate semantic colors slightly. Same hierarchy system, inverted values. Keep one hue; shift only lightness across surfaces.
+- Dark mode. Shadows are weak on dark, lean on borders. Desaturate semantic colors slightly. Same hierarchy system, inverted values. Keep one hue. Shift only lightness across surfaces.
 
 ## 12. Polish and Motion
 
@@ -175,11 +175,11 @@ A hundred small details compound into "feels great."
 
 - Concentric radius. Nested rounded elements: `outerRadius = innerRadius + padding`. Same radius on parent and child is the most common thing that makes UI feel off.
 - Tabular numbers. Any dynamic number (counters, prices, timers, table columns) gets `font-variant-numeric: tabular-nums` to prevent layout shift.
-- Optical alignment. When geometric centering looks off, fix it optically, icon-side padding ≈ text-side − 2px; nudge play triangles ~2px right.
+- Optical alignment. When geometric centering looks off, fix it optically, icon-side padding ≈ text-side − 2px. Nudge play triangles ~2px right.
 - States are not optional. Every interactive element needs default, hover, active, focus, disabled. Data needs loading, empty, error. Missing states feel broken.
 - Hit areas, 44×44px (`WCAG`), 40 at minimum. If the visible control is smaller (a 20px checkbox), extend with a pseudo-element. Never let two hit areas overlap.
-- Shadows over borders for elevation. For cards/buttons/containers that lift, prefer a layered transparent `box-shadow`; keep real borders for dividers and input outlines. Light-mode lift stacks three layers; dark mode collapses to a single ring.
-- Text wrapping. `text-wrap: balance` on headings; `text-wrap: pretty` on body/captions to kill orphans.
+- Shadows over borders for elevation. For cards/buttons/containers that lift, prefer a layered transparent `box-shadow`. Keep real borders for dividers and input outlines. Light-mode lift stacks three layers. Dark mode collapses to a single ring.
+- Text wrapping. `text-wrap: balance` on headings. `text-wrap: pretty` on body/captions to kill orphans.
 - Font smoothing. `-webkit-font-smoothing: antialiased` on the root (macOS renders heavy otherwise).
 - Image outlines. 1px inset outline, pure `rgba(0,0,0,0.1)` light / `rgba(255,255,255,0.1)` dark, never a tinted near-black/white.
 
@@ -188,13 +188,13 @@ A hundred small details compound into "feels great."
 Motion should be felt, not watched. Fast, purposeful, and never in the way.
 
 - Should it animate at all? Actions repeated 100+×/day (keyboard shortcuts, command palette) get no animation, it makes them feel slow. Occasional surfaces (modals, drawers, toasts) get standard animation. Rare/first-run moments can add delight.
-- Duration < 300ms for UI. Button press 100–160ms; tooltips/popovers 125–200ms; dropdowns 150–250ms; modals/drawers 200–500ms.
-- Custom ease-out, never ease-in. Built-in curves are too weak. Use `cubic-bezier(0.23, 1, 0.32, 1)` for entering/interactive; ease-in-out for on-screen movement. `ease-in` feels sluggish.
+- Duration < 300ms for UI. Button press 100–160ms, tooltips/popovers 125–200ms, dropdowns 150–250ms, modals/drawers 200–500ms.
+- Custom ease-out, never ease-in. Built-in curves are too weak. Use `cubic-bezier(0.23, 1, 0.32, 1)` for entering/interactive, ease-in-out for on-screen movement. `ease-in` feels sluggish.
 - Press feedback. `transform: scale(0.97)` on `:active` (never below 0.95).
 - Never animate from `scale(0)`. Start at `scale(0.95)` + `opacity: 0`.
 - Origin-aware popovers. Popovers scale from their trigger, not center. Modals are the exception.
 - Only animate `transform` and `opacity` (`GPU`-composited). Animating width/height triggers layout + paint. Never `transition: all`, name exact properties.
-- Stagger entrances 30–80ms between items for a natural cascade; keep exits faster and subtler than enters.
+- Stagger entrances 30–80ms between items for a natural cascade. Keep exits faster and subtler than enters.
 - Respect `prefers-reduced-motion`, keep opacity/color transitions, drop movement.
 
 ## 13. Design System Persistence
@@ -210,7 +210,7 @@ Consistency checks. If `system.md` defines values, hold to them: spacing on the 
 
 ## 14. The Checks
 
-Run these against your output before presenting; if any fails, iterate first.
+Run these against your output before presenting. If any fails, iterate first.
 
 - Swap test, swap your typeface for the usual one, your layout for a standard template: would anything feel different? Where swapping wouldn't matter is where you defaulted.
 - Squint test, blur your eyes: hierarchy still readable? Nothing jumping out harshly?
@@ -233,7 +233,7 @@ Then ask: "Does that direction feel right?"
 
 ## Rules
 
-- Do not announce modes or narrate process. Jump into the work; state suggestions with reasoning.
+- Do not announce modes or narrate process. Jump into the work. State suggestions with reasoning.
 - Inspect the existing app, design tokens, component patterns, and `.interface-design/system.md` if present before proposing anything.
 - Make the domain exploration concrete before choosing layout, color, type, density, and navigation.
 - Keep user-facing updates short. Don't expose long private design monologues, surface the useful recommendation or decision.

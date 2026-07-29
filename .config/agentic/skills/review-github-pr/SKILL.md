@@ -185,7 +185,7 @@ Description: {pr_description}
 Return findings as:
 ## Architecture Review
 ### Findings
-For each issue: [SEVERITY] file:line — problem description. Fix suggestion.
+For each issue: [SEVERITY] file:line, problem description. Fix suggestion.
 Severity: CRITICAL | HIGH | MEDIUM | LOW | NIT
 ### Summary
 One paragraph. If no issues, say so explicitly.
@@ -249,7 +249,7 @@ Findings rated LOW or NIT. Brief, not exhaustive.
 
 ### Human Reviewer Callouts
 Populate from the callout scan in "Classify the change". Include only
-applicable callouts, each bolded exactly as below; write "- None" if none apply. These are informational for the human reviewer, not fix items, they must not themselves change the Verdict:
+applicable callouts, each bolded exactly as below. Write "- None" if none apply. These are informational for the human reviewer, not fix items, they must not themselves change the Verdict:
 - **This change adds a database migration:** <files/details>
 - **This change introduces a new dependency:** <package(s)/details>
 - **This change changes a dependency, or the lockfile:** <files/package(s)/details>

@@ -20,7 +20,7 @@ Assess scope, present approach, and iterate based on feedback until user approve
 
 ## Exit Criteria
 
-- User explicitly approves the plan (e.g. "yes", "go ahead", "proceed", "sounds good", "looks good", "ship it").
+- User explicitly approves the plan (for example "yes", "go ahead", "proceed", "sounds good", "looks good", "ship it").
 - Scope is bounded and clear.
 - Implementation approach is agreed upon.
 - Risks and constraints are documented (if any).

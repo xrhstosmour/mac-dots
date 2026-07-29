@@ -22,24 +22,11 @@ Do not use for landing pages, marketing sites, campaigns, or brand-only work.
 
 ## 1. The Problem
 
-You will generate generic output. Your training has seen thousands of dashboards, and the patterns are strong. You can follow this entire process and still produce a template: warm colors on cold structures, friendly fonts on generic layouts.
+You will generate generic output by default, your training has seen thousands of dashboards and the patterns are strong. Intent lives in prose, but code generation pulls from patterns, that gap is where defaults win. The bar: if another AI, given a similar prompt, would produce substantially the same output, you have failed.
 
-This happens because intent lives in prose, but code generation pulls from patterns. The gap between them is where defaults win.
+Defaults hide in what feels like infrastructure rather than design, typography, navigation, data display, token names. All of it is design, none of it is scaffolding. The moment you stop asking "why this?" is the moment defaults take over.
 
-The bar: If another AI, given a similar prompt, would produce substantially the same output, you have failed. Not different for its own sake, different because the interface emerged from this user, this task, this world. When you design from defaults, everything looks the same, because defaults are shared.
-
-## 2. Where Defaults Hide
-
-Defaults disguise themselves as infrastructure, the parts that feel like they just need to work, not be designed.
-
-- Typography feels like a container. But type isn't holding your design, it is your design. The weight of a headline, the personality of a label, the texture of a paragraph shape how the product feels before anyone reads a word. Reaching for your usual font means you're not designing.
-- Navigation feels like scaffolding. But navigation is the product, where you are, where you can go, what matters. A page floating in space is a component demo, not software.
-- Data feels like presentation. But a number on screen is not design. What does it mean to the person looking? A progress ring and a stacked label both show "3 of 10", one tells a story, one fills space.
-- Token names feel like implementation detail. But `--ink` and `--parchment` evoke a world. `--gray-700` and `--surface-2` evoke a template. Someone reading only your tokens should guess what product this is.
-
-There are no structural decisions. Everything is design. The moment you stop asking "why this?" is the moment defaults take over.
-
-## 3. Intent First
+## 2. Intent First
 
 Before touching code, answer these. Keep it a compact working brief unless the direction needs user confirmation.
 
@@ -51,7 +38,7 @@ If the prompt is too vague to identify the human, task, and feel, ask one concis
 
 Intent must be systemic. Saying "warm" then using cold colors is not following through. If warm: surfaces, text, borders, accents, semantic colors, type, all warm. If dense: spacing, type size, information architecture, all dense. Check every token against the stated intent. For every choice, layout, color temperature, typeface, spacing scale, hierarchy, you must be able to say why. "It's common" or "it works" means you defaulted.
 
-## 4. Product Domain Exploration
+## 3. Product Domain Exploration
 
 This is where defaults get caught, or don't. Generic path: Task type → visual template → theme. Crafted path: Task type → product domain → signature → structure + expression. The difference is time spent in the product's world before any visual thinking.
 
@@ -64,7 +51,7 @@ Produce all four before proposing any direction:
 
 The test: Read your proposal with the product name removed. Could someone identify what it's for? If not, explore deeper.
 
-## 5. Visual Hierarchy and Composition
+## 4. Visual Hierarchy and Composition
 
 The single biggest driver of "this looks designed" versus "this looks generated." Defaults produce flatness, everything the same size, weight, and spacing, so nothing leads and the eye has nowhere to go. Craft produces hierarchy, the eye knows instantly what matters.
 
@@ -97,15 +84,15 @@ A 280px sidebar next to full-width content says "navigation serves content." A 3
 - Hierarchy through space and weight, not lines. Reach for whitespace and tonal shift before borders and dividers. The most premium interfaces are mostly invisible structure.
 - Optical sizing on large type: tighten letter-spacing as type gets bigger (headings slightly negative tracking). Loosen line-height on body for readability (~1.5). Tight type reads as crafted. Default tracking on a 32px heading reads as a document.
 
-## 6. Infinite Expression
+## 5. Infinite Expression
 
 Every pattern has infinite expressions, no two interfaces should look the same. A metric display could be a hero number, inline stat, sparkline, gauge, progress bar, comparison delta, or trend badge. Same sidebar width, same card grid, same icon-left-number-big-label-small metric boxes every time signals AI-generated immediately and is forgettable. Linear's cards don't look like Notion's. Vercel's metrics don't look like Stripe's. Same concepts, infinite expressions. Before building, ask: what's the ONE thing users do here, and what product solves a similar problem brilliantly?
 
-## 7. Color Lives Somewhere
+## 6. Color Lives Somewhere
 
 Every product exists in a world, and that world has colors. Before reaching for a palette, walk into the physical version of this space, what materials, what light, what objects? Your palette should feel like it came FROM somewhere, not applied TO something. Temperature is one axis. Also ask quiet or loud, dense or spacious, serious or playful, geometric or organic. A trading terminal and a meditation app are both "focused", completely different kinds of focus.
 
-## 8. Craft Foundations
+## 7. Craft Foundations
 
 ### Surface elevation
 
@@ -123,7 +110,7 @@ Should disappear when you're not looking for them, but be findable when you need
 
 Blur your eyes at the interface. You should still perceive hierarchy, what's above what, where sections divide, but nothing should jump out. No harsh lines, no jarring shifts. Just quiet structure. Get this wrong and nothing else matters.
 
-## 9. Before Writing Each Component
+## 8. Before Writing Each Component
 
 Every time you write UI code, even small additions, state:
 
@@ -139,7 +126,7 @@ Spacing:    [base unit + chosen density]
 
 This checkpoint is mandatory. If you can't explain WHY for each, you're defaulting, stop and think.
 
-## 10. Use What Exists
+## 9. Use What Exists
 
 The most common way AI degrades a codebase: it hand-rolls what already exists. A bespoke `<div onClick>` "button" beside the project's real `Button`. A from-scratch dropdown with no keyboard support beside an installed primitive that has it. A 14-class `Tailwind` string copy-pasted onto every card instead of the component or token that's right there.
 
@@ -156,7 +143,7 @@ The most common way AI degrades a codebase: it hand-rolls what already exists. A
 3. Bind to semantic tokens, not hardcoded literals. `bg-card border-border text-muted-foreground`, not `bg-white border-gray-200 text-gray-500`. Hardcoded raw values break theming and dark mode.
 4. Inline utilities are for genuine one-offs, a layout nudge used once. The tell of slop is the same long className sprayed everywhere. That's a missing component or token.
 
-## 11. Design System Essentials
+## 10. Design System Essentials
 
 - Token architecture. Every color traces to a small set of primitives: foreground (text), background (surface), border, brand, semantic (destructive/warning/success). No random hex.
 - Text hierarchy, four levels. Primary, secondary, tertiary, muted (default / supporting / metadata / disabled). Using only two means the hierarchy is too flat.
@@ -167,7 +154,7 @@ The most common way AI degrades a codebase: it hand-rolls what already exists. A
 - Control tokens. Inputs/selects/checkboxes get dedicated background, border, and focus tokens, don't reuse surface tokens, so you can tune controls independently.
 - Dark mode. Shadows are weak on dark, lean on borders. Desaturate semantic colors slightly. Same hierarchy system, inverted values. Keep one hue. Shift only lightness across surfaces.
 
-## 12. Polish and Motion
+## 11. Polish and Motion
 
 A hundred small details compound into "feels great."
 
@@ -197,7 +184,7 @@ Motion should be felt, not watched. Fast, purposeful, and never in the way.
 - Stagger entrances 30–80ms between items for a natural cascade. Keep exits faster and subtler than enters.
 - Respect `prefers-reduced-motion`, keep opacity/color transitions, drop movement.
 
-## 13. Design System Persistence
+## 12. Design System Persistence
 
 After completing a task, always offer to save the patterns: "Want me to save these for future sessions?" If yes, write to `.interface-design/system.md`:
 
@@ -208,7 +195,7 @@ After completing a task, always offer to save the patterns: "Want me to save the
 
 Consistency checks. If `system.md` defines values, hold to them: spacing on the grid, the declared depth strategy throughout, colors from the palette, documented patterns reused not reinvented. This compounds, each save makes future work faster and more consistent.
 
-## 14. The Checks
+## 13. The Checks
 
 Run these against your output before presenting. If any fails, iterate first.
 
@@ -217,7 +204,7 @@ Run these against your output before presenting. If any fails, iterate first.
 - Signature test, point to five specific elements where your signature appears. "The overall feel" doesn't count.
 - Token test, read your `CSS` variables aloud: do they belong to this product's world, or any project?
 
-## 15. Suggest and Ask
+## 14. Suggest and Ask
 
 Lead with exploration and recommendation, then confirm:
 

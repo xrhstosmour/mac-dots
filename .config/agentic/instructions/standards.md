@@ -281,6 +281,7 @@ Manage context actively. Long sessions burn tokens because every API call re-sen
 - Read files with `offset`/`limit` when you only need a specific section, not the entire file.
 - Prefer `grep`/`glob` over `read` for searching patterns. Read only the matching files/sections.
 - Avoid re-reading the same files across turns. Cache findings in your mental model or notes.
+- To view a match in context, grep for the line number first, then `Read` that file with `offset`/`limit`. Do not chain `grep`/`sed` into one compound shell command (semicolons, command substitution), it costs the same tool calls, and multi-statement shell strings often fail the harness's read-only auto-approval parser, forcing a manual permission prompt that a plain `grep` or `Read` would have skipped.
 
 ## Context Anti-Patterns
 

@@ -260,13 +260,17 @@ applicable callouts, each bolded exactly as below; write "- None" if none apply.
 - **This change changes configuration defaults:** <config var changed>
 ```
 
-## Prompt to post
+## Next steps
 
-After presenting the review, ask the user:
+After presenting the review, ask the user what they want to do with it:
 
-> Post review with inline comments to the PR?
+1. Post review with inline comments to the PR.
+2. Export the findings to a markdown file.
+3. Fix the findings directly in the working tree.
 
-If yes, write each finding as a natural comment like a teammate reviewing code. Do not use emojis or markdown flourishes. Do not open with preambles. Just state the issue and suggestion directly. Keep each comment to at most one paragraph, and keep any inline code under 3 lines. When you're confident in a concrete, minimal fix, add a ```suggestion block containing only the replacement code, no commentary inside it, and preserve the exact leading whitespace of the lines it replaces. Skip the suggestion block for anything speculative or multi-part. Then post as a review with inline comments:
+### Option 1: Post inline comments
+
+Write each finding as a natural comment like a teammate reviewing code. Do not use emojis or markdown flourishes. Do not open with preambles. Just state the issue and suggestion directly. Keep each comment to at most one paragraph, and keep any inline code under 3 lines. When you're confident in a concrete, minimal fix, add a ```suggestion block containing only the replacement code, no commentary inside it, and preserve the exact leading whitespace of the lines it replaces. Skip the suggestion block for anything speculative or multi-part. Then post as a review with inline comments:
 
 ```bash
 HEAD_SHA=$(gh pr view <pr_number> --repo <owner>/<repo> --json commits --jq '.commits[-1].oid')
@@ -283,6 +287,21 @@ gh api repos/<owner>/<repo>/pulls/<pr_number>/reviews \
 
 Use `event: "REQUEST_CHANGES"` if blockers exist, `"COMMENT"` otherwise.
 Each comment references one finding, written conversationally in English.
+
+### Option 2: Export to markdown
+
+Write the synthesized review, Summary, Verdict, CRITICAL/MEDIUM/LOW, Coverage, Human Reviewer Callouts, to a markdown file. Default path `pr-<number>-review.md` in the repo root, confirm the path with the user before writing. Report the path when done, do not open it or take further action.
+
+### Option 3: Fix the findings directly
+
+Checkout the PR branch locally if not already on it:
+
+```bash
+git fetch origin <branch>
+git checkout <branch>
+```
+
+Delegate each CRITICAL/HIGH and MEDIUM finding to the `implementor` agent with the finding's file, line range, problem, and fix suggestion. Skip LOW/NIT findings unless the user asks for them too. After fixes land, show `git diff` for the user to confirm, then split and commit following `~/.config/agentic/instructions/versioning.md`, use `fixup` commits targeting the original commit that introduced each finding where the PR already has commits, otherwise regular commits. Do not push without explicit approval, follow the push guardrails in `manage-github-pr` skill.
 
 ## Guardrails
 

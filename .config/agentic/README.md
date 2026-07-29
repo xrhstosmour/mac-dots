@@ -66,7 +66,7 @@ Shared AI configuration for OpenCode and Claude Code. Model assignments live in 
 
 | File | Purpose |
 | ---- | ------- |
-| `context-guard.sh` | Claude Code `UserPromptSubmit` hook. When the session's transcript is large or idle, instructs the model to invoke the `handoff` skill itself right away, no need to ask the user first. A cooldown marker in the OS temp directory stops it from re-nudging every single turn |
+| `context-guard.sh` | Claude Code `UserPromptSubmit` hook. When the session's transcript is large or idle, instructs the model to inform the user and advise compacting, handoff, or a new session, it never invokes anything itself. A cooldown marker in the OS temp directory stops it from re-nudging every single turn |
 | `webfetch-guard.sh` | Claude Code `PreToolUse` hook, matcher: `WebFetch`. Denies fetches to self-hosted `Phabricator`/`Grafana` hostnames, a static `permissions.deny` domain rule can't match an arbitrary org hostname |
 | `opencode-context-guard.js` | OpenCode plugin equivalent, same thresholds using the session API's exact token counts instead of a byte-size estimate. Also blocks `WebFetch` on all 4 hosts, `github.com`, `phabricator.`, `sentry.io`, `grafana.`, regex covers self-hosted domains directly |
 

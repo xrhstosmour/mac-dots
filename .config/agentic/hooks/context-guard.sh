@@ -13,7 +13,7 @@ if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
   estimated_tokens=$((size_bytes / 17))
 
   size_warn_bytes=850000
-  idle_warn_seconds=1800
+  idle_warn_seconds=7200
   growth_cooldown_bytes=100000
 
   if [ "$size_bytes" -gt "$size_warn_bytes" ] || [ "$idle_seconds" -gt "$idle_warn_seconds" ]; then
@@ -39,9 +39,8 @@ if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
       echo ""
       echo "This session's transcript is ~${size_megabytes}MB (~${estimated_tokens} estimated tokens), last active ${idle_minutes} minutes ago."
       echo "Long idle gaps on large contexts force an expensive full cache rebuild on the next turn."
-      echo "Finish responding to the user's current request first. Once that's done, invoke the handoff skill on your own, without asking the user for permission first."
-      echo "After it is saved, tell the user in one line where it was saved. Compaction will happen automatically, or they can start a fresh session that picks it up."
-      echo "Do not interrupt the current answer to do this, and do not just surface this as a warning and wait for a permission decision."
+      echo "Finish responding to the user's current request first. Then inform them their context is large or stale, and advise compacting, handoff, or a new session."
+      echo "Do not interrupt the current answer to do this, and do not invoke anything yourself, only inform and advise."
     fi
   fi
 fi

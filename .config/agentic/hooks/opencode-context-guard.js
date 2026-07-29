@@ -5,8 +5,8 @@
 //   - Warns once a session's token usage or idle time gets large, mirroring
 //     Claude Code's context-guard.sh (same thresholds, exact token counts here
 //     instead of a byte-size estimate, since the session API reports them).
-//     Thresholds are intentionally aggressive (50K tokens, 30 min idle) to
-//     force compaction before context bloat becomes irreversible.
+//     Thresholds (50K tokens, 2 hour idle) warn before context bloat becomes
+//     irreversible without nagging over short, ordinary breaks.
 //
 // Static instructions (communication/standards/versioning) load via opencode.json's
 // `instructions` array instead, no hook needed for those.
@@ -27,7 +27,7 @@ const blockedHosts = [
 // Warn early. 50K tokens is roughly 2-3 API calls with a full context window.
 // At 180K the context is already bloated and compaction cannot recover lost cache.
 const SIZE_WARN_TOKENS = 50000;
-const IDLE_WARN_SECONDS = 1800;
+const IDLE_WARN_SECONDS = 7200;
 const GROWTH_COOLDOWN_TOKENS = 15000;
 
 // In-memory, per running OpenCode process. Mirrors context-guard.sh's file-based
@@ -60,7 +60,7 @@ export const AgenticReminderPlugin = async ({ client }) => {
             lastWarned.set(sessionID, { tokens: totalTokens, time: nowSeconds });
             const idleMinutes = Math.round(idleSeconds / 60);
             output.system.push(
-              `# Context Health Warning\n\nThis session has used ~${totalTokens} tokens, last active ${idleMinutes} minutes ago. Long sessions burn tokens because every API call re-sends the full conversation history.\nFinish responding to the user's current request first. Once that's done, invoke the handoff skill on your own, without asking the user for permission first, then mention the saved path in one line before compacting or starting a fresh session.\nDo not interrupt the current answer to do this, and do not just surface this as a warning and wait for a permission decision.`,
+              `# Context Health Warning\n\nThis session has used ~${totalTokens} tokens, last active ${idleMinutes} minutes ago. Long sessions burn tokens because every API call re-sends the full conversation history.\nFinish responding to the user's current request first. Then inform them their context is large or stale, and advise compacting, handoff, or a new session.\nDo not interrupt the current answer to do this, and do not invoke anything yourself, only inform and advise.`,
             );
           }
         }

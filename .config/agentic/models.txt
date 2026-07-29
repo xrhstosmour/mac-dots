@@ -16,7 +16,7 @@ opencode:tester:model:opencode-go/deepseek-v4-flash
 opencode:tester:variant:high
 opencode:designer:model:opencode-go/deepseek-v4-flash
 opencode:designer:variant:high
-opencode:reviewer:model:opencode-go/deepseek-v4-pro
+opencode:reviewer:model:opencode-go/grok-4.5
 opencode:reviewer:variant:high
 opencode:explore:model:opencode/big-pickle
 opencode:explore:variant:-

@@ -12,6 +12,10 @@
   },
   "permissions": {
     "defaultMode": "plan",
+    "allow": [
+      "Bash(bundle exec rspec*)",
+      "Bash(bundle exec rubocop*)"
+    ],
     "deny": [
       "Read(**/.env)",
       "Read(**/.env.*)",
@@ -31,7 +35,8 @@
     "ask": [
       "Bash(git reset --hard *)",
       "Bash(git clean -f *)",
-      "Bash(git branch -D *)"
+      "Bash(git branch -D *)",
+      "Bash(gh pr merge*)"
     ]
   },
   "hooks": {

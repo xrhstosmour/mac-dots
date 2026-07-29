@@ -25,6 +25,7 @@
       "git reset*--hard*": "ask",
       "git clean*-f*": "ask",
       "git branch*-D*": "ask",
+      "gh pr merge*": "ask",
       "git filter-branch*": "deny",
       "rm -rf /*": "deny",
       "rm -rf ~*": "deny",

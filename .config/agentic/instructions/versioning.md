@@ -10,8 +10,7 @@
 
 ### Style
 
-- Use imperative mood: "Add feature" not "Added feature" or "Adds feature".
-- Use present tense: "Fix bug" not "Fixed bug" or "Fixes bug".
+- Use imperative, present tense: "Add feature" / "Fix bug", not "Added"/"Fixed"/"Adds"/"Fixes".
 - Keep it short: aim for under ~8-10 words, one clear clause. Don't explain the whole diff in the subject line, that's what the PR description is for.
 - Avoid punctuation at the end of the message.
 - Avoid generic messages like "Update README.md" or "Fix bug". Be specific about what was changed and why.
@@ -95,10 +94,6 @@ git commit --fixup abc123
 ## Save-Point Pattern
 
 Commit locally each tested increment per the increment cycle in rules.md. Commits are save points, if the next change breaks something, revert to the last known-good state.
-
-## Commit Size
-
-Target ~100 lines per commit. Split commits over ~300 lines.
 
 ## Change Summaries
 

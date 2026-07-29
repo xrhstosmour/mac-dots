@@ -3,19 +3,16 @@
 ## Core
 
 - Think first, then implement in small steps and validate incrementally.
-- Before any user-facing operation, check the skills your harness exposes (Claude Code lists them as `available_skills` and loads them via the `skill` tool, OpenCode auto-discovers `SKILL.md` files and surfaces them the same way). If a matching skill exists, invoke it as your first action. Do not hand-roll what a skill covers.
+- Before any user-facing operation, check for a matching skill (Claude Code: `available_skills`/`skill` tool, OpenCode: auto-discovered `SKILL.md`) and invoke it first. Do not hand-roll what a skill covers.
 - Prefer existing patterns over new abstractions.
 - Tests required for behavior changes.
 - Prioritize security and performance risks.
 - Keep communication concise and direct.
-- Always read file before editing.
-- Read multiple files in parallel.
-- Before executing any command, state your reasoning.
-- Always use non-interactive mode.
-- Use absolute paths or verify them before destructive commands.
-- Inform user of long-running processes.
-- Apply all explicit user-provided context (links, images, constraints) in the next actions.
-- Do not skip user-provided context unless it directly conflicts with safety.
+- Always read a file before editing it. Read multiple files in parallel.
+- State your reasoning before executing any command, and always use non-interactive mode.
+- Use absolute paths, or verify them, before destructive commands.
+- Inform the user of long-running processes.
+- Apply all explicit user-provided context (links, images, constraints), and don't skip it unless it conflicts with safety.
 - Never fabricate findings. If nothing is wrong, say so explicitly.
 - Add only essential code comments, no fluff.
 
@@ -27,72 +24,33 @@ All code comments in every language must end with a period. Comments go above th
 
 ### Line Length / Rulers
 
-New code changes should respect language-specific ruler settings from the editor configuration:
-
-- Check VS Code settings for language-specific `editor.rulers` values:
-  - Project settings: `.vscode/settings.json`
-  - User settings:
-    - macOS: `~/Library/Application Support/Code/User/settings.json`
-    - Linux: `~/.config/Code/User/settings.json`
-    - Windows: `%APPDATA%\Code\User\settings.json`
-- If language-specific rulers are found, use them as the maximum line length guide.
-- If no language-specific rulers exist, fallback to 80-100 characters as the horizontal limit.
-  - Soft limit: 80 characters
-  - Hard limit: 100 characters
+Respect language-specific `editor.rulers` as the max line length: project `.vscode/settings.json` first, then user settings (macOS `~/Library/Application Support/Code/User/settings.json`, Linux `~/.config/Code/User/settings.json`, Windows `%APPDATA%\Code\User\settings.json`). If no rulers exist, fallback to 80 soft / 100 hard characters.
 
 ### Naming Conventions
 
-Prefer single, whole words for variables, constants, functions, parameters, file names, and folder names. Never abbreviate or shorten words.
-
-Common acronyms and initialisms are fine (`ID`, `URL`, `API`, `HTTP`), but do not shorten regular words.
-
-- `documents` not `docs`
-- `reference` not `ref`
-- `temporary` not `tmp`
-- `previous` not `prev`
-- `error` not `err`
-- `message` not `msg`
-- `maximum` not `max`, `minimum` not `min`
-- `index` not `idx`, `count` not `cnt`
-- `button` not `btn`
-- `configuration` not `config`
+Prefer single, whole words for variables, constants, functions, parameters, file names, and folder names, never abbreviate (`documents` not `docs`, `reference` not `ref`, `temporary` not `tmp`, `previous` not `prev`, `error` not `err`, `message` not `msg`, `maximum`/`minimum` not `max`/`min`, `index`/`count` not `idx`/`cnt`, `button` not `btn`, `configuration` not `config`). Common acronyms (`ID`, `URL`, `API`, `HTTP`) are fine.
 
 ## Self-Critique
 
-After implementing code, pause and self-critique:
-
-1. Re-read your work.
-2. Question your approach: "Did I do this right? Is there a better way?".
-3. If concerns arise, fix them before moving on.
-4. Max 3 iterations, then ask user for help.
-5. If you realize you made a mistake or ignored a rule, acknowledge it immediately, revert, and explain.
+After implementing code, pause and self-critique: re-read your work, question whether there's a better approach, and fix concerns before moving on. Max 3 iterations, then ask the user for help. If you realize you made a mistake or ignored a rule, acknowledge it immediately, revert, and explain.
 
 ## Hallucination Prevention
 
 ### Know Your Limits
 
-- If you don't know something, say "I don't know" explicitly. Never invent an answer.
-- Answer only when you are confident in your response. If confidence is below the threshold, state your uncertainty and ask for clarification instead.
-- Prefer silence or a clarifying question over a plausible-sounding guess.
-- The bar for "confident" is: you can point to specific evidence (a file you read, a command output you saw, a source you cited) that directly supports your claim.
+If you don't know something, say so explicitly, never invent an answer. Answer only when confident: you can point to specific evidence, a file you read, a command output you saw, a source you cited, that directly supports the claim. Below that bar, prefer silence or a clarifying question over a plausible-sounding guess.
 
 ### Think Before Answering
 
-- Reason through the problem step-by-step before writing the final response.
-- For non-trivial questions, show your reasoning or emit a lightweight plan before acting.
-- If your reasoning reveals a gap, stop and address it rather than papering over it.
+Reason through non-trivial questions step by step before writing the final response, showing your reasoning or a lightweight plan. If your reasoning reveals a gap, stop and address it rather than papering over it.
 
 ### Cite Your Sources
 
-- When answering from documents, files, or external data, find and read the relevant source material first, then answer based on what you read.
-- Quote or reference the source directly. Never paraphrase from memory what you can read from the source file.
-- If the source material does not support your intended answer, say so.
+When answering from documents, files, or external data, find and read the relevant source material first, then quote or reference it directly, never paraphrase from memory what you can read from the source. If the source material doesn't support your intended answer, say so.
 
 ### Self-Check Before Output
 
-- Re-read your response before sending. Ask: "Is this factual? Can I point to where I got this from?"
-- If you realize you fabricated something, acknowledge it immediately and correct it.
-- Never fabricate findings. If nothing is wrong, say so explicitly.
+Re-read your response before sending. Ask: is this factual, can I point to where I got it? If you realize you fabricated something, acknowledge it immediately and correct it.
 
 ### Contrastive Boundaries
 
@@ -161,11 +119,7 @@ Don't leave dead code lying around, it confuses future readers and agents. Don't
 
 ### Implementation Rules
 
-- One thing at a time, don't mix refactors with features in the same commit.
-- Feature flags: Gate incomplete features behind a flag so you can merge increments safely.
-- Safe defaults: New code should be opt-in, conservative.
-- Rollback-friendly: Each increment should be independently revertable. Prefer additive changes.
-- Keep it compilable: Project must build and tests pass after each increment.
+One thing at a time, don't mix refactors with features in the same commit. Gate incomplete features behind a flag so you can merge increments safely. New code should be opt-in and conservative. Each increment should be independently revertable, prefer additive changes, and keep the project compilable, must build and tests must pass after each increment.
 
 ## Migrations
 
@@ -182,8 +136,7 @@ Do not use timestamps that look hand-typed or sequential, like `20260706120000`,
 
 ### Chain
 
-Migration chains must stay linear with a single head.
-Concurrent PRs adding migrations from different ancestors create a multi-head state that blocks `upgrade head` and fails CI.
+Migration chains must stay linear with a single head. Concurrent PRs adding migrations from different ancestors create a multi-head state that blocks `upgrade head` and fails CI.
 
 - **CI check**: Verify a single head in the lint step, no database connection required.
 - **Generate from head**: Always run `upgrade head` first so new migrations chain off the current tip.
@@ -200,19 +153,9 @@ For any complex or multi-step task, follow this sequence before writing code:
 
 ## Verification Before Code
 
-Before writing any code:
+Before writing any code: confirm you understand the requirement (ask if unsure), verify the target file exists and is the right one, check for existing patterns in the codebase, run lint/typecheck early to establish a baseline, and verify unfamiliar library APIs against official docs first rather than assuming they exist.
 
-- Confirm you understand the requirement (ask if unsure).
-- Verify the file you need to edit exists and is the right one.
-- Check for existing patterns in the codebase.
-- Run lint/typecheck early to establish baseline.
-- If using unfamiliar library APIs, verify against official docs first, never assume an API exists.
-
-After writing code:
-
-- Run lint/typecheck to catch style issues immediately.
-- Run relevant tests before moving on.
-- Review changes with `git diff` before presenting.
+After writing code: run lint/typecheck to catch style issues immediately, run relevant tests before moving on, and review changes with `git diff` before presenting.
 
 ## Skills Priority
 
@@ -234,19 +177,9 @@ This applies in Plan Mode too. Invoking a matching skill is a read-only action, 
 
 ## Error Handling
 
-When commands fail:
+When commands fail: show the exact command that failed and the exact error output, then stop and ask the user for guidance. Do not continue with a fallback unless the user approves.
 
-1. Show exact command that failed.
-2. Show exact error output.
-3. Stop and ask user for guidance.
-4. Do not continue with fallback unless user approves.
-
-When code fails:
-
-1. Report the failure with root cause.
-2. Show the failing test output or stack trace.
-3. Propose fix approach before implementing.
-4. Re-test after fix.
+When code fails: report the failure with root cause, show the failing test output or stack trace, propose a fix approach before implementing, then re-test after the fix.
 
 ## Stop the Line
 
@@ -306,16 +239,11 @@ Vague "do not" rules fail under complex instructions. Use contrastive binary exa
 - If a function has tests → refactor safely.
 - If a function has no tests → do NOT delete or rename it without asking first.
 
-When writing rules for agents or yourself: Pair every prohibition with a concrete "do/don't" example so the boundary is unambiguous.
+When writing rules for agents or yourself: pair every prohibition with a concrete "do/don't" example so the boundary is unambiguous.
 
 ## Confusion Management
 
-When encountering inconsistencies, conflicting requirements, or unclear specifications:
-
-1. STOP. Do not proceed with a guess.
-2. Name the specific confusion: "I see X in the spec but Y in the existing code."
-3. Present the tradeoff or ask the clarifying question.
-4. Wait for resolution before continuing.
+When encountering inconsistencies, conflicting requirements, or unclear specifications: stop, don't proceed with a guess. Name the specific confusion ("I see X in the spec but Y in the existing code"), present the tradeoff or ask the clarifying question, and wait for resolution before continuing.
 
 Surface assumptions before implementing:
 
@@ -337,9 +265,7 @@ PLAN:
 
 ## Context Management
 
-Manage context actively. Long sessions burn tokens because every API call
-re-sends the full conversation history. A session that runs for days with
-hundreds of messages will always balloon.
+Manage context actively. Long sessions burn tokens because every API call re-sends the full conversation history, a session that runs for days with hundreds of messages will always balloon.
 
 ### Compaction Triggers
 
@@ -351,8 +277,7 @@ hundreds of messages will always balloon.
 
 ### Token-Saving Best Practices
 
-- Use the `explore` subagent for code discovery instead of reading large files
-directly in the main context. The subagent returns only the answer, not the full file content.
+- Use the `explore` subagent for code discovery instead of reading large files directly in the main context. The subagent returns only the answer, not the full file content.
 - Read files with `offset`/`limit` when you only need a specific section, not the entire file.
 - Prefer `grep`/`glob` over `read` for searching patterns. Read only the matching files/sections.
 - Avoid re-reading the same files across turns. Cache findings in your mental model or notes.

@@ -2,6 +2,7 @@
 
 input=$(cat)
 transcript_path=$(echo "$input" | jq -r '.transcript_path // empty')
+session_id=$(echo "$input" | jq -r '.session_id // empty')
 
 if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
   size_bytes=$(stat -f%z "$transcript_path")
@@ -13,14 +14,34 @@ if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
 
   size_warn_bytes=850000
   idle_warn_seconds=1800
+  growth_cooldown_bytes=100000
 
   if [ "$size_bytes" -gt "$size_warn_bytes" ] || [ "$idle_seconds" -gt "$idle_warn_seconds" ]; then
-    size_megabytes=$((size_bytes / 1024 / 1024))
-    echo ""
-    echo "# Context Health Warning"
-    echo ""
-    echo "This session's transcript is ~${size_megabytes}MB (~${estimated_tokens} estimated tokens), last active ${idle_minutes} minutes ago."
-    echo "Long idle gaps on large contexts force an expensive full cache rebuild on the next turn."
-    echo "Tell the user their context is large or stale. They MUST compact now or start a fresh session. Do not defer."
+    # Cooldown marker so this doesn't re-fire the handoff instruction every single turn
+    # once the threshold is crossed, only on meaningful growth or after enough time passes.
+    marker="${TMPDIR:-/tmp}/agentic-context-guard-${session_id:-unknown}"
+    last_warned_size=0
+    last_warned_time=0
+    if [ -f "$marker" ]; then
+      last_warned_size=$(cut -d' ' -f1 "$marker" 2>/dev/null)
+      last_warned_time=$(cut -d' ' -f2 "$marker" 2>/dev/null)
+      last_warned_size=${last_warned_size:-0}
+      last_warned_time=${last_warned_time:-0}
+    fi
+    growth=$((size_bytes - last_warned_size))
+    since_last_warn=$((now - last_warned_time))
+
+    if [ ! -f "$marker" ] || [ "$growth" -ge "$growth_cooldown_bytes" ] || [ "$since_last_warn" -ge "$idle_warn_seconds" ]; then
+      echo "${size_bytes} ${now}" > "$marker"
+      size_megabytes=$((size_bytes / 1024 / 1024))
+      echo ""
+      echo "# Context Health Warning"
+      echo ""
+      echo "This session's transcript is ~${size_megabytes}MB (~${estimated_tokens} estimated tokens), last active ${idle_minutes} minutes ago."
+      echo "Long idle gaps on large contexts force an expensive full cache rebuild on the next turn."
+      echo "Finish responding to the user's current request first. Once that's done, invoke the handoff skill on your own, without asking the user for permission first."
+      echo "After it is saved, tell the user in one line where it was saved. Compaction will happen automatically, or they can start a fresh session that picks it up."
+      echo "Do not interrupt the current answer to do this, and do not just surface this as a warning and wait for a permission decision."
+    fi
   fi
 fi

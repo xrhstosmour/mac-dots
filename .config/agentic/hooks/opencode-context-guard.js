@@ -28,6 +28,13 @@ const blockedHosts = [
 // At 180K the context is already bloated and compaction cannot recover lost cache.
 const SIZE_WARN_TOKENS = 50000;
 const IDLE_WARN_SECONDS = 1800;
+const GROWTH_COOLDOWN_TOKENS = 15000;
+
+// In-memory, per running OpenCode process. Mirrors context-guard.sh's file-based
+// cooldown marker, so this doesn't re-fire the handoff instruction every single
+// turn once the threshold is crossed, only on meaningful growth or after enough
+// idle time passes.
+const lastWarned = new Map();
 
 export const AgenticReminderPlugin = async ({ client }) => {
   return {
@@ -44,10 +51,18 @@ export const AgenticReminderPlugin = async ({ client }) => {
         const idleSeconds = (Date.now() - (session.time?.updated ?? Date.now())) / 1000;
 
         if (totalTokens > SIZE_WARN_TOKENS || idleSeconds > IDLE_WARN_SECONDS) {
-          const idleMinutes = Math.round(idleSeconds / 60);
-          output.system.push(
-            `# Context Health Warning\n\nThis session has used ~${totalTokens} tokens, last active ${idleMinutes} minutes ago.\nYOU MUST compact now or start a fresh session. Long sessions burn tokens because every API call re-sends the full conversation history.\nDo not defer compaction. Do not start new delegations until context is compacted.`,
-          );
+          const nowSeconds = Date.now() / 1000;
+          const last = lastWarned.get(sessionID);
+          const growth = totalTokens - (last?.tokens ?? 0);
+          const sinceLastWarn = nowSeconds - (last?.time ?? 0);
+
+          if (!last || growth >= GROWTH_COOLDOWN_TOKENS || sinceLastWarn >= IDLE_WARN_SECONDS) {
+            lastWarned.set(sessionID, { tokens: totalTokens, time: nowSeconds });
+            const idleMinutes = Math.round(idleSeconds / 60);
+            output.system.push(
+              `# Context Health Warning\n\nThis session has used ~${totalTokens} tokens, last active ${idleMinutes} minutes ago. Long sessions burn tokens because every API call re-sends the full conversation history.\nFinish responding to the user's current request first. Once that's done, invoke the handoff skill on your own, without asking the user for permission first, then mention the saved path in one line before compacting or starting a fresh session.\nDo not interrupt the current answer to do this, and do not just surface this as a warning and wait for a permission decision.`,
+            );
+          }
         }
       } catch {
         // Best-effort. Never break a session if session info can't be fetched.

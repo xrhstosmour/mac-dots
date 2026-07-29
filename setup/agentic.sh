@@ -91,6 +91,8 @@ fi
 if brewfile_declares claude-code; then
     log_info "Injecting Claude Code agent models..."
 
+    # Fully regenerated from agents/*.md below, any hand-added personal subagent
+    # not tracked in this repo is destroyed here on every run.
     rm -rf "$HOME/.claude/agents"
     mkdir -p "$HOME/.claude/agents"
 

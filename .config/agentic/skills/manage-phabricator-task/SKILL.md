@@ -23,11 +23,23 @@ Derive `$PHAB` in order:
 2. `~/.arcrc` host key, strip the `/api/` suffix: `jq -r '.hosts | to_entries[] | select(.key | test("phabricator")) | .key' ~/.arcrc | sed 's|/api/||'`
 3. Ask the user.
 
-Find `$TOKEN` in order:
-1. Environment variable `$PHABRICATOR_TOKEN` or `$CONDUIT_TOKEN`.
-2. `~/.arcrc`: `jq -r '.hosts | to_entries[] | select(.key | test("phabricator")) | .value.token // empty' ~/.arcrc`
-3. 1Password: `op item get "Phabricator Token" --fields label=credential --reveal`.
-4. Ask the user for a token.
+Find `$TOKEN` in order. Always use this block verbatim, do not write your own token resolution, partial implementations silently drop the 1Password fallback:
+
+```bash
+TOKEN="${PHABRICATOR_TOKEN:-${CONDUIT_TOKEN:-}}"
+
+if [ -z "$TOKEN" ] && [ -f "$HOME/.arcrc" ]; then
+  TOKEN="$(jq -r '.hosts | to_entries[] | select(.key | test("phabricator")) | .value.token // empty' ~/.arcrc)"
+fi
+
+if [ -z "$TOKEN" ] && command -v op >/dev/null 2>&1; then
+  TOKEN="$(op item get "Phabricator Token" --fields label=credential --reveal 2>/dev/null || true)"
+fi
+
+[ -n "$TOKEN" ] || { echo "No Phabricator token found"; exit 1; }
+```
+
+If all three lookups fail, ask the user for a token.
 
 Verify before proceeding:
 

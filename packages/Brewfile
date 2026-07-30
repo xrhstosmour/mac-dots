@@ -2,7 +2,6 @@
 cask_args appdir: '/Applications'
 
 # Install necessary `homebrew`, `macOS` and third party taps.
-tap 'argon/mas'
 tap 'buo/cask-upgrade', trusted: true
 tap 'wickenico/wailbrew'
 

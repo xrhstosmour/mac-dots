@@ -104,16 +104,7 @@ If matches found, stop immediately. Warn the user that secrets may be staged.
 
 #### 2.9 Quality gate
 
-Find and run lint, typecheck, and test commands:
-
-```bash
-# Lint, try common runners.
-npm run lint 2>/dev/null || npx eslint . 2>/dev/null || true
-# Typecheck.
-npm run typecheck 2>/dev/null || npx tsc --noEmit 2>/dev/null || true
-# Tests.
-npm test 2>/dev/null || npx vitest run 2>/dev/null || go test ./... 2>/dev/null || cargo test 2>/dev/null || true
-```
+Find the project's lint, typecheck, and test commands, check `package.json` scripts, a `Makefile`, `justfile`, CI config, project skills, or `AGENTS.md`/`CLAUDE.md` for the actual commands, they vary per project and language. Run whichever apply.
 
 If any fail, stop and present the failure. Do not proceed without the user's approval.
 
@@ -198,7 +189,12 @@ Derive each section:
   - CORRECT: `Resolves [1234](https://link.example.com/1234).`
   - WRONG: `Resolves [1234](https://link.example.com/1234). After this change ...`
   Nothing else, no explanation, no context, no extra sentences. Use the tracker's native ID format, like `T247574`, `PROJ-123`, or `#42`. If no link is provided, write one short sentence on the problem the change solves.
-- Testing: List concrete scenarios and cases manually exercised, UI walkthroughs, staging checks, representative edge cases. Never mention test-suite runs, coverage counts, or lint/typecheck results, those are process, not scenarios, and belong to the quality gate already run in Phase 2.9, not the PR body. When in doubt, omit.
+- Testing: List concrete scenarios and cases manually exercised, UI walkthroughs, staging checks, representative edge cases. Never mention test-suite runs, coverage counts, or lint/typecheck results, those are process, not scenarios, and belong to the quality gate already run in Phase 2.9, not the PR body.
+  - If the only verification was the existing automated suite with no manual scenario exercised, omit the section entirely, do not describe running the suite as a testing step.
+  - WRONG: `1. Run the test suite.`
+  - WRONG: `1. Confirmed via existing test coverage.`
+  - CORRECT: Omit the `**Testing**:` heading entirely.
+  - When in doubt, omit.
 - Monitoring: From relevant dashboards, Sentry boards, or observability queries.
 
 Rules:

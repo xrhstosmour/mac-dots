@@ -270,14 +270,24 @@ After presenting the review, ask the user what they want to do with it:
 
 ### Option 1: Post inline comments
 
-Write each finding as a natural comment like a teammate reviewing code. Do not use emojis or markdown flourishes. Do not open with preambles. Just state the issue and suggestion directly. Keep each comment to at most one paragraph, and keep any inline code under 3 lines. When you're confident in a concrete, minimal fix, add a ```suggestion block containing only the replacement code, no commentary inside it, and preserve the exact leading whitespace of the lines it replaces. Skip the suggestion block for anything speculative or multi-part. Then post as a review with inline comments:
+Write each finding as a natural comment like a teammate reviewing code. Do not use emojis or markdown flourishes. Do not open with preambles. Just state the issue and suggestion directly. Keep each comment to at most one paragraph, and keep any inline code under 3 lines. When you're confident in a concrete, minimal fix, add a ```suggestion block containing only the replacement code, no commentary inside it, and preserve the exact leading whitespace of the lines it replaces. Skip the suggestion block for anything speculative or multi-part.
+
+Determine the review event from the findings buckets in "Synthesize findings":
+
+- CRITICAL section has entries -> event = `REQUEST_CHANGES`
+- CRITICAL is empty, MEDIUM has entries -> event = `COMMENT`
+- CRITICAL and MEDIUM both empty -> event = `APPROVE`
+
+State the recommended event and a one-line reason, e.g. "Recommending APPROVE, no CRITICAL/HIGH/MEDIUM findings." Ask the user to confirm or pick a different event before posting. Do not post until confirmed.
+
+Then post as a review with inline comments:
 
 ```bash
 HEAD_SHA=$(gh pr view <pr_number> --repo <owner>/<repo> --json commits --jq '.commits[-1].oid')
 
 gh api repos/<owner>/<repo>/pulls/<pr_number>/reviews \
   -f commit_id="$HEAD_SHA" \
-  -f event="COMMENT" \
+  -f event="<confirmed_event>" \
   -f body="<summary_paragraph>" \
   -f comments='[
     {"path":"<file>","line":<line>,"body":"<human-like comment with fix suggestion>"},
@@ -285,7 +295,6 @@ gh api repos/<owner>/<repo>/pulls/<pr_number>/reviews \
   ]'
 ```
 
-Use `event: "REQUEST_CHANGES"` if blockers exist, `"COMMENT"` otherwise.
 Each comment references one finding, written conversationally in English.
 
 ### Option 2: Export to markdown

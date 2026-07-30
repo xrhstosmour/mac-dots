@@ -81,7 +81,17 @@ Try unauthenticated first, plenty of internal setups need nothing extra once the
 3. `$LOKI_ORG_ID` / `--org-id`, for multi-tenant Loki, needed alongside one of the above, not instead of it
 4. `--cert`/`--key`, mTLS client certificate, for zero-trust setups that authenticate the machine instead of a token
 
-Look for credentials in an env var first, then 1Password, `op item get "Loki Token" --fields label=credential --reveal`, then ask the user.
+For the bearer-token method, resolve `$LOKI_BEARER_TOKEN` in order. Always use this block verbatim, do not write your own token resolution, partial implementations silently drop the 1Password fallback:
+
+```bash
+LOKI_BEARER_TOKEN="${LOKI_BEARER_TOKEN:-}"
+
+if [ -z "$LOKI_BEARER_TOKEN" ] && command -v op >/dev/null 2>&1; then
+  LOKI_BEARER_TOKEN="$(op item get "Loki Token" --fields label=credential --reveal 2>/dev/null || true)"
+fi
+```
+
+If `$LOKI_BEARER_TOKEN` is still empty, and none of the other three methods above resolve either, ask the user for credentials.
 
 ## Discover the right label selector
 

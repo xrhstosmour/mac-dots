@@ -13,10 +13,25 @@ description: Use when a Sentry issue/event link appears, or when working with Se
 
 ## Authentication
 
-1. Look for a token in `~/.sentryclirc`.
-2. Look for an environment variable named `$SENTRY_AUTH_TOKEN`.
-3. Look for a token in 1Password via `op item get "Sentry Token" --fields label=credential --reveal`.
-4. Ask the user to provide a token.
+Find `$TOKEN` in order. Always use this block verbatim, do not write your own token resolution, partial implementations silently drop the 1Password fallback:
+
+```bash
+TOKEN=""
+
+if [ -f "$HOME/.sentryclirc" ]; then
+  TOKEN="$(awk -F ' *= *' '/^\[auth\]/{f=1; next} /^\[/{f=0} f && /^token/{print $2; exit}' "$HOME/.sentryclirc")"
+fi
+
+TOKEN="${TOKEN:-$SENTRY_AUTH_TOKEN}"
+
+if [ -z "$TOKEN" ] && command -v op >/dev/null 2>&1; then
+  TOKEN="$(op item get "Sentry Token" --fields label=credential --reveal 2>/dev/null || true)"
+fi
+
+[ -n "$TOKEN" ] || { echo "No Sentry token found"; exit 1; }
+```
+
+If all three lookups fail, ask the user to provide a token.
 
 ## Commands
 

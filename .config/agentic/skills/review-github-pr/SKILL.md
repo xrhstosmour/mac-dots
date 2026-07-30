@@ -280,6 +280,13 @@ Determine the review event from the findings buckets in "Synthesize findings":
 
 State the recommended event and a one-line reason, e.g. "Recommending APPROVE, no CRITICAL/HIGH/MEDIUM findings." Ask the user to confirm or pick a different event before posting. Do not post until confirmed.
 
+The top-level review body posted to GitHub is a short headline, not the full Summary paragraph from "Synthesize findings". One short line, like a human reviewer signing off, no restating findings, no emojis, no bullet list. Match tone to the event and how much there is to flag, be creative rather than reusing the same phrase every time:
+
+- APPROVE, nothing flagged at all -> something like "Great job, nothing to flag" or "Looks great, LGTM."
+- APPROVE, only LOW/NIT findings -> something like "Nice work, a couple of small nits below."
+- COMMENT, only MEDIUM findings -> something like "Some minor comments." or "A few small things worth a look."
+- REQUEST_CHANGES -> something like "Think we should fix these first." or "A couple of blockers before this merges."
+
 Then post as a review with inline comments:
 
 ```bash
@@ -288,7 +295,7 @@ HEAD_SHA=$(gh pr view <pr_number> --repo <owner>/<repo> --json commits --jq '.co
 gh api repos/<owner>/<repo>/pulls/<pr_number>/reviews \
   -f commit_id="$HEAD_SHA" \
   -f event="<confirmed_event>" \
-  -f body="<summary_paragraph>" \
+  -f body="<short_headline>" \
   -f comments='[
     {"path":"<file>","line":<line>,"body":"<human-like comment with fix suggestion>"},
     {"path":"<file>","line":<line>,"body":"<human-like comment with fix suggestion>"}

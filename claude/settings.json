@@ -14,7 +14,14 @@
     "defaultMode": "plan",
     "allow": [
       "Bash(bundle exec rspec*)",
-      "Bash(bundle exec rubocop*)"
+      "Bash(bundle exec rubocop*)",
+      "Bash(sed -n *)",
+      "Bash(git grep *)",
+      "Bash(git rev-parse *)",
+      "Bash(git merge-base *)",
+      "Bash(git stash show *)",
+      "Bash(ruby -c *)",
+      "Bash(awk *)"
     ],
     "deny": [
       "Read(**/.env)",

@@ -136,6 +136,10 @@ The most common way AI degrades a codebase: it hand-rolls what already exists. A
 2. A battle-tested headless primitive for anything stateful and hard to get right, select, combobox, dialog, popover, tooltip, dropdown menu, tabs, date picker. These ship keyboard navigation, focus management, `ARIA`, and collision/positioning that take days to reproduce.
 3. Hand-roll only as a genuine last resort, no primitive fits, or there's no dependency budget. Then you owe the complete behavior contract: keyboard nav, focus trap/return, full `ARIA` roles and state, click-outside, and scroll-lock for overlays. A styled control missing these is broken.
 
+### Motion: CSS → library
+
+Plain CSS transitions and `@starting-style` cover hover, fade, and simple enter/exit, no dependency needed. Reach for a spring-capable motion library only when the interaction needs gestures, interruptibility, or layout animation, drag, reordering, a value that can be grabbed mid-flight. A simple fade doesn't earn a library.
+
 ### Styling: system → component → token → utility
 
 1. If the project has a design system, use it. `shadcn/Button`, a `CVA` variant set, a theme, a component library, use `<Button variant="…">` before writing a one-off. Match the codebase's styling convention.
@@ -183,6 +187,12 @@ Motion should be felt, not watched. Fast, purposeful, and never in the way.
 - Only animate `transform` and `opacity` (`GPU`-composited). Animating width/height triggers layout + paint. Never `transition: all`, name exact properties.
 - Stagger entrances 30–80ms between items for a natural cascade. Keep exits faster and subtler than enters.
 - Respect `prefers-reduced-motion`, keep opacity/color transitions, drop movement.
+- Interruptibility. Anything re-triggerable, drags, toggles, toasts, must retarget from its current on-screen value, never restart from zero or jump straight to the target. Use CSS transitions or a spring for these, not `@keyframes`, which always restarts.
+- Spring defaults. For interaction-driven motion, default to critically damped, no overshoot, damping `1.0`, response `0.3–0.4s`. Reserve bounce, damping around `0.8`, for motion a gesture already carried momentum into, a flick or a drag release. Overshoot on a menu that just faded in feels wrong, overshoot on a card you flicked feels right.
+- Velocity and rubber-banding. On drag release, hand the pointer's velocity into the settle animation so there's no seam between dragging and animating. At a drag boundary, resist progressively instead of stopping hard, real things slow down before they stop.
+- Materials. Floating chrome, toolbars, command palettes, sheets, that should read as layered rather than opaque uses a translucent surface, `backdrop-filter` blur plus a semi-transparent background, with content scrolling underneath. Never stack two translucent surfaces, legibility collapses.
+- Reduced motion has three independent signals. `prefers-reduced-motion` swaps slides and springs for opacity cross-fades. `prefers-reduced-transparency` raises translucent surfaces toward solid. `prefers-contrast: more` moves toward solid backgrounds with a defined border.
+- Asymmetric timing. A deliberate held action, hold-to-confirm, can be slow while pressed, but its release and the system's response stay fast.
 
 ## 12. Design System Persistence
 
@@ -225,3 +235,4 @@ Then ask: "Does that direction feel right?"
 - Make the domain exploration concrete before choosing layout, color, type, density, and navigation.
 - Keep user-facing updates short. Don't expose long private design monologues, surface the useful recommendation or decision.
 - Harsh borders, dramatic surface jumps, flat hierarchy, monotone layout, inconsistent spacing, mixed depth strategies, missing states, dramatic drop shadows, large radius on small elements, gradients for decoration, multiple accent colors, different hues for different surfaces, and default typography are all signs of defaults winning. Catch them and fix them.
+- The same applies to motion, `transition: all`, `ease-in` on UI, `@keyframes` on anything re-triggerable, animating layout properties instead of `transform`/`opacity`, and hover motion left ungated on touch devices are all signs of defaults winning.

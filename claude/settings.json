@@ -22,7 +22,14 @@
       "Bash(git merge-base *)",
       "Bash(git stash show *)",
       "Bash(ruby -c *)",
-      "Bash(awk *)"
+      "Bash(awk *)",
+      "Bash(nc -z *)",
+      "Bash(docker compose ps*)",
+      "Bash(docker port*)",
+      "Bash(git fetch *)",
+      "Bash(logcli *)",
+      "Bash(bundle show *)",
+      "Bash(gem which *)"
     ],
     "deny": [
       "Read(**/.env)",

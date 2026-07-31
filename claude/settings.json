@@ -6,7 +6,7 @@
   "preferredNotifChannel": "terminal_bell",
   "spinnerTipsEnabled": false,
   "autoUpdatesChannel": "stable",
-  "cleanupPeriodDays": 90,
+  "cleanupPeriodDays": 15,
   "enabledPlugins": {
     "ruby-lsp@claude-plugins-official": true
   },

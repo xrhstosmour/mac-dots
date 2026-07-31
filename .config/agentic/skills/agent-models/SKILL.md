@@ -19,10 +19,11 @@ description: >
 
 Ask user to pick a provider:
 
-1. opencode-go
-2. github-copilot
-3. claude-code
-4. custom, user pastes their own model table
+1. opencode (free Zen models)
+2. opencode-go (paid subscription)
+3. github-copilot
+4. claude-code
+5. custom, user pastes their own model table
 
 ## Research models
 
@@ -30,7 +31,8 @@ For known providers, attempt to fetch model info from these sources:
 
 | Provider | URL(s) to try |
 |----------|---------------|
-| opencode-go | `https://opencode.ai/go` |
+| opencode | `https://opencode.ai/zen/v1/models` (available models), `https://opencode.ai/docs/zen/` (pricing/docs) |
+| opencode-go | `https://opencode.ai/go` (rate limits), `https://opencode.ai/docs/go/` (pricing/docs) |
 | github-copilot | `https://docs.github.com/en/copilot/reference/ai-models/supported-models` |
 | claude-code | `https://docs.anthropic.com/en/docs/about-claude/models` |
 
@@ -55,7 +57,7 @@ Fetch `https://models.dev/api.json` and filter by provider. Extract these fields
 - `npi` (npm/package info, indicates API compatibility type)
 - `recommended` or `priority` tier if present
 
-For opencode-go specifically, also fetch `https://opencode.ai/go` for rate limit data (requests per 5h).
+For opencode, fetch `https://opencode.ai/zen/v1/models` for the list of free models (IDs ending in `-free`). All free models have zero cost. For opencode-go specifically, also fetch `https://opencode.ai/go` for rate limit data (requests per 5h).
 
 ### For Anthropic/Claude Code
 
@@ -85,7 +87,7 @@ After selecting models, determine the highest available variant per model. Do no
 
 ### Running Through OpenCode
 
-Fetch `https://models.dev/api.json`, filter by provider (`opencode-go`, `github-copilot`, `anthropic`, `openai`, etc.), and check each model's `reasoning_options` array:
+Fetch `https://models.dev/api.json`, filter by provider (`opencode`, `opencode-go`, `github-copilot`, `anthropic`, `openai`, etc.), and check each model's `reasoning_options` array:
 
 - Empty (`[]`) → no variants, then remove `variant:` line from agent YAML
 - Non-empty → use the highest/latest value from the array of strings. For example, `["max", "xhigh", "high"]` → use `max`. If the array is `["low", "medium", "high"]`, use `high`. If the array is `["none", "minimal", "low", "medium", "high"]`, use `high`.
@@ -152,7 +154,7 @@ Once the user approves, update `.config/agentic/models.txt`. This is the single 
 # Use '-' as value when a field does not apply.
 
 # OpenCode
-opencode:leader:model:opencode-go/deepseek-v4-pro
+opencode:leader:model:opencode/deepseek-v4-flash-free
 opencode:leader:variant:max
 opencode:explore:model:opencode/big-pickle
 opencode:explore:variant:-

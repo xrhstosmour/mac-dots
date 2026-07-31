@@ -123,8 +123,8 @@ Auto-triggered by topic, no dedicated command, formerly always-loaded files unde
 | `read-sentry-issue` | Sentry error tracking and issue analysis |
 | `search-grafana-logs` | Grafana dashboard/log links, `logcli`/Loki only, no `curl`/`HTTP API` path |
 | `search-qmd-notes` | `qmd` markdown search and semantic query usage |
-| `craft-stitch-prompt` | Polish a Google Stitch design prompt before the user goes to the Stitch web app |
-| `implement-stitch-design` | Build/match UI from an already-generated Stitch export, HTML/CSS or screenshot |
+| `craft-design-prompt` | Polish an AI design tool prompt before the user goes to the tool |
+| `implement-design-from-export` | Build/match UI from an AI design tool export, HTML/CSS or screenshot |
 
 ## Agents
 

@@ -15,7 +15,7 @@ Research, rank, and apply model updates across all agent configs and opencode.js
 
 Follow the agent-models skill:
 
-1. Ask user to pick a provider (opencode-go, github-copilot, claude-code, custom).
+1. Ask user to pick a provider (opencode, opencode-go, github-copilot, claude-code, custom).
 2. Fetch model data from provider docs or ask user to paste a table.
 3. Rank models per agent role by quality and rate limits.
 4. Show proposed mapping and get approval.

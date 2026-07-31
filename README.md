@@ -139,7 +139,6 @@ Open `Finder` and configure sidebar:
 1. Open `Google Chrome` and visit:
    - [`Google Messages`](https://messages.google.com/web)
    - [`Google Photos`](https://photos.google.com/)
-   - [`Google Stitch`](https://stitch.withgoogle.com/)
 
 2. For each site, go to `Chrome main menu → Cast, Save, and Share → Install Page as App...` and follow the on-screen instructions.
 

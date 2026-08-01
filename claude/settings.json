@@ -29,7 +29,18 @@
       "Bash(git fetch *)",
       "Bash(logcli *)",
       "Bash(bundle show *)",
-      "Bash(gem which *)"
+      "Bash(gem which *)",
+      "Bash(git branch --show-current)",
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git ls-remote*)",
+      "Bash(git remote -v)",
+      "Bash(git remote show*)",
+      "Bash(git for-each-ref*)",
+      "Bash(gh pr list*)",
+      "Bash(gh pr view*)",
+      "Bash(gh repo view*)"
     ],
     "deny": [
       "Read(**/.env)",

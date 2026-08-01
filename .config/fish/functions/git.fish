@@ -510,7 +510,7 @@ function git_merge_to_default_branch
     end
 
     # Push the auto-squashed history so FETCH_HEAD later is clean.
-    git push --force-with-lease "$remote" "$upstream_branch"
+    git push --force-with-lease "$remote" "$current_branch:$upstream_branch"
 
     # Get the base branch using the `git_get_default_branch` function.
     set default_branch (git_get_default_branch)
@@ -519,7 +519,7 @@ function git_merge_to_default_branch
 
     git checkout "$local_branch"
     git reset --hard "$default_branch"
-    git fetch "$remote" "$current_branch"
+    git fetch "$remote" "$upstream_branch"
 
     set new_commits_count (git rev-list --count "$default_branch..FETCH_HEAD")
     if test "$new_commits_count" -ge 1

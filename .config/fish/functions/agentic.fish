@@ -57,9 +57,15 @@ function claude_session_list
                 head -50 "$jsonl" | jq -r '
                     select(.type == "user") |
                     .message.content |
-                    if type == "string" then .
-                    elif type == "array" then (map(select(.type == "text") | .text) | first // "")
-                    else "" end
+                    (if type == "string" then . elif type == "array" then (map(select(.type == "text") | .text) | first // "") else "" end) as $content |
+                    if ($content | test("<command-name>")) then
+                        ($content | capture("<command-name>/(?<name>[^<]+)</command-name>")) as $m |
+                        (($content | capture("<command-args>(?<args>.*)</command-args>"; "m")?) // {args:""}) as $a |
+                        ($a.args // "" | gsub("\n"; " ") | gsub("\t"; " ") | gsub(" +"; " ") | sub("^ "; "") | sub(" $"; "")) as $args |
+                        if ($args | length) > 0 then ("/" + $m.name + " " + $args) else ("/" + $m.name) end
+                    else
+                        $content
+                    end
                 ' 2>/dev/null | head -1
             end
         )

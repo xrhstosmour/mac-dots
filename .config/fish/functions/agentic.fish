@@ -227,3 +227,44 @@ function opencode_session_list
 
     return 0
 end
+
+# Function to delete all Claude session transcripts and history entries for the current directory.
+# Prompts for confirmation before deleting.
+# Usage:
+#   claude_delete_conversations
+function claude_delete_conversations
+    set -l history_file ~/.claude/history.jsonl
+
+    if not test -f "$history_file"
+        log_error "No Claude history found!"
+        return 1
+    end
+
+    set -l session_ids (jq -rs --arg pwd "$PWD" '
+        map(select(.sessionId != null and .project == $pwd)) |
+        map(.sessionId) | unique[]
+    ' "$history_file" 2>/dev/null)
+
+    if test (count $session_ids) -eq 0
+        log_error "No sessions found for $PWD!"
+        return 1
+    end
+
+    set -l count (count $session_ids)
+    log_warning "About to delete $count Claude session(s) for '$PWD'."
+    read -P "Continue? (y/N): " confirm
+    if test $status -ne 0; return 1; end
+    if test "$confirm" != "y" -a "$confirm" != "Y"
+        log_info "Aborted."
+        return 0
+    end
+
+    set -l enc (string replace -a '/' '-' -- "$PWD")
+    set -l project_dir "$HOME/.claude/projects/$enc"
+    test -d "$project_dir"; and rm -rf "$project_dir"
+
+    grep -vF "\"project\":\"$PWD\"" "$history_file" >"$history_file.tmp" 2>/dev/null
+    mv "$history_file.tmp" "$history_file"
+
+    log_success "Deleted $count Claude session(s)."
+end

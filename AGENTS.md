@@ -14,9 +14,13 @@ This file documents the repository itself. For the agentic (AI assistant) subsys
 | `utilities/` | macOS system preference scripts, one per domain (`dock.sh`, `finder.sh`, `keyboard.sh`, `trackpad.sh`, etc.) |
 | `settings/` | Third-party app config/preference files restored during install (`aerospace.toml`, `flameshot.ini`, `.plist.xml` files) |
 | `packages/` | `Brewfile` (Homebrew), `store_applications_ids.txt` (Mac App Store, via `mas`), `additional_packages.txt` (arbitrary install commands) |
-| `.config/` | Copied verbatim to `~/.config/` by `install.sh`, contains app configs (`fish/`, `wezterm/`, `starship.toml`) and the `agentic/` and `opencode/` subsystems |
+| `.config/` | Copied verbatim to `~/.config/` by `install.sh`, contains app configs (`fish/`, `wezterm/`, `starship.toml`), executable utility scripts (`scripts/`, chmod'd by `install.sh`), and the `agentic/` and `opencode/` subsystems |
 | `claude/` | Global Claude Code settings (`settings.json`, `keybindings.json`), copied to `~/.claude/` by `setup/agentic.sh` |
 | `Wallpapers/` | Desktop wallpaper images |
+
+## Fish functions
+
+`.config/fish/functions/` holds reusable helpers invoked by abbreviations in `.config/fish/conf.d/abbr.fish`. Notably `git.fish` (rebasing, worktrees, fixups, `GitHub` PR helpers) and `agentic.fish` (`claude_session_list`/`opencode_session_list` and their delete counterparts). Check there before writing new shell logic for `git`/session-management needs.
 
 ## Script conventions
 

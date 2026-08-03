@@ -15,7 +15,7 @@ Opinionated `macOS` configuration via shell scripts.
 | Development Languages | `Node.js`, `Python`, `Go`, `Java`, `Ruby`, `.NET` (via `mise`) |
 | Keyboard | Remapping with persistence (`kbcs` for cheat sheet) |
 | Shell Abbreviations | Custom aliases (`alcs` for cheat sheet) |
-| Display | Auto notch-hiding for `MacBook` Pro/Air |
+| Display | Auto notch-hiding for `MacBook` Pro/Air (`TopNotch`) |
 | Clipboard | `Maccy` |
 | Screenshots | `Flameshot` |
 | Keep Awake | `Amphetamine` |

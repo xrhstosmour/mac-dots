@@ -131,7 +131,7 @@ If a branch name already exists locally or remotely, suffix with a number, `-2`,
 
 ### 4. Commit Splitting
 
-Follow `~/.config/agentic/instructions/versioning.md` at "Commit Size" and "Commits" sections. Key rules for this skill:
+Follow `~/.config/agentic/instructions/versioning.md` at "Commits" and "Commit Splitting" sections. Key rules for this skill:
 
 - No type prefixes like `feat:` or `perf:`. Natural language only.
 - One topic per commit, never mix contexts.

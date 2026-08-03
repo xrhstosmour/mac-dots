@@ -34,13 +34,16 @@ Delegate test job setup to Copier tasks via env block
 Remove redundant `alembic` and `initial_data` from `prestart.sh`
 ```
 
-### Structure
+### Commit Splitting
 
 - One topic per commit. Never mix different contexts.
 - Split by context, include tests in same commit as code.
 - Target ~100 lines per commit. Split commits over ~300 lines.
 - Use `fixup` commits for review comment fixes, typos, small oversights.
 - Use `amend` for single-commit changes.
+- Before running `git commit`, run `git diff --staged --name-only` and check whether the staged files span more than one topic. If they do, stop, unstage, and split with `git add -p` first. Never `git add -A` or `git add .` straight into a single commit when the change touches more than one topic.
+- If a change touches one topic across multiple files, a single commit is correct.
+- If a change bundles two unrelated topics, for example a bug fix and a documentation update, split into two commits. Don't combine them into one commit with a long message trying to describe both.
 
 ```bash
 git add <file> && git commit --fixup <SHA>

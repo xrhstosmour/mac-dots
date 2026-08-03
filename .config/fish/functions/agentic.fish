@@ -268,3 +268,31 @@ function claude_delete_conversations
 
     log_success "Deleted $count Claude session(s)."
 end
+
+# Function to delete all OpenCode sessions for the current directory.
+# Prompts for confirmation before deleting.
+# Usage:
+#   opencode_delete_conversations
+function opencode_delete_conversations
+    set -l session_ids (opencode session list --format json 2>/dev/null | jq -r --arg pwd "$PWD" '.[] | select(.directory == $pwd) | .id')
+
+    if test (count $session_ids) -eq 0
+        log_error "No sessions found for $PWD!"
+        return 1
+    end
+
+    set -l count (count $session_ids)
+    log_warning "About to delete $count OpenCode session(s) for '$PWD'."
+    read -P "Continue? (y/N): " confirm
+    if test $status -ne 0; return 1; end
+    if test "$confirm" != "y" -a "$confirm" != "Y"
+        log_info "Aborted."
+        return 0
+    end
+
+    for id in $session_ids
+        opencode session delete "$id"
+    end
+
+    log_success "Deleted $count OpenCode session(s)."
+end

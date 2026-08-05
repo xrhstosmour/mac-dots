@@ -17,15 +17,14 @@ function claude_session_list
         map(
             (sort_by(.timestamp)) as $g |
             {
-                sessionId:        ($g | first | .sessionId),
-                project:          ($g | last  | .project // ""),
-                max_ts:           ($g | last  | .timestamp),
-                min_ts:           ($g | first | .timestamp),
-                display_fallback: (($g | map(select((.display // "") | (. != "") and (startswith("/") | not))) | first | .display) // "")
+                sessionId: ($g | first | .sessionId),
+                project:   ($g | last  | .project // ""),
+                max_ts:    ($g | last  | .timestamp),
+                min_ts:    ($g | first | .timestamp)
             }
         ) |
         sort_by((.project != $pwd), -.max_ts)[] |
-        [.sessionId, (.project // ""), (.max_ts | tostring), (.min_ts | tostring), (.display_fallback // "")] |
+        [.sessionId, (.project // ""), (.max_ts | tostring), (.min_ts | tostring)] |
         @tsv
     ' "$history_file" 2>/dev/null)
 
@@ -40,7 +39,6 @@ function claude_session_list
         set -l project $fields[2]
         set -l max_ts $fields[3]
         set -l min_ts $fields[4]
-        set -l display_fallback $fields[5]
 
         set -l enc (string replace -a '/' '-' -- "$project")
         set -l jsonl "$HOME/.claude/projects/$enc/$session_id.jsonl"
@@ -52,38 +50,27 @@ function claude_session_list
         set -l updated (date -r (math --scale=0 "$max_ts / 1000") '+%Y-%m-%d %H:%M' 2>/dev/null)
         set -l created (date -r (math --scale=0 "$min_ts / 1000") '+%Y-%m-%d %H:%M' 2>/dev/null)
 
-        set -l display (
-            if test -f "$jsonl"
-                head -50 "$jsonl" | jq -r '
-                    select(.type == "user") |
-                    .message.content |
-                    (if type == "string" then . elif type == "array" then (map(select(.type == "text") | .text) | first // "") else "" end) as $content |
-                    if ($content | test("<command-name>")) then
-                        ($content | capture("<command-name>/(?<name>[^<]+)</command-name>")) as $m |
-                        (($content | capture("<command-args>(?<args>.*)</command-args>"; "m")?) // {args:""}) as $a |
-                        ($a.args // "" | gsub("\n"; " ") | gsub("\t"; " ") | gsub(" +"; " ") | sub("^ "; "") | sub(" $"; "")) as $args |
-                        if ($args | length) > 0 then ("/" + $m.name + " " + $args) else ("/" + $m.name) end
-                    else
-                        $content
-                    end
-                ' 2>/dev/null | head -1
-            end
-        )
-        test -n "$display"; or set display $display_fallback
-        test -n "$display"; or set display $short_id
-        if test (string length -- "$display") -gt 60
-            set display (string sub -l 57 -- "$display")"..."
+        # Same precedence claude-hud uses for its statusline: a /rename'd
+        # custom title always wins over the auto-generated slug.
+        set -l custom_title (jq -r 'select(.type == "custom-title" and (.customTitle != null)) | .customTitle' "$jsonl" 2>/dev/null | tail -1)
+        set -l session_name $custom_title
+        if test -z "$session_name"
+            set session_name (jq -r 'select(.slug != null) | .slug' "$jsonl" 2>/dev/null | tail -1)
+        end
+        test -n "$session_name"; or set session_name $short_id
+        if test (string length -- "$session_name") -gt 60
+            set session_name (string sub -l 57 -- "$session_name")"..."
         end
 
         if test "$project" = "$PWD"
             printf '%s\t%s\t\033[1;33m> %s\033[0m \033[1;32m|\033[0m %s\t%s\t%s\t%s\n' \
                 "$jsonl" "$session_id" \
-                "$short_id" "$display" \
+                "$short_id" "$session_name" \
                 "$project" "$created" "$updated"
         else
             printf '%s\t%s\t\033[0;33m  %s\033[0m \033[0;32m|\033[0m %s\t%s\t%s\t%s\n' \
                 "$jsonl" "$session_id" \
-                "$short_id" "$display" \
+                "$short_id" "$session_name" \
                 "$project" "$created" "$updated"
         end
     end | env SHELL=/bin/bash fzf --ansi --height=20 --delimiter='\t' --with-nth=3 \

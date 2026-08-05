@@ -117,6 +117,9 @@ effort: ${effort}" "$HOME/.claude/agents/${agent}.md"
     cp "$AGENTIC_SCRIPT_DIRECTORY/../claude/settings.json" "$HOME/.claude/"
     cp "$AGENTIC_SCRIPT_DIRECTORY/../claude/keybindings.json" "$HOME/.claude/"
 
+    mkdir -p "$HOME/.claude/plugins/claude-hud"
+    cp "$AGENTIC_SCRIPT_DIRECTORY/../claude/plugins/claude-hud/config.json" "$HOME/.claude/plugins/claude-hud/"
+
     log_info "Creating Claude Code symlinks..."
 
     mkdir -p "$HOME/.claude/rules"

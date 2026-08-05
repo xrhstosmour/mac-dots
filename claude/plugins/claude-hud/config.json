@@ -1,0 +1,17 @@
+{
+  "showSeparators": true,
+  "display": {
+    "showModel": false,
+    "showProject": false,
+    "showSessionName": true,
+    "showDuration": false,
+    "showAgents": true,
+    "showTodos": true,
+    "showCompactions": true,
+    "usageCompact": true,
+    "showResetLabel": false
+  },
+  "gitStatus": {
+    "enabled": false
+  }
+}

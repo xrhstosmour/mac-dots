@@ -16,6 +16,7 @@ This file documents the repository itself. For the agentic (AI assistant) subsys
 | `packages/` | `Brewfile` (Homebrew), `store_applications_ids.txt` (Mac App Store, via `mas`), `additional_packages.txt` (arbitrary install commands) |
 | `.config/` | Copied verbatim to `~/.config/` by `install.sh`, contains app configs (`fish/`, `wezterm/`, `starship.toml`), executable utility scripts (`scripts/`, chmod'd by `install.sh`), and the `agentic/` and `opencode/` subsystems |
 | `claude/` | Global Claude Code settings (`settings.json`, `keybindings.json`) and plugin config (`plugins/claude-hud/config.json`), copied to `~/.claude/` by `setup/agentic.sh` |
+| `.config/opencode/` | OpenCode config and plugins. `setup/agentic.sh` also `npm install -g`s and installs the third-party `opencode-status-hud` HUD plugin into `~/.config/opencode/plugin/` |
 | `Wallpapers/` | Desktop wallpaper images |
 
 ## Fish functions

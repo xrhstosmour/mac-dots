@@ -86,6 +86,16 @@ if brewfile_declares opencode; then
     # hook and permissions.deny in `settings.json`.
     mkdir -p "$HOME/.config/opencode/plugin"
     create_symlink "$AGENTIC_DIRECTORY/hooks/opencode-context-guard.js" "$HOME/.config/opencode/plugin/agentic-reminder.js"
+
+    # `opencode-status-hud`'s own local-install default is `~/.config/opencode/plugins`, which
+    # OpenCode does not auto-load. Force it into the same directory as `agentic-reminder.js` above.
+    log_info "Installing opencode-status-hud plugin..."
+    if command -v npm &>/dev/null; then
+        npm install -g opencode-status-hud
+        opencode-status-hud install --mode local --plugin-dir "$HOME/.config/opencode/plugin"
+    else
+        log_warning "Skipping 'opencode-status-hud' plugin installation as npm not found!"
+    fi
 fi
 
 if brewfile_declares claude-code; then

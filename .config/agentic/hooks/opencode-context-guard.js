@@ -20,7 +20,7 @@
 const blockedHosts = [
   { pattern: /github\.com/i, use: "the `gh` CLI, see the `read-github-pr`/`read-github-issue`/`read-github-files` skills" },
   { pattern: /phabricator\./i, use: "the Conduit API per the `read-phabricator-task` skill" },
-  { pattern: /sentry\.io/i, use: "`sentry-cli` per the `read-sentry-issue` skill" },
+  { pattern: /sentry\.io/i, use: "`sentry-cli`/`curl` per the `read-sentry-issue` skill" },
   { pattern: /grafana\./i, use: "`logcli` per the `search-grafana-logs` skill" },
 ];
 

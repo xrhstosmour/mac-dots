@@ -62,6 +62,8 @@ git commit --amend --no-edit
 
 Target only original commits. NEVER fixup a fixup.
 
+This convention also applies to bugs you find yourself while self-reviewing work still in `<base>..HEAD`, fold the fix into the commit that introduced the bug, do not add a new standalone commit describing it as a fix.
+
 Rules:
 
 - Target must be in `<base>..HEAD`

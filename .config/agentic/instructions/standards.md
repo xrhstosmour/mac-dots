@@ -167,6 +167,8 @@ When a skill defines a checklist, apply every item before finishing, never a sub
 
 This applies in Plan Mode too. Invoking a matching skill is a read-only action, do it directly before any codebase exploration, regardless of the Plan Mode phase you are in.
 
+This applies no matter which skill or command is currently driving the session, `/scope`, `/code`, `/test`, another skill's workflow, or a subagent chain, none of these override or suppress a different skill's coverage.
+
 ## Safety
 
 - Confirm before destructive operations (`rm`, `DROP TABLE`, `DELETE FROM`, etc.).

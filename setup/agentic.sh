@@ -91,7 +91,11 @@ if brewfile_declares opencode; then
     # OpenCode does not auto-load. Force it into the same directory as `agentic-reminder.js` above.
     log_info "Installing opencode-status-hud plugin..."
     if command -v npm &>/dev/null; then
-        npm install -g opencode-status-hud
+        if command -v opencode-status-hud &>/dev/null; then
+            log_info "'opencode-status-hud' already installed, skipping npm install."
+        else
+            npm install -g opencode-status-hud
+        fi
         opencode-status-hud install --mode local --plugin-dir "$HOME/.config/opencode/plugin"
     else
         log_warning "Skipping 'opencode-status-hud' plugin installation as npm not found!"

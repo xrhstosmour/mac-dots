@@ -2,7 +2,7 @@
   "showSeparators": true,
   "display": {
     "showModel": false,
-    "showProject": false,
+    "showProject": true,
     "showSessionName": true,
     "showDuration": false,
     "showAgents": true,

@@ -129,6 +129,29 @@ effort: ${effort}" "$HOME/.claude/agents/${agent}.md"
     cp "$AGENTIC_SCRIPT_DIRECTORY/../claude/settings.json" "$HOME/.claude/"
     cp "$AGENTIC_SCRIPT_DIRECTORY/../claude/keybindings.json" "$HOME/.claude/"
 
+    # `claude/settings.json` bakes an absolute `claude-hud` runtime path into `statusLine.command`.
+    # That path is machine and user specific, so re-detect it here instead of trusting whatever
+    # was last committed, otherwise a path from one machine silently breaks the HUD on another.
+    log_info "Re-detecting claude-hud runtime path..."
+    hud_runtime_path=$(command -v bun || command -v node || true)
+    if [ -n "$hud_runtime_path" ]; then
+        node -e '
+const fs = require("fs");
+const path = process.argv[1];
+const runtimePath = process.argv[2];
+const settings = JSON.parse(fs.readFileSync(path, "utf8"));
+if (settings.statusLine && typeof settings.statusLine.command === "string") {
+    settings.statusLine.command = settings.statusLine.command.replace(
+        /exec "[^"]+"/,
+        "exec \"" + runtimePath + "\""
+    );
+    fs.writeFileSync(path, JSON.stringify(settings, null, 2) + "\n");
+}
+' "$HOME/.claude/settings.json" "$hud_runtime_path"
+    else
+        log_warning "No 'bun' or 'node' found, leaving 'claude-hud' statusLine command as committed."
+    fi
+
     mkdir -p "$HOME/.claude/plugins/claude-hud"
     cp "$AGENTIC_SCRIPT_DIRECTORY/../claude/plugins/claude-hud/config.json" "$HOME/.claude/plugins/claude-hud/"
 

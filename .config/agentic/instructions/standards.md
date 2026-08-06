@@ -159,7 +159,7 @@ After writing code: run lint/typecheck to catch style issues immediately, run re
 
 ## Skills Priority
 
-When a skill covers an operation, always invoke it. Never use ad-hoc commands for operations that have a skill. Skills encode safety guardrails, consistency, and quality gates that ad-hoc tool usage lacks.
+When a skill covers an operation, always invoke it. Never use ad-hoc commands for operations that have a skill. This is not limited to the terminal step. Skills encode safety guardrails, consistency, and quality gates that ad-hoc tool usage lacks.
 
 When a request could match more than one skill, for example a project skill in `~/.config/agentic/skills/` and a same-topic plugin/marketplace skill, prefer the project skill. It encodes this repo's specific workflow and trigger phrasing.
 

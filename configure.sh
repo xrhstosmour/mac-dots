@@ -26,8 +26,14 @@ brew bundle install --file=packages/Brewfile
 # Install `Mac App Store` applications.
 # Loop through the list of app IDs in `packages/store_applications_ids.txt`.
 if command -v mas &>/dev/null; then
+    installed_application_ids=$(mas list | awk '{print $1}')
+
     while IFS= read -r application_id || [[ -n "$application_id" ]]; do
         [[ -z "$application_id" || "$application_id" =~ ^# ]] && continue
+
+        if grep -qx "$application_id" <<<"$installed_application_ids"; then
+            continue
+        fi
 
         mas purchase "$application_id"
     done <packages/store_applications_ids.txt

@@ -38,7 +38,7 @@ if [[ -f packages/additional_packages.txt ]]; then
     while IFS= read -r line || [[ -n "$line" ]]; do
         [[ -z "$line" || "$line" =~ ^# ]] && continue
 
-        bash -c "$line"
+        bash -c "$line" || log_warning "Failed to run additional package command: $line"
     done <packages/additional_packages.txt
 fi
 log_divider

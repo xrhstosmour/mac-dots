@@ -100,7 +100,7 @@ git commit --fixup abc123
 - Never push directly to `main`/`master`. Every change goes through a pull request.
 - Before merging, if the repo has `CI`/`CD` configured, verify it is green. Fix issues on the branch and push, never merge around a red check.
 - Before merging, rebase onto the resolved default branch and autosquash pending `fixup!`/`squash!` commits: `git fetch origin && git rebase -i --autosquash $(git rev-parse --abbrev-ref origin/HEAD)`. Push with `--force-with-lease` after.
-- Merge with `gh pr merge <number> --merge --delete-branch`, or the platform's equivalent.
+- Merge with `gh pr merge <number> --merge --delete-branch --subject 'Merge branch `<branch>`'`, or the platform's equivalent.
 - Force-push is fine on feature branches with `--force-with-lease`, never on `main`/`master`.
 - Keep pull requests single-topic, non-stacked, and independently mergeable against `main`.
 

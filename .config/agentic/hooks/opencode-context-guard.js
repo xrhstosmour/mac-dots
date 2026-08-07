@@ -2,11 +2,12 @@
 // settings.json:
 //   - Blocks WebFetch on service URLs that have a dedicated CLI, since OpenCode
 //     cannot deny WebFetch by host in config (Claude uses permissions.deny).
-//   - Warns once a session's token usage or idle time gets large, mirroring
-//     Claude Code's context-guard.sh (same thresholds, exact token counts here
-//     instead of a byte-size estimate, since the session API reports them).
-//     Thresholds (50K tokens, 2 hour idle) warn before context bloat becomes
-//     irreversible without nagging over short, ordinary breaks.
+//   - Warns once a session has been idle for a while, mirroring Claude Code's
+//     idle-only context-guard.sh (same threshold, using the session API's
+//     `time.updated` instead of a transcript file's mtime). A byte/token size
+//     check was dropped from both scripts: it was an unreliable estimate of
+//     actual context usage, and the host's own context indicator already
+//     covers that accurately.
 //
 // Static instructions (communication/standards/versioning) load via opencode.json's
 // `instructions` array instead, no hook needed for those.
@@ -24,16 +25,18 @@ const blockedHosts = [
   { pattern: /grafana\./i, use: "`logcli` per the `search-grafana-logs` skill" },
 ];
 
-// Warn early. 50K tokens is roughly 2-3 API calls with a full context window.
-// At 180K the context is already bloated and compaction cannot recover lost cache.
-const SIZE_WARN_TOKENS = 50000;
-const IDLE_WARN_SECONDS = 7200;
-const GROWTH_COOLDOWN_TOKENS = 15000;
+// No documented cache-TTL basis for this environment's actual providers
+// (opencode/deepseek-v4-flash-free, nemotron, etc. via the opencode-go gateway,
+// not Anthropic), so this mirrors context-guard.sh's Claude-subscription figure
+// as a general staleness heuristic rather than a provider-verified number.
+const IDLE_WARN_SECONDS = 3600;
 
-// In-memory, per running OpenCode process. Mirrors context-guard.sh's file-based
-// cooldown marker, so this doesn't re-fire the handoff instruction every single
-// turn once the threshold is crossed, only on meaningful growth or after enough
-// idle time passes.
+// In-memory, per running OpenCode process. Unlike context-guard.sh's
+// UserPromptSubmit hook (fires once per user message, so idle naturally
+// self-resets), this transform can run on every LLM request within a turn,
+// including intermediate tool-calling rounds. Keeps track of the
+// `time.updated` value last seen when a warning fired, so it only re-fires
+// once that value has actually moved forward, not on every request in a burst.
 const lastWarned = new Map();
 
 export const AgenticReminderPlugin = async ({ client }) => {
@@ -46,21 +49,17 @@ export const AgenticReminderPlugin = async ({ client }) => {
         const { data: session } = await client.session.get({ path: { id: sessionID } });
         if (!session) return;
 
-        const tokens = session.tokens ?? {};
-        const totalTokens = (tokens.input ?? 0) + (tokens.output ?? 0) + (tokens.cache?.read ?? 0) + (tokens.cache?.write ?? 0);
-        const idleSeconds = (Date.now() - (session.time?.updated ?? Date.now())) / 1000;
+        const updatedAt = session.time?.updated ?? Date.now();
+        const idleSeconds = (Date.now() - updatedAt) / 1000;
 
-        if (totalTokens > SIZE_WARN_TOKENS || idleSeconds > IDLE_WARN_SECONDS) {
-          const nowSeconds = Date.now() / 1000;
+        if (idleSeconds > IDLE_WARN_SECONDS) {
           const last = lastWarned.get(sessionID);
-          const growth = totalTokens - (last?.tokens ?? 0);
-          const sinceLastWarn = nowSeconds - (last?.time ?? 0);
 
-          if (!last || growth >= GROWTH_COOLDOWN_TOKENS || sinceLastWarn >= IDLE_WARN_SECONDS) {
-            lastWarned.set(sessionID, { tokens: totalTokens, time: nowSeconds });
+          if (!last || last.updatedAt !== updatedAt) {
+            lastWarned.set(sessionID, { updatedAt });
             const idleMinutes = Math.round(idleSeconds / 60);
             output.system.push(
-              `# Context Health Warning\n\nThis session has used ~${totalTokens} tokens, last active ${idleMinutes} minutes ago. Long sessions burn tokens because every API call re-sends the full conversation history.\nFinish responding to the user's current request first. Then inform them their context is large or stale, and advise compacting, handoff, or a new session.\nDo not interrupt the current answer to do this, and do not invoke anything yourself, only inform and advise.`,
+              `# Context Health Warning\n\nThis session has been idle for ~${idleMinutes} minutes. Long idle gaps force an expensive full cache rebuild on the next turn.\nFinish responding to the user's current request first. Then inform them the session has been idle a while, and advise compacting, handoff, or a new session.\nDo not interrupt the current answer to do this, and do not invoke anything yourself, only inform and advise.`,
             );
           }
         }

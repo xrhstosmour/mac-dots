@@ -54,15 +54,29 @@ Cost estimate: `items per page × calls per item × cost per call`
 
 ## Security
 
-Auth: Every non-public endpoint needs an auth guard. Flag bypasses. Scoped data access must check ownership.
+Think like an attacker: For every new input path or trust boundary, trace the value end to end through the call chain, don't stop at the first sanitizer. Only flag what you can trace to a concrete exploit path.
+
+Authentication: Every non-public endpoint needs an authentication guard. Flag bypasses.
+
+Access control: Scoped data access must check ownership, not just authentication. Flag IDOR, any swappable ID or reference that reaches another user's or tenant's resource.
 
 Input: Validate and whitelist all user input. Never trust it raw in queries, commands, or rendered output.
 
-Injection: Flag string concatenation in queries, `exec`/`eval` with user input, or unescaped user strings in HTML/JS.
+Injection: Flag string concatenation in queries, `exec`/`eval`/shell subprocess calls built from untrusted input, template rendering of user-controlled strings (SSTI), and deserialization of untrusted data (`pickle`, `yaml.load`, `unmarshal`) instead of a safe or restricted loader.
+
+Server-side requests: Outbound requests built from user-supplied hosts or URLs need protection against internal, link-local, and cloud-metadata addresses, including DNS-rebinding.
+
+Session and tokens: Verify token signature and algorithm server-side, reject `alg: none` and algorithm confusion. Flag missing session rotation on privilege changes (session fixation) and missing rate limits on login/token endpoints.
+
+Business logic: Flag race conditions on stateful operations that read-then-write without a lock or atomic op (TOCTOU, double-spend). Flag workflows where a later step is reachable without completing an earlier required step, or where quantity/price/payment fields are client-controlled.
+
+API abuse: Flag deserialization that binds request fields directly onto internal or protected model fields (mass assignment). Flag expensive or sensitive endpoints with no rate limit.
 
 Exposure: Logs and API responses must not leak passwords, tokens, keys, PII, or internal identifiers.
 
 Secrets: No hardcoded credentials or tokens. Use environment variables or a secrets manager.
+
+Supply chain: Flag new dependencies pulled from outside the project's package registry, unpinned versions on security-sensitive packages, and install/build scripts that pipe a remote script into a shell or run with elevated privileges.
 
 Redirects: User-controlled redirect targets must be validated against an allowlist.
 

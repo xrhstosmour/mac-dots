@@ -36,7 +36,32 @@ local function apply_configuration(configuration)
     wezterm.on(
         "format-tab-title",
         function(tab, tabs, panes, config, hover, max_width)
-            local title = tostring(tab.tab_index + 1)
+            local process = tab.active_pane.foreground_process_name or ""
+            local process_name = process ~= "" and process:match("([^/]+)$") or "shell"
+
+            local cwd = tab.active_pane.current_working_dir
+            local path_name = nil
+            if cwd then
+                local full_path = cwd.file_path
+                if full_path ~= "/" then
+                    full_path = full_path:gsub("/$", "")
+                end
+                local home = wezterm.home_dir
+                if full_path == home then
+                    path_name = "~"
+                elseif full_path:sub(1, #home + 1) == home .. "/" then
+                    path_name = "~" .. full_path:sub(#home + 1)
+                else
+                    path_name = full_path
+                end
+            end
+
+            local title = process_name
+            if path_name then
+                title = title .. " · " .. path_name
+            end
+            title = wezterm.truncate_right(title, max_width - 2)
+
             local background = config.colors.tab_bar.inactive_tab.bg_color
             local foreground = config.colors.tab_bar.inactive_tab.fg_color
 

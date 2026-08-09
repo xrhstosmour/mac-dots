@@ -88,6 +88,7 @@ Skills are loaded by agents and triggered via commands.
 | ----- | ------ | ------- |
 | `diagnose` | `/diagnose` | Disciplined diagnosis loop: reproduce, minimise, hypothesise, instrument, fix, regression-test |
 | `technical-analysis` | `/technical-analysis` | Structured technical analysis with method-level changes, notes, estimation, and architecture deepening opportunities |
+| `seo` | `/seo` | Technical SEO, E-E-A-T/content quality, schema markup, sitemap, image SEO, and AI-search (GEO/AEO) analysis for any URL |
 
 ### Design Skills
 

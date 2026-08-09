@@ -33,6 +33,10 @@ apply_system_configuration() {
     log_info "Saving screenshots in lossless 'PNG' format..."
     defaults write com.apple.screencapture type -string "png"
 
+    # Move archive to `Trash` after expanding it in `Archive Utility`.
+    log_info "Moving archive to 'Trash' after expanding in 'Archive Utility'..."
+    defaults write com.apple.archiveutility dearchive-move-after -string "~/.Trash"
+
     # Show scroll-bars always.
     log_info "Showing scroll-bars always..."
     defaults write NSGlobalDomain AppleShowScrollBars -string "Always"

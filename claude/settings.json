@@ -27,7 +27,7 @@
     "refreshInterval": 5
   },
   "permissions": {
-    "defaultMode": "plan",
+    "defaultMode": "auto",
     "allow": [
       "Bash(bundle exec rspec*)",
       "Bash(bundle exec rubocop*)",

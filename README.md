@@ -101,12 +101,6 @@ Opinionated `macOS` configuration via shell scripts.
 - **Spotlight** → Enable only `Show Spotlight search` → `Key 2 + .`
 - **Input Sources** → Enable only `Select previous input source` → `Key 2 + Space`
 
-### Trackpad
-
-`System Settings → Trackpad → More Gestures`:
-
-- Disable **Swipe between full-screen applications** (conflicts with `SwipeAeroSpace`)
-
 ### Display
 
 `System Settings → Displays`:

@@ -23,7 +23,7 @@ apply_appearance_configuration() {
         mkdir -p ~/Pictures/wallpapers
     fi
     cp -R Wallpapers/* ~/Pictures/wallpapers/
-    osascript -e 'tell application "System Events" to tell every desktop to set picture to POSIX file "~/Pictures/wallpapers/rocks_milky_stream.png"'
+    osascript -e "tell application \"System Events\" to tell every desktop to set picture to POSIX file \"$HOME/Pictures/wallpapers/rocks_milky_stream.png\""
 
     # Set dark mode.
     log_info "Setting dark mode..."

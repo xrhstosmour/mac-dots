@@ -12,6 +12,7 @@ description: Use for GitHub pull requests, creating a new PR with a full safety-
 - User asks to comment on or edit an existing PR, its labels, assignees, reviewers, title, or body, or to approve it or leave a quick review comment via `gh pr review`.
 - Not for just reading/viewing a PR, see the `read-github-pr` skill for that.
 - Not for a full multi-agent code review (architecture and quality sub-agents, synthesized findings report), see the `review-github-pr` skill for that.
+- Also applies when a plan step or a delegated subagent prompt already specifies `gh pr create`/`gh pr edit` directly, invoke this skill instead of running that command as written, even if the flags look complete.
 
 ## Reviewing, commenting, or editing an existing PR
 

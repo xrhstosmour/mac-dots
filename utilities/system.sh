@@ -117,11 +117,10 @@ apply_system_configuration() {
 
     # Remove leftover user/library data for deleted apps.
     log_info "Removing leftover Library data for deleted apps..."
-    for dir in "~/Library/Containers/com.apple.voicememos" "~/Library/Containers/com.apple.garageband" "~/Library/Containers/com.apple.iMovie" "~/Library/Containers/com.apple.iWork.Keynote"; do
-        eval expanded_dir=$dir
-        if [ -d "$expanded_dir" ]; then
-            rm -rf "$expanded_dir"
-            log_info "Removed $expanded_dir."
+    for dir in "$HOME/Library/Containers/com.apple.voicememos" "$HOME/Library/Containers/com.apple.garageband" "$HOME/Library/Containers/com.apple.iMovie" "$HOME/Library/Containers/com.apple.iWork.Keynote"; do
+        if [ -d "$dir" ]; then
+            rm -rf "$dir"
+            log_info "Removed $dir."
         fi
     done
 

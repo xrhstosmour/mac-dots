@@ -33,9 +33,12 @@ apply_system_configuration() {
     log_info "Saving screenshots in lossless 'PNG' format..."
     defaults write com.apple.screencapture type -string "png"
 
-    # Move archive to `Trash` after expanding it in `Archive Utility`.
-    log_info "Moving archive to 'Trash' after expanding in 'Archive Utility'..."
-    defaults write com.apple.archiveutility dearchive-move-after -string "~/.Trash"
+    # Delete archive after expanding it in `Archive Utility`.
+    log_info "Deleting archive after expanding in 'Archive Utility'..."
+    archive_utility_plist="$HOME/Library/Containers/com.apple.archiveutility/Data/Library/Preferences/com.apple.archiveutility"
+    mkdir -p "$(dirname "$archive_utility_plist")"
+    defaults write "$archive_utility_plist" dearchive-move-after-location -dict Selection Delete
+    killall cfprefsd 2>/dev/null || true
 
     # Show scroll-bars always.
     log_info "Showing scroll-bars always..."

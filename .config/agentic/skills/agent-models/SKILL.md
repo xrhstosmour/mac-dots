@@ -190,7 +190,7 @@ After all edits:
 
 ## Rules
 
-1. Do not use bash or system-specific commands, use the agent's built-in file editing tools. This ensures portability across OpenCode, Claude Code, and Codex.
+1. Edit `.config/agentic/models.txt` with the agent's built-in file editing tools, not `sed`/`awk`/system-specific commands, to keep the mapping change portable across OpenCode, Claude Code, and Codex. Running `setup/agentic.sh` afterward to inject the mapping is still required and isn't covered by this rule.
 2. Always show the proposed mapping and get approval before editing.
 3. If any file cannot be found or read, report it and stop.
 4. Keep the mapping concise, one model per role with no fallback lists.

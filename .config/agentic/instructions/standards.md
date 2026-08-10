@@ -169,6 +169,13 @@ This applies in Plan Mode too. Invoking a matching skill is a read-only action, 
 
 This applies no matter which skill or command is currently driving the session, `/scope`, `/code`, `/test`, another skill's workflow, or a subagent chain, none of these override or suppress a different skill's coverage.
 
+When writing a plan step or a subagent/delegation prompt for a skill-covered action, name the skill to invoke, never the raw command it wraps. Spelling out the exact CLI flags in a plan or subagent prompt bypasses the skill, because whoever executes that step just runs the literal instruction instead of re-matching triggers. This holds even when the flags already look correct, knowing the flags is exactly what makes it tempting to skip the skill.
+
+- Wrong: plan step 'Push the branch and open a PR via `gh pr create` with a Summary/Test plan body.'
+- Right: plan step 'Push the branch, then invoke the `manage-github-pr` skill to open the PR.'
+- Wrong: subagent prompt 'Open a PR with `gh pr create --title "..." --body "## Summary..."`.'
+- Right: subagent prompt 'When your fix is committed, invoke the `manage-github-pr` skill to open the PR, do not run `gh pr create` directly.'
+
 ## Safety
 
 - Confirm before destructive operations (`rm`, `DROP TABLE`, `DELETE FROM`, etc.).

@@ -105,25 +105,34 @@ return function(config)
                 "ClipboardAndPrimarySelection"
             ),
         },
-    }
-
-    -- `mouse_reporting` defaults to `false`, so a binding without it only applies outside
-    -- programs that enable mouse tracking (`Claude Code`, `OpenCode`, `vim`, `tmux`). Register
-    -- both variants so CTRL/Globe+Click opens links everywhere.
-    for _, mouse_reporting in ipairs({ false, true }) do
-        table.insert(config.mouse_bindings, {
+        -- `mouse_reporting` defaults to `false`, so a binding without it only applies outside
+        -- programs that enable mouse tracking (`Claude Code`, `OpenCode`, `vim`, `tmux`). Register
+        -- both variants so CTRL/Globe+Click opens links everywhere.
+        {
             event = { Up = { streak = 1, button = "Left" } },
             mods = "SUPER",
-            mouse_reporting = mouse_reporting,
+            mouse_reporting = false,
             action = wezterm.action.OpenLinkAtMouseCursor,
-        })
-        table.insert(config.mouse_bindings, {
+        },
+        {
             -- Without this, WezTerm still forwards the `Down` half of the click
             -- to the running program, which can trigger unwanted behavior there.
             event = { Down = { streak = 1, button = "Left" } },
             mods = "SUPER",
-            mouse_reporting = mouse_reporting,
+            mouse_reporting = false,
             action = wezterm.action.Nop,
-        })
-    end
+        },
+        {
+            event = { Up = { streak = 1, button = "Left" } },
+            mods = "SUPER",
+            mouse_reporting = true,
+            action = wezterm.action.OpenLinkAtMouseCursor,
+        },
+        {
+            event = { Down = { streak = 1, button = "Left" } },
+            mods = "SUPER",
+            mouse_reporting = true,
+            action = wezterm.action.Nop,
+        }
+    }
 end

@@ -61,10 +61,6 @@ apply_dock_configuration() {
     log_info "Disabling animation when opening applications..."
     defaults write com.apple.dock launchanim -bool false
 
-    # Disable animation when opening applications.
-    log_info "Disabling animation when opening applications..."
-    defaults write com.apple.dock launchanim -bool false
-
     # Automatically hide and show the `Dock`.
     log_info "Automatically hiding and showing the 'Dock'..."
     sudo defaults write /Library/Preferences/com.apple.dock autohide -bool true

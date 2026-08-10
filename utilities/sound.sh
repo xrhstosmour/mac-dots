@@ -31,7 +31,7 @@ apply_sound_configuration() {
 
     # Disable speech recognition
     log_info "Disabling speech recognition..."
-    sudo defaults write "com.apple.speech.recognition.AppleSpeechRecognition.prefs" StartSpeakableItems -bool false
+    defaults write "com.apple.speech.recognition.AppleSpeechRecognition.prefs" StartSpeakableItems -bool false
 
     # Stop `iTunes` from responding to the keyboard media keys.
     log_info "Stopping 'iTunes' from responding to the keyboard media keys..."

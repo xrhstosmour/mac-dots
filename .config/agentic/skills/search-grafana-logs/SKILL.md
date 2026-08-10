@@ -9,6 +9,7 @@ description: Use for Grafana/Loki links, "search Loki", "check Grafana", log que
 
 - User shares a Grafana dashboard/explore link or a Loki reference.
 - User says "search Loki", "check Grafana", or asks to search/investigate logs for an error or failure.
+- Not for a full bug diagnosis workflow (reproduce, minimise, hypothesise, fix) that happens to involve a log search, see the `diagnose` skill for that.
 
 Two ways this gets triggered:
 

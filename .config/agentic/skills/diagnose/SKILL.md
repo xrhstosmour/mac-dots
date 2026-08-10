@@ -4,9 +4,9 @@ description: >
   Disciplined diagnosis loop for hard bugs and performance regressions.
   Reproduce → minimise → hypothesise → instrument → fix → regression-test.
   Use when user says "diagnose this", "debug this", reports a bug, says
-  something is broken or throwing or failing, describes a performance
-  regression, or shares a Grafana/Loki link or asks to search logs
-  for a problem.
+  something is broken or throwing or failing, or describes a performance
+  regression. Not for a standalone log search or a bare Grafana/Loki link
+  with no bug-report framing, see `search-grafana-logs` for that.
 ---
 
 # Diagnose
@@ -19,7 +19,8 @@ description: >
 - Tests are failing and the root cause is not obvious.
 - Something is broken, throwing, or producing wrong output.
 - User describes a performance regression.
-- User shares a Grafana/Loki dashboard or explore link, or asks to "search Loki"/"check Grafana"/"search the logs" for a problem.
+- User shares a Grafana/Loki dashboard or explore link, or asks to "search Loki"/"check Grafana"/"search the logs", as part of root-causing a bug they've already described.
+- Not for a standalone log search or a bare Grafana/Loki link with no bug-report framing, see the `search-grafana-logs` skill for that.
 
 A discipline for hard bugs. Skip phases only when explicitly justified.
 

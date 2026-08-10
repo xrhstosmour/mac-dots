@@ -1,6 +1,6 @@
 ---
 name: manage-github-pr
-description: Use for GitHub pull requests, creating a new PR with a full safety-gated workflow, branch checks, commit splitting, structured description, or reviewing, commenting on, and editing an existing PR.
+description: Use for GitHub pull requests, creating a new PR with a full safety-gated workflow, branch checks, commit splitting, structured description, or approving, commenting on, and editing an existing PR. Not for a full multi-agent code review, see `review-github-pr` for that.
 ---
 
 # Manage GitHub PR
@@ -9,8 +9,9 @@ description: Use for GitHub pull requests, creating a new PR with a full safety-
 
 - `/manage-github-pr`, or user says "ship it", "create PR", "make a PR", "open a pull request", "push this", "I'm done", "edit PR data", "edit PR body", "edit PR title".
 - After `/code` or `/test` complete and the user confirms they want to proceed.
-- User asks to review, comment on, or edit an existing PR, its labels, assignees, reviewers, title, or body.
+- User asks to comment on or edit an existing PR, its labels, assignees, reviewers, title, or body, or to approve it or leave a quick review comment via `gh pr review`.
 - Not for just reading/viewing a PR, see the `read-github-pr` skill for that.
+- Not for a full multi-agent code review (architecture and quality sub-agents, synthesized findings report), see the `review-github-pr` skill for that.
 
 ## Reviewing, commenting, or editing an existing PR
 

@@ -17,12 +17,15 @@
 //   invocation: https://github.com/anomalyco/opencode/blob/dev/packages/opencode/src/session/llm/request.ts
 //   session shape (tokens, time.updated in epoch ms): https://github.com/anomalyco/opencode/blob/dev/packages/core/src/session.ts
 
-// Service URLs that must go through a dedicated CLI, never WebFetch.
+// Service URLs that must go through a dedicated CLI, never WebFetch. Patterns
+// match against the hostname only (see below), anchored to a label boundary,
+// so a path/query segment that happens to contain one of these words (e.g.
+// blog.example.com/learn-grafana) isn't mistaken for the real host.
 const blockedHosts = [
-  { pattern: /github\.com/i, use: "the `gh` CLI, see the `read-github-pr`/`read-github-issue`/`read-github-files` skills" },
-  { pattern: /phabricator\./i, use: "the Conduit API per the `read-phabricator-task` skill" },
-  { pattern: /sentry\.io/i, use: "`sentry-cli`/`curl` per the `read-sentry-issue` skill" },
-  { pattern: /grafana\./i, use: "`logcli` per the `search-grafana-logs` skill" },
+  { pattern: /(^|\.)github\.com$/i, use: "the `gh` CLI, see the `read-github-pr`/`read-github-issue`/`read-github-files` skills" },
+  { pattern: /(^|\.)phabricator\./i, use: "the Conduit API per the `read-phabricator-task` skill" },
+  { pattern: /(^|\.)sentry\.io$/i, use: "`sentry-cli`/`curl` per the `read-sentry-issue` skill" },
+  { pattern: /(^|\.)grafana\./i, use: "`logcli` per the `search-grafana-logs` skill" },
 ];
 
 // No documented cache-TTL basis for this environment's actual providers
@@ -70,7 +73,13 @@ export const AgenticReminderPlugin = async ({ client }) => {
     "tool.execute.before": async (input, output) => {
       if ((input.tool ?? "").toLowerCase() !== "webfetch") return;
       const url = String(output.args?.url ?? "");
-      const blocked = blockedHosts.find((host) => host.pattern.test(url));
+      let host = url;
+      try {
+        host = new URL(url).hostname;
+      } catch {
+        // Not a parseable absolute URL, fall back to matching the raw string.
+      }
+      const blocked = blockedHosts.find((entry) => entry.pattern.test(host));
       if (blocked) {
         throw new Error(`Blocked: use ${blocked.use}, not WebFetch.`);
       }

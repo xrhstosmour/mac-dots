@@ -37,6 +37,12 @@ apply_appearance_configuration() {
     log_info "Disabling 'Click to wallpaper to reveal desktop'..."
     defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
 
+    # Enable `Reduce motion`. Requires Accessibility access for `Terminal`
+    # (see README Pre-Installation), guarded so a missing grant doesn't abort the rest of this script.
+    log_info "Enabling 'Reduce motion'..."
+    defaults write com.apple.universalaccess reduceMotion -bool true || log_warning "Failed to enable 'Reduce motion', check Accessibility permission for 'Terminal'."
+    defaults write com.apple.Accessibility ReduceMotionEnabled -bool true || true
+
     log_success "Appearance configuration applied successfully."
     log_divider
 }

@@ -113,10 +113,6 @@ Opinionated `macOS` configuration via shell scripts.
 
 - Disable **`True Tone`**
 
-`System Settings → Accessibility → Display`:
-
-- Enable **Reduce motion**
-
 ### `Finder`
 
 Open `Finder` and configure sidebar:

@@ -40,6 +40,7 @@ end
 --   CTRL/Globe+Right/Left square brackets: Switch to previous/next tab.
 --   CTRL/Globe+Left/Right arrow: Move cursor to beginning/end of line (sends CTRL+A/E).
 --   Mouse left click: Copy selection to clipboard and primary selection.
+--   CTRL/Globe+Mouse left click: Open the link or URL under the cursor.
 return function(config)
     local is_macos = wezterm.target_triple:find("apple") ~= nil
     local mod = is_macos and "CMD" or "CTRL"
@@ -105,4 +106,24 @@ return function(config)
             ),
         },
     }
+
+    -- `mouse_reporting` defaults to `false`, so a binding without it only applies outside
+    -- programs that enable mouse tracking (`Claude Code`, `OpenCode`, `vim`, `tmux`). Register
+    -- both variants so CTRL/Globe+Click opens links everywhere.
+    for _, mouse_reporting in ipairs({ false, true }) do
+        table.insert(config.mouse_bindings, {
+            event = { Up = { streak = 1, button = "Left" } },
+            mods = "SUPER",
+            mouse_reporting = mouse_reporting,
+            action = wezterm.action.OpenLinkAtMouseCursor,
+        })
+        table.insert(config.mouse_bindings, {
+            -- Without this, WezTerm still forwards the `Down` half of the click
+            -- to the running program, which can trigger unwanted behavior there.
+            event = { Down = { streak = 1, button = "Left" } },
+            mods = "SUPER",
+            mouse_reporting = mouse_reporting,
+            action = wezterm.action.Nop,
+        })
+    end
 end

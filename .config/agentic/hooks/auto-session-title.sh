@@ -18,7 +18,14 @@ session_id=$(echo "$input" | jq -r '.session_id // empty')
 grep -q '"type":"custom-title"' "$transcript_path" 2>/dev/null && exit 0
 
 # Wait for enough signal that a summary is meaningful (skip a bare "hi").
-user_message_count=$(grep -c '"role":"user"' "$transcript_path" 2>/dev/null || echo 0)
+# Counts only turns with real text content, tool-result echoes also carry
+# `"role":"user"` in the transcript and would otherwise satisfy this after
+# the very first turn.
+user_message_count=$(jq -rs '
+  [.[] | select(.type == "user") | .message.content |
+    (if type == "string" then . elif type == "array" then (map(select(.type == "text") | .text) | first // "") else "" end)
+  ] | map(select(length > 0)) | length
+' "$transcript_path" 2>/dev/null || echo 0)
 [ "${user_message_count:-0}" -ge 2 ] || exit 0
 
 # Find the first substantive user message: skip system-injected/command-wrapped
@@ -44,8 +51,7 @@ first_message=$(jq -rs '
 # empty/trivial-only session can still pick up a title from a later message
 # instead of being locked out permanently.
 lock="${TMPDIR:-/tmp}/agentic-auto-session-title-${session_id}"
-[ -e "$lock" ] && exit 0
-touch "$lock"
+mkdir "$lock" 2>/dev/null || exit 0
 
 nohup bash -c '
   first_message="$1"

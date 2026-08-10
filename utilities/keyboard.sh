@@ -50,8 +50,62 @@ apply_keyboard_configuration() {
     keyboard_clear_hidutil_mappings
     keyboard_apply_special_key_mappings
 
+    # Configure keyboard shortcuts (Mission Control, Spotlight, Input Source).
+    keyboard_apply_symbolic_hotkeys
+
     log_success "Keyboard configuration applied successfully."
     log_divider
+}
+
+# Function to configure keyboard shortcuts via `AppleSymbolicHotKeys`.
+# Disables all `Mission Control` shortcuts and sets `Show Spotlight search`/`Select the previous input source`
+# to `Key 2 + .` / `Key 2 + Space`.
+#
+# Usage:
+#   keyboard_apply_symbolic_hotkeys
+keyboard_apply_symbolic_hotkeys() {
+    log_info "Configuring keyboard shortcuts..."
+
+    local symbolic_hotkeys_plist="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
+
+    # Disable all `Mission Control` shortcuts (each pair is the default-key /
+    # dedicated-key variant):
+    #   32/34 Mission Control, 33/35 Application windows, 36/37 Show Desktop,
+    #   79/80 Move left a space, 81/82 Move right a space, 118-121 Switch to Desktop 1-4.
+    log_info "Disabling all 'Mission Control' shortcuts..."
+    for hotkey_id in 32 33 34 35 36 37 79 80 81 82 118 119 120 121; do
+        /usr/libexec/PlistBuddy -c "Delete :AppleSymbolicHotKeys:${hotkey_id}" "$symbolic_hotkeys_plist" 2>/dev/null || true
+        /usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:${hotkey_id}:enabled bool false" "$symbolic_hotkeys_plist"
+    done
+
+    # Set `Show Spotlight search` to `Key 2 + .` (physical Control key, remapped to Option).
+    log_info "Setting 'Show Spotlight search' shortcut to 'Key 2 + .'..."
+    /usr/libexec/PlistBuddy -c "Delete :AppleSymbolicHotKeys:64" "$symbolic_hotkeys_plist" 2>/dev/null || true
+    /usr/libexec/PlistBuddy \
+        -c "Add :AppleSymbolicHotKeys:64:enabled bool true" \
+        -c "Add :AppleSymbolicHotKeys:64:value:type string standard" \
+        -c "Add :AppleSymbolicHotKeys:64:value:parameters array" \
+        -c "Add :AppleSymbolicHotKeys:64:value:parameters:0 integer 46" \
+        -c "Add :AppleSymbolicHotKeys:64:value:parameters:1 integer 47" \
+        -c "Add :AppleSymbolicHotKeys:64:value:parameters:2 integer 524288" \
+        "$symbolic_hotkeys_plist"
+
+    # Set `Select the previous input source` to `Key 2 + Space` (physical Control key, remapped to Option).
+    log_info "Setting 'Select the previous input source' shortcut to 'Key 2 + Space'..."
+    /usr/libexec/PlistBuddy -c "Delete :AppleSymbolicHotKeys:60" "$symbolic_hotkeys_plist" 2>/dev/null || true
+    /usr/libexec/PlistBuddy \
+        -c "Add :AppleSymbolicHotKeys:60:enabled bool true" \
+        -c "Add :AppleSymbolicHotKeys:60:value:type string standard" \
+        -c "Add :AppleSymbolicHotKeys:60:value:parameters array" \
+        -c "Add :AppleSymbolicHotKeys:60:value:parameters:0 integer 32" \
+        -c "Add :AppleSymbolicHotKeys:60:value:parameters:1 integer 49" \
+        -c "Add :AppleSymbolicHotKeys:60:value:parameters:2 integer 524288" \
+        "$symbolic_hotkeys_plist"
+
+    killall cfprefsd 2>/dev/null || true
+
+    log_warning "Keyboard shortcut changes require logging out (or restarting) to take effect."
+    log_success "Keyboard shortcuts configured successfully."
 }
 
 # Function to clear existing hidutil mappings and launch agent.

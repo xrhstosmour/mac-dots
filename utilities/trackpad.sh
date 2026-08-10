@@ -38,6 +38,15 @@ apply_trackpad_configuration() {
     log_info "Disabling 'Dictionary' pop-up when right-clicking..."
     defaults write com.apple.finder FXEnableDictionary -bool false
 
+    # Disable swipe between full-screen applications.
+    log_info "Disabling swipe between full-screen applications..."
+    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerHorizSwipeGesture -int 0
+    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFourFingerHorizSwipeGesture -int 0
+    defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerHorizSwipeGesture -int 0
+    defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerHorizSwipeGesture -int 0
+    defaults -currentHost write NSGlobalDomain com.apple.trackpad.threeFingerHorizSwipeGesture -int 0
+    defaults -currentHost write NSGlobalDomain com.apple.trackpad.fourFingerHorizSwipeGesture -int 0
+
     log_success "Trackpad configuration applied successfully."
     log_divider
 }

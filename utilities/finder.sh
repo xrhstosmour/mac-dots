@@ -36,7 +36,7 @@ apply_finder_configuration() {
 
     # Show all hidden files.
     log_info "Showing all hidden files in 'Finder' windows..."
-    defaults write com.apple.Finder AppleShowAllFiles true
+    defaults write com.apple.finder AppleShowAllFiles -bool true
 
     # Show hidden `/Volumes` and `~/Library` folders.
     log_info "Showing hidden '/Volumes' and '~/Library' folders in 'Finder' windows..."
@@ -55,7 +55,7 @@ apply_finder_configuration() {
 
     # Group files by Date creation date in `Finder`.
     log_info "Grouping files by creation date in 'Finder'..."
-    defaults write com.apple.Finder FXPreferredGroupBy dateCreated
+    defaults write com.apple.finder FXPreferredGroupBy -string "dateCreated"
 
     # Stop `.DS_Store` creation at network shares and removable drives.
     log_info "Stopping '.DS_Store' creation at network shares and removable drives..."

@@ -95,12 +95,6 @@ Opinionated `macOS` configuration via shell scripts.
 | Command | Option |
 | Option | Control |
 
-**Shortcuts** (`System Settings → Keyboard → Keyboard Shortcuts`):
-
-- **Mission Control** → Disable all (conflicts with `AeroSpace`)
-- **Spotlight** → Enable only `Show Spotlight search` → `Key 2 + .`
-- **Input Sources** → Enable only `Select previous input source` → `Key 2 + Space`
-
 ### Display
 
 `System Settings → Displays`:

@@ -107,7 +107,11 @@ apply_system_configuration() {
     for app in "GarageBand" "iMovie" "Keynote" "Voice Memos"; do
         # Check /Applications first.
         if [ -d "/Applications/$app.app" ]; then
-            sudo rm -rf "/Applications/$app.app" 2>/dev/null && log_info "Removed $app.app from /Applications." || log_info "Could not remove $app.app from /Applications."
+            if sudo rm -rf "/Applications/$app.app" 2>/dev/null; then
+                log_info "Removed $app.app from /Applications."
+            else
+                log_info "Could not remove $app.app from /Applications."
+            fi
         fi
     done
 

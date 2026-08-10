@@ -4,7 +4,7 @@ input=$(cat)
 transcript_path=$(echo "$input" | jq -r '.transcript_path // empty')
 
 if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
-  mtime=$(stat -f%m "$transcript_path")
+  mtime=$(stat -f%m "$transcript_path" 2>/dev/null || stat -c%Y "$transcript_path" 2>/dev/null)
   now=$(date +%s)
   idle_seconds=$((now - mtime))
   idle_minutes=$((idle_seconds / 60))

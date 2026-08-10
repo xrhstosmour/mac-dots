@@ -22,14 +22,14 @@ mkdir -p ~/.config && cp -R .config/* ~/.config/
 
 # Set up agentic configuration: inject models, symlink shared content.
 log_info "Setting up agentic configuration..."
-sh "$INSTALL_SCRIPT_DIRECTORY/setup/agentic.sh"
+bash "$INSTALL_SCRIPT_DIRECTORY/setup/agentic.sh"
 
 # Give execute permission to all scripts in the directory.
 chmod +x ~/.config/scripts/*.sh
 
 # Configure `macOS`.
 log_info "Starting 'macOS' configuration..."
-sh "$INSTALL_SCRIPT_DIRECTORY/configure.sh"
+bash "$INSTALL_SCRIPT_DIRECTORY/configure.sh"
 
 log_success "System configuration completed!"
 

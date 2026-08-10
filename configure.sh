@@ -50,11 +50,11 @@ fi
 log_divider
 
 # Restore installed applications' configurations.
-sh setup/applications.sh
+bash setup/applications.sh
 log_divider
 
 # Configure shell.
-sh setup/shell.sh
+bash setup/shell.sh
 
 # Configure `macOS` Preferences.
-sh setup/preferences.sh
+bash setup/preferences.sh

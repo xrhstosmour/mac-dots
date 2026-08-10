@@ -25,11 +25,37 @@ local function close_pane_if_multiple(window, pane)
     end
 end
 
+-- The OS clipboard has no text flavor when it holds only an image, so an empty/failed
+-- read here means "not text", not necessarily "empty clipboard".
+local function clipboard_has_text(is_macos)
+    local read_command = is_macos
+        and { "pbpaste" }
+        or { "bash", "-lc", "wl-paste --no-newline 2>/dev/null || xclip -selection clipboard -o 2>/dev/null" }
+
+    local success, stdout = wezterm.run_child_process(read_command)
+    return success and stdout ~= nil and #stdout > 0
+end
+
+-- Paste clipboard text directly, or forward the raw `CTRL+V` keystroke when the
+-- clipboard holds an image, so the running program (`Claude Code`, `OpenCode`) can
+-- read the image straight from the OS clipboard itself.
+local function paste_action(is_macos)
+    return wezterm.action_callback(
+        function(window, pane)
+            if clipboard_has_text(is_macos) then
+                window:perform_action(wezterm.action.PasteFrom("Clipboard"), pane)
+            else
+                window:perform_action(wezterm.action.SendKey { key = "v", mods = "CTRL" }, pane)
+            end
+        end
+    )
+end
+
 -- WezTerm keybindings:
 -- For external keyboards and Linux systems we are going to use CTRL.
 -- For internal macOS keyboards we are going to use Globe, which is remapped to CMD.
 --   CTRL/Globe+C: Copy selection if present, else send `SIGINT` to terminal.
---   CTRL/Globe+V: Paste from clipboard.
+--   CTRL/Globe+V: Paste clipboard text or image.
 --   CTRL/Globe+D: Split pane horizontally.
 --   CTRL/Globe+T: New terminal tab.
 --   CTRL/Globe+N: New terminal window.
@@ -54,7 +80,7 @@ return function(config)
         {
             key = "v",
             mods = mod,
-            action = wezterm.action.PasteFrom("Clipboard")
+            action = paste_action(is_macos)
         },
         {
             key = "d",
@@ -105,25 +131,34 @@ return function(config)
                 "ClipboardAndPrimarySelection"
             ),
         },
-    }
-
-    -- `mouse_reporting` defaults to `false`, so a binding without it only applies outside
-    -- programs that enable mouse tracking (`Claude Code`, `OpenCode`, `vim`, `tmux`). Register
-    -- both variants so CTRL/Globe+Click opens links everywhere.
-    for _, mouse_reporting in ipairs({ false, true }) do
-        table.insert(config.mouse_bindings, {
+        -- `mouse_reporting` defaults to `false`, so a binding without it only applies outside
+        -- programs that enable mouse tracking (`Claude Code`, `OpenCode`, `vim`, `tmux`). Register
+        -- both variants so CTRL/Globe+Click opens links everywhere.
+        {
             event = { Up = { streak = 1, button = "Left" } },
             mods = "SUPER",
-            mouse_reporting = mouse_reporting,
+            mouse_reporting = false,
             action = wezterm.action.OpenLinkAtMouseCursor,
-        })
-        table.insert(config.mouse_bindings, {
+        },
+        {
             -- Without this, WezTerm still forwards the `Down` half of the click
             -- to the running program, which can trigger unwanted behavior there.
             event = { Down = { streak = 1, button = "Left" } },
             mods = "SUPER",
-            mouse_reporting = mouse_reporting,
+            mouse_reporting = false,
             action = wezterm.action.Nop,
-        })
-    end
+        },
+        {
+            event = { Up = { streak = 1, button = "Left" } },
+            mods = "SUPER",
+            mouse_reporting = true,
+            action = wezterm.action.OpenLinkAtMouseCursor,
+        },
+        {
+            event = { Down = { streak = 1, button = "Left" } },
+            mods = "SUPER",
+            mouse_reporting = true,
+            action = wezterm.action.Nop,
+        },
+    }
 end

@@ -187,6 +187,8 @@ Follow style in `~/.config/agentic/instructions/communication.md` for tone and f
 
 Derive each section:
 - What: From commit messages and diffs. Each logical change gets one plain-sentence item starting with the action verb, no `**Topic**:` label prefix. Fold migrations into the feature item they support, never list separately.
+  - If there is only one logical change, write it as a single plain sentence directly under `**What**:`, no numbered list, no leading `1.`.
+  - Use a numbered list only when there are two or more items.
 - Why: If the user provides a task, issue or tracker link:
   - CORRECT: `Resolves [1234](https://link.example.com/1234).`
   - WRONG: `Resolves [1234](https://link.example.com/1234). After this change ...`

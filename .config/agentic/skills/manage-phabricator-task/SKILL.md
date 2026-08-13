@@ -54,7 +54,7 @@ If `error_code` is not null, token/auth is invalid and must be fixed first.
 ### 1. Gather required fields
 
 - Tag, required: Phabricator project. Ask: "Which tag?"
-- Title, required: Short imperative phrase, max ~60 characters. No priority prefix, priority is a separate field. Example: `Add dark mode toggle`.
+- Title, required: Short imperative phrase, max ~60 characters. No priority prefix, priority is a separate field. Do not wrap words in backticks, unlike commit messages, Phabricator titles are plain text. Example: Add dark mode toggle.
 
 ### 2. Gather optional fields
 

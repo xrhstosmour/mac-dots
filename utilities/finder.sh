@@ -85,6 +85,10 @@ apply_finder_configuration() {
     log_info "Disabling the warning when changing a file extension..."
     defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
+    # Show hard disks (including '/') under 'Finder' sidebar Locations.
+    log_info "Showing hard disks under 'Finder' sidebar Locations..."
+    defaults write com.apple.sidebarlists systemitems -dict-add ShowHardDisks -bool true
+
     log_success "'Finder' configuration applied successfully."
     log_divider
 }

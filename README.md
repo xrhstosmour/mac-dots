@@ -11,7 +11,7 @@ Opinionated `macOS` configuration via shell scripts.
 | Shell | `Fish` + `Starship` + `Atuin` |
 | Terminal | `WezTerm` |
 | Editors | `Helix`, `VS Code`, `DataGrip` |
-| Window Manager | `AeroSpace` + `SwipeAeroSpace` + `Switch` |
+| Window Manager | `AeroSpace` + `SwipeAeroSpace` + `DockDoor` |
 | Development Languages | `Node.js`, `Python`, `Go`, `Java`, `Ruby`, `.NET` (via `mise`) |
 | Keyboard | Remapping with persistence (`kbcs` for cheat sheet) |
 | Shell Abbreviations | Custom aliases (`alcs` for cheat sheet) |
@@ -64,7 +64,7 @@ Opinionated `macOS` configuration via shell scripts.
 | `WezTerm` | ✓ | ✓ | | ✓ |
 | `VS Code` | | | | ✓ |
 | `AeroSpace` | | ✓ | | |
-| `Switch` | | ✓ | ✓ | |
+| `DockDoor` | | ✓ | ✓ | |
 | `Flameshot` | | | ✓ | |
 | `Maccy` | | ✓ | | |
 | `SwipeAeroSpace` | | ✓ | | |

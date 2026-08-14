@@ -66,6 +66,7 @@ Opinionated `macOS` configuration via shell scripts.
 | `AeroSpace` | | ✓ | | |
 | `DockDoor` | | ✓ | ✓ | |
 | `Flameshot` | | | ✓ | |
+| `Google Drive` | | ✓ | | |
 | `Maccy` | | ✓ | | |
 | `SwipeAeroSpace` | | ✓ | | |
 

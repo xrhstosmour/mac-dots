@@ -17,7 +17,7 @@ source "$APPLICATIONS_SCRIPT_DIRECTORY/../helpers/logs.sh"
 APPLICATIONS_SOURCES=(
   "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/aerospace.toml"
   "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/com.if.Amphetamine.plist.xml"
-  "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/com.sanyamgarg.switch.plist.xml"
+  "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/com.ethanbills.DockDoor.plist.xml"
   "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/org.p0deje.Maccy.plist.xml"
   "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/pl.maketheweb.TopNotch.plist.xml"
   "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/club.mediosz.SwipeAeroSpace.plist.xml"
@@ -27,7 +27,7 @@ APPLICATIONS_SOURCES=(
 APPLICATIONS_DESTINATIONS=(
   "$HOME/.config/aerospace/aerospace.toml"
   "$HOME/Library/Containers/com.if.Amphetamine/Data/Library/Preferences/com.if.Amphetamine.plist"
-  "$HOME/Library/Preferences/com.sanyamgarg.switch.plist"
+  "$HOME/Library/Preferences/com.ethanbills.DockDoor.plist"
   "$HOME/Library/Containers/org.p0deje.Maccy/Data/Library/Preferences/org.p0deje.Maccy.plist"
   "$HOME/Library/Preferences/pl.maketheweb.TopNotch.plist"
   "$HOME/Library/Preferences/club.mediosz.SwipeAeroSpace.plist"
@@ -37,7 +37,7 @@ APPLICATIONS_DESTINATIONS=(
 APPLICATIONS_NAMES=(
   "Aerospace"
   "Amphetamine"
-  "Switch"
+  "DockDoor"
   "Maccy"
   "TopNotch"
   "SwipeAeroSpace"

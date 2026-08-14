@@ -107,7 +107,7 @@ Opinionated `macOS` configuration via shell scripts.
 Open `Finder` and configure sidebar:
 
 - Remove: Recents, Shared, `iCloud`, `AirDrop`
-- Add to Locations: `/` (`root`), `Home` folder
+- Add to Locations: `Home` folder
 - Add to Favorites: `Developer` folder
 
 ### `1Password`

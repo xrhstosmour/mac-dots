@@ -93,7 +93,7 @@ apply_system_configuration() {
     # ! You need to grant `Full Disk Access` to the terminal running this script.
     # Exclude applications from quarantine.
     log_info "Exclude applications from quarantine..."
-    for app in "Flameshot" "LocalSend" "Syncthing"; do
+    for app in "DockDoor" "Flameshot" "LocalSend" "Syncthing"; do
         if [ -d "/Applications/$app.app" ]; then
             log_info "Exclude $app from quarantine..."
             sudo xattr -dr com.apple.quarantine "/Applications/$app.app"

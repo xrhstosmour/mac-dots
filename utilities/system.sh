@@ -173,7 +173,7 @@ apply_system_configuration() {
             if ! osascript -e 'tell application "System Events" to get the name of every login item' | sed 's/, /\n/g' | grep -Fxq "$application"; then
                 log_info "Adding '$application' to 'Login Items'..."
                 osascript -e "tell application \"System Events\" to make login item at end with properties {name: \"$application\", path:\"/Applications/$application.app\", hidden:true}"
-                ((items_to_add++))
+                items_to_add=$((items_to_add + 1))
             fi
         fi
     done

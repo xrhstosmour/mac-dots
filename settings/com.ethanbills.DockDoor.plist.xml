@@ -6,14 +6,8 @@
 	<true/>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
-	<key>SUHasLaunchedBefore</key>
-	<true/>
-	<key>SULastCheckTime</key>
-	<date>2026-08-14T06:46:48Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
-	<key>SUUpdateGroupIdentifier</key>
-	<integer>2302344179</integer>
 	<key>UserKeybind</key>
 	<string>{"keyCode":48,"modifierFlags":262401}</string>
 	<key>allowDynamicImageSizing</key>
@@ -62,21 +56,10 @@
 	<false/>
 	<key>instantWindowSwitcher</key>
 	<true/>
-	<key>lastKnownScreenRecordingPermission</key>
-	<true/>
-	<key>launched</key>
-	<true/>
 	<key>lockedDockScreenIdentifier</key>
 	<string>Optional(1)-1800.0-1169.0-Optional(8)-Optional("NSCalibratedRGBColorSpace")</string>
 	<key>mouseFollowsFocusMode</key>
 	<string>always</string>
-	<key>persistedWindowOrder</key>
-	<array>
-		<string>{"bundleIdentifier":"com.ethanbills.DockDoor","creationTime":808382095.708643,"lastAccessedTime":808382796.502113,"windowTitle":""}</string>
-		<string>{"bundleIdentifier":"com.microsoft.VSCode","creationTime":808382075.27432,"lastAccessedTime":808382719.186826,"windowTitle":"Change Switch with the following package • Untitled-1 — macsify"}</string>
-		<string>{"bundleIdentifier":"com.google.Chrome","creationTime":808382639.883355,"lastAccessedTime":808382666.962227,"windowTitle":"Transporter responses - Grafana - Pinned - Google Chrome - Christos (Work)"}</string>
-		<string>{"bundleIdentifier":"com.tinyspeck.slackmacgap","creationTime":808382075.381839,"lastAccessedTime":808382569.149919,"windowTitle":"* Unread Messages - skroutz - 1 new item - Slack"}</string>
-	</array>
 	<key>reopenSettingsAfterRestart</key>
 	<false/>
 	<key>showActiveAppIndicator</key>
@@ -113,6 +96,8 @@
 	<string>topLeading</string>
 	<key>windowSwitcherPlacementStrategy</key>
 	<string>screenWithMouse</string>
+	<key>windowSwitcherScrollDirection</key>
+	<string>horizontal</string>
 	<key>windowSwitcherSortOrder</key>
 	<string>creationOrder</string>
 </dict>

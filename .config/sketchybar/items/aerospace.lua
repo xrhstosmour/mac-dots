@@ -77,6 +77,9 @@ for index = 1, WORKSPACE_COUNT do
         height = 24,
         clip = 1.0,
         image = { scale = 0.9, drawing = true },
+        -- barik drops a soft shadow under every window icon
+        -- (`WindowView.shadow(color: .iconShadow, radius: 2)`).
+        shadow = { drawing = true, color = colors.with_alpha(colors.black, 0.5), distance = 1, angle = 270 },
       },
       drawing = false,
     })

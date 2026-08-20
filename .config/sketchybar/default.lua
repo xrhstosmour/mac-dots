@@ -33,12 +33,16 @@ sbar.default({
   popup = {
     background = {
       border_width = 1,
-      corner_radius = 12,
+      -- Rounder than the bar's own pills, matching barik's own popup card
+      -- (a much larger corner radius than its list rows).
+      corner_radius = 20,
       border_color = colors.popup.border,
       color = colors.popup.bg,
       shadow = { drawing = true },
     },
     blur_radius = 40,
+    -- A small gap below the bar rather than the popup touching it directly.
+    y_offset = 4,
   },
   padding_left = 4,
   padding_right = 4,

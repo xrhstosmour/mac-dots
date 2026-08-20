@@ -1,44 +1,49 @@
--- Nerd Font glyphs (Fira Code Nerd Font is already provisioned by
--- `packages/Brewfile`), so no extra font cask is needed for icons. Codepoints
--- below are verified against a real published Nerd Font icons table, except
--- where noted as plain standard Unicode (no icon font needed for those).
+-- SF Symbols, rendered by `SF Pro` (provisioned as `font-sf-pro` in
+-- `packages/Brewfile`). These are the same glyphs macOS uses for its own
+-- menu bar, so the bar reads as native rather than as a Nerd Font pastiche.
+--
+-- The only exception is Bluetooth: SF Symbols has no Bluetooth glyph, so that
+-- one item falls back to a Nerd Font codepoint and sets its own icon font
+-- (`FiraCode Nerd Font`, already provisioned).
 return {
-  apple = "",
-  gear = "",
-  calendar = "󰃭",
-  cpu = "󰻠",
-  memory = "󰍛",
-  camera = "󰄀",
+  apple = "􀣺",
+  gear = "􀍟",
+  calendar = "􀉉",
+  cpu = "􀫥",
+  memory = "􀫦",
+  camera = "􀌞",
+  chevron_left = "􀆉",
+  chevron_right = "􀆊",
+  ellipsis = "􀍠",
+  reveal = "􀆊",
 
   -- Plain Unicode, always renders regardless of font.
-  chevron_left = "‹",
-  chevron_right = "›",
-  reveal = ">",
   divider = "│",
 
   volume = {
-    _100 = "",
-    _66 = "",
-    _33 = "",
-    _10 = "",
-    _0 = "",
+    _100 = "􀊩",
+    _66 = "􀊧",
+    _33 = "􀊥",
+    _10 = "􀊡",
+    _0 = "􀊣",
   },
   mic = {
-    on = "",
-    off = "",
+    on = "􀊰",
+    off = "􀊲",
   },
+  -- Nerd Font, see the note above.
   bluetooth = {
     on = "󰂱",
     off = "󰂲",
   },
   wifi = {
-    connected = "󰖩",
-    disconnected = "󰖪",
+    connected = "􀙇",
+    disconnected = "􀙈",
   },
   media = {
-    back = "",
-    play = "",
-    pause = "",
-    forward = "",
+    back = "􀊊",
+    play = "􀊄",
+    pause = "􀊆",
+    forward = "􀊌",
   },
 }

@@ -12,10 +12,10 @@ Opinionated `macOS` configuration via shell scripts.
 | Terminal | `WezTerm` |
 | Editors | `Helix`, `VS Code`, `DataGrip` |
 | Window Manager | `AeroSpace` + `SwipeAeroSpace` + `DockDoor` |
+| Menu Bar | `SketchyBar`, `barik`-styled, black (notch-hiding) or light theme |
 | Development Languages | `Node.js`, `Python`, `Go`, `Java`, `Ruby`, `.NET` (via `mise`) |
 | Keyboard | Remapping with persistence (`kbcs` for cheat sheet) |
 | Shell Abbreviations | Custom aliases (`alcs` for cheat sheet) |
-| Display | Auto notch-hiding for `MacBook` Pro/Air (`TopNotch`) |
 | Clipboard | `Maccy` |
 | Screenshots | `Flameshot` |
 | Keep Awake | `Amphetamine` |
@@ -68,6 +68,7 @@ Opinionated `macOS` configuration via shell scripts.
 | `Flameshot` | | | ✓ | |
 | `Google Drive` | | ✓ | | |
 | `Maccy` | | ✓ | | |
+| `SketchyBar` | | ✓ | | |
 | `SwipeAeroSpace` | | ✓ | | |
 
 ### Keyboard Configuration
@@ -118,6 +119,17 @@ Open `Finder` and configure sidebar:
   - Autofill: `Key 2 + Shift + A`
   - Quick Access: `Key 2 + Shift + S`
   - Clear remaining shortcuts to avoid conflicts.
+
+### `SketchyBar` Menu Bar
+
+The native menu bar is hidden and replaced. Click `›` at the inner end of the right cluster to bring the native one back for a few seconds when you need an app's menu extras.
+
+- Theme (black/light) and the language picker's sources follow `System Settings` automatically, nothing to configure. The theme switches live, no reload needed.
+- Add your calendar accounts (`iCloud`, `Google`, etc.) under `System Settings → Internet Accounts` so the calendar popup's `Calendar.app` shows everything.
+- Grant `SketchyBar` Accessibility access when macOS prompts, it is what opens the real `Apple` menu.
+- Grant `SketchyBar` `Bluetooth` access under `System Settings → Privacy & Security → Bluetooth`. Until you do, `blueutil` blocks on its own permission prompt and the `Bluetooth` widget stays empty.
+- The Wi-Fi popup shows `Connected` instead of the network name unless `SketchyBar` also has `Location Services`. macOS has withheld the `SSID` from command line tools without it since `Sonoma`.
+- Microphone and camera indicators only appear while something is using them. `Bluetooth` microphones do not report their state to macOS, so those never light up.
 
 ### `PWA`s
 

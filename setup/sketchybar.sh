@@ -30,7 +30,8 @@ fi
 # Make the entrypoint and helper build scripts executable.
 chmod +x "$SKETCHYBAR_CONFIG_DIRECTORY/sketchybarrc"
 
-# Build the compiled helper binaries (the Accessibility-based menu helper).
+# Build the compiled helper binaries (the Accessibility-based Apple/App menu
+# helper, and the CoreAudio/CoreMediaIO microphone/camera indicator probe).
 log_info "Building 'SketchyBar' helper binaries..."
 make -C "$SKETCHYBAR_CONFIG_DIRECTORY/helpers"
 

@@ -35,7 +35,7 @@ sbar.default({
       border_width = 1,
       -- Rounder than the bar's own pills, matching barik's own popup card
       -- (a much larger corner radius than its list rows).
-      corner_radius = 20,
+      corner_radius = 24,
       border_color = colors.popup.border,
       color = colors.popup.bg,
       shadow = { drawing = true },

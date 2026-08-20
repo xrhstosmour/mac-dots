@@ -8,6 +8,7 @@ return {
   calendar = "󰃭",
   cpu = "󰻠",
   memory = "󰍛",
+  camera = "󰄀",
 
   -- Plain Unicode, always renders regardless of font.
   chevron_left = "‹",

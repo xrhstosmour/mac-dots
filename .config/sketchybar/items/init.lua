@@ -12,7 +12,7 @@ require("items.aerospace")
 
 -- Right side, edge to center: calendar, divider, battery, wifi, bluetooth,
 -- language, mic, sound (now playing folded into its popup), CPU/memory,
--- reveal toggle.
+-- microphone and camera indicators, reveal toggle.
 require("items.calendar")
 require("items.divider")
 require("items.battery")
@@ -22,4 +22,5 @@ require("items.language")
 require("items.microphone")
 require("items.sound")
 require("items.monitor")
+require("items.indicators")
 require("items.reveal")

@@ -6,6 +6,8 @@ return {
   apple = "",
   gear = "",
   calendar = "󰃭",
+  cpu = "󰻠",
+  memory = "󰍛",
 
   -- Plain Unicode, always renders regardless of font.
   chevron_left = "‹",

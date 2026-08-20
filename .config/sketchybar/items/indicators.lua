@@ -21,6 +21,12 @@ local microphone = sbar.add("item", "indicators.microphone", {
   padding_right = 1,
   drawing = false,
   update_freq = 3,
+  -- `default.lua` sets `updates = "when_shown"` bar-wide, which also pauses
+  -- `update_freq`-driven `routine` ticks while an item isn't drawn. This
+  -- item's entire job is to stay hidden until it detects activity, so with
+  -- the default it can never re-check itself into existence. Verified
+  -- empirically: with `when_shown`, a live microphone never appears here.
+  updates = "on",
 })
 
 local camera = sbar.add("item", "indicators.camera", {

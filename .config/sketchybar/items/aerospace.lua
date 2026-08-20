@@ -68,8 +68,15 @@ for index = 1, WORKSPACE_COUNT do
         drawing = true,
         color = colors.transparent,
         corner_radius = 8,
+        -- `clip` shapes the image to the background's own rounded rect,
+        -- without it a large source icon overflows past the pill edges
+        -- uncropped. `scale` is a raw multiplier on the source image's own
+        -- pixel size, not a fit-to-frame fraction, 1.4 fills a 24pt row
+        -- without the icon reading as oversized, verified empirically against
+        -- a live render (SketchyBar's docs don't specify this).
         height = 24,
-        image = { scale = 0.16, drawing = true },
+        clip = 1.0,
+        image = { scale = 1.4, drawing = true },
       },
       drawing = false,
     })

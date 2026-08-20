@@ -42,26 +42,36 @@ local nowplaying_label = sbar.add("item", "sound.nowplaying", {
   label = { string = "Nothing playing", max_chars = 26 },
 })
 
-local control_back = sbar.add("item", {
+-- One row, not three. SketchyBar lays out everything at a single "popup.X"
+-- position as a single vertical (or, with `popup.horizontal`, single
+-- horizontal) list, there's no per-row grouping, so three separate icon
+-- items here would stack as three near-empty rows rather than sit side by
+-- side (confirmed empirically). The three glyphs are concatenated into one
+-- label instead, the same trick `items/calendar.lua` already uses for its
+-- `‹ month ›` header. Left click toggles play/pause, matching the bar icon's
+-- own primary click; right click skips to the next track; scrolling steps
+-- back/forward, mirroring the volume icon's own scroll-to-adjust gesture.
+local controls_row = sbar.add("item", "sound.controls", {
   position = popup_position,
-  icon = { string = icons.media.back },
-  label = { drawing = false },
-  click_script = "media-control previous-track",
+  width = popup_width,
+  align = "center",
+  icon = { drawing = false },
+  label = {
+    string = icons.media.back .. "    " .. icons.media.play .. "    " .. icons.media.forward,
+    font = { size = 18.0 },
+  },
 })
 
-local control_play_pause = sbar.add("item", {
-  position = popup_position,
-  icon = { string = icons.media.play },
-  label = { drawing = false },
-  click_script = "media-control toggle-play-pause",
-})
-
-sbar.add("item", {
-  position = popup_position,
-  icon = { string = icons.media.forward },
-  label = { drawing = false },
-  click_script = "media-control next-track",
-})
+controls_row:subscribe("mouse.clicked", function(env)
+  if env.BUTTON == "right" then
+    sbar.exec("media-control next-track")
+  else
+    sbar.exec("media-control toggle-play-pause")
+  end
+end)
+controls_row:subscribe("mouse.scrolled", function(env)
+  sbar.exec("media-control " .. ((env.INFO.delta > 0) and "previous-track" or "next-track"))
+end)
 
 sbar.add("item", "sound.separator", {
   position = popup_position,
@@ -111,7 +121,9 @@ local function refresh_nowplaying()
   sbar.exec("media-control get --no-artwork 2>/dev/null", function(info)
     if type(info) ~= "table" then
       nowplaying_label:set({ label = "Nothing playing" })
-      control_play_pause:set({ icon = icons.media.play })
+      controls_row:set({
+        label = { string = icons.media.back .. "    " .. icons.media.play .. "    " .. icons.media.forward },
+      })
       return
     end
 
@@ -120,7 +132,13 @@ local function refresh_nowplaying()
     local label = (artist and artist ~= "") and (title .. " — " .. artist) or title
 
     nowplaying_label:set({ label = label })
-    control_play_pause:set({ icon = info.playing and icons.media.pause or icons.media.play })
+    controls_row:set({
+      label = {
+        string = icons.media.back .. "    "
+          .. (info.playing and icons.media.pause or icons.media.play)
+          .. "    " .. icons.media.forward,
+      },
+    })
   end)
 end
 

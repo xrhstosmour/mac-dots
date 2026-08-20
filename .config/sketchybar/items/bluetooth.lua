@@ -7,7 +7,9 @@ local max_rows = 8
 
 local bluetooth_icon = sbar.add("item", "bluetooth.icon", {
   position = "right",
-  icon = { string = icons.bluetooth.on, color = colors.icon },
+  -- SF Symbols has no Bluetooth glyph (see `icons.lua`), so this item pins
+  -- its own icon font rather than inheriting the bar's default SF Pro.
+  icon = { string = icons.bluetooth.on, color = colors.icon, font = { family = "FiraCode Nerd Font" } },
   label = { drawing = false },
   background = { color = colors.pill.bg, border_color = colors.pill.border, border_width = 1 },
   padding_left = 1,

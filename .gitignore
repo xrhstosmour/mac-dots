@@ -15,3 +15,6 @@ Thumbs.db
 .tmp/
 .temp/
 *.local.fish
+
+# `SketchyBar` compiled helper binaries (built locally by `setup/sketchybar.sh`).
+.config/sketchybar/helpers/**/bin/

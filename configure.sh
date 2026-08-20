@@ -53,6 +53,9 @@ log_divider
 bash setup/applications.sh
 log_divider
 
+# Configure `SketchyBar`.
+bash setup/sketchybar.sh
+
 # Configure shell.
 bash setup/shell.sh
 

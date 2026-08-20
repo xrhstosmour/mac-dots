@@ -44,6 +44,12 @@ default-root-container-orientation = 'auto'
 # Mouse follows focus when focused monitor changes.
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
+# Notify `SketchyBar` so its workspace indicator stays in sync.
+exec-on-workspace-change = ['/bin/dash', '-c',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE PREV_FOCUSED=$AEROSPACE_PREV_WORKSPACE'
+]
+on-focus-changed = ['exec-and-forget sketchybar --trigger aerospace_focus_change']
+
 # Automatically re-appear hidden apps on `macOS`.
 automatically-unhide-macos-hidden-apps = false
 
@@ -70,7 +76,12 @@ inner.horizontal = 5
 inner.vertical = 5
 outer.left = 5
 outer.bottom = 5
-outer.top = 5
+# The native menu bar is hidden (`utilities/menu_bar.sh`), so macOS would
+# otherwise report the full screen height as usable and tile windows
+# underneath `SketchyBar`. External monitors need the full bar height
+# reserved; the built-in notched display keeps the small default gap,
+# since macOS still reserves the physical notch's strip on its own.
+outer.top = [{ monitor."built-in" = 5 }, 37]
 outer.right = 5
 
 # 'main' binding mode declaration.

@@ -81,7 +81,7 @@ outer.bottom = 5
 # underneath `SketchyBar`. External monitors need the full bar height
 # reserved; the built-in notched display keeps the small default gap,
 # since macOS still reserves the physical notch's strip on its own.
-outer.top = [{ monitor."built-in" = 5 }, 37]
+outer.top = [{ monitor."built-in" = 28 }, 60]
 outer.right = 5
 
 # 'main' binding mode declaration.

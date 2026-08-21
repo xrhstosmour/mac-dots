@@ -16,6 +16,7 @@ local numbers = {}
 local icons = {}
 local titles = {}
 local overflows = {}
+local gaps = {}
 
 -- One shell invocation returns everything the widget needs: the focused
 -- workspace, the focused window, and every window on every workspace.
@@ -61,7 +62,8 @@ for index = 1, WORKSPACE_COUNT do
       position = "left",
       icon = { drawing = false },
       label = { drawing = false },
-      width = 26,
+      -- barik's `WindowView`: a 21pt icon with 2pt padding either side.
+      width = 25,
       padding_left = 1,
       padding_right = 1,
       background = {
@@ -74,7 +76,7 @@ for index = 1, WORKSPACE_COUNT do
         -- pixel size, not a fit-to-frame fraction, 0.9 fills a 24pt row
         -- without the icon reading as oversized, verified empirically against
         -- a live render (SketchyBar's docs don't specify this).
-        height = 24,
+        height = 30,
         clip = 1.0,
         image = { scale = 0.9, drawing = true },
         -- barik drops a soft shadow under every window icon
@@ -108,6 +110,16 @@ for index = 1, WORKSPACE_COUNT do
     drawing = false,
   })
 
+  -- barik separates its space pills by 8pt (`SpacesWidget` `HStack(spacing: 8)`).
+  -- Tracked so it can be hidden along with its workspace, otherwise every
+  -- hidden workspace would still leave a gap behind.
+  gaps[index] = sbar.add("item", "aerospace.gap." .. index, {
+    position = "left",
+    width = 8,
+    background = { drawing = false },
+    drawing = false,
+  })
+
   local members = { numbers[index].name }
   for slot = 1, MAX_WINDOWS do
     table.insert(members, icons[index][slot].name)
@@ -120,8 +132,9 @@ for index = 1, WORKSPACE_COUNT do
       color = colors.pill.bg,
       border_color = colors.pill.border,
       border_width = 1,
+      -- barik's `SpaceView`: 30pt tall, 8pt corner radius.
       corner_radius = 8,
-      height = 26,
+      height = 30,
     },
     drawing = false,
   })
@@ -148,6 +161,8 @@ local function apply(workspaces, focused_workspace, focused_window)
     for _, window in ipairs(windows) do
       app_counts[window.app] = (app_counts[window.app] or 0) + 1
     end
+
+    gaps[index]:set({ drawing = should_show })
 
     numbers[index]:set({
       drawing = should_show,

@@ -33,16 +33,17 @@ sbar.default({
   popup = {
     background = {
       border_width = 1,
-      -- Rounder than the bar's own pills, matching barik's own popup card
-      -- (a much larger corner radius than its list rows).
-      corner_radius = 24,
+      -- barik's popup card: `.cornerRadius(40)` with `.shadow(radius: 30)`
+      -- over a `Color.black` fill (`MenuBarPopupView`).
+      corner_radius = 40,
       border_color = colors.popup.border,
       color = colors.popup.bg,
       shadow = { drawing = true },
     },
     blur_radius = 40,
-    -- A small gap below the bar rather than the popup touching it directly.
-    y_offset = 4,
+    -- barik offsets its popup below the bar by 5pt
+    -- (`.padding(.top, foregroundHeight + 5)`).
+    y_offset = 5,
   },
   padding_left = 4,
   padding_right = 4,

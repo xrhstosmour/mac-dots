@@ -31,12 +31,12 @@ local function popup_row(name, properties)
   local defaults = {
     position = popup_position,
     width = popup_width,
+    padding_left = 14,
+    padding_right = 14,
     icon = { drawing = false },
     label = {
       font = { family = settings.font.numbers },
       align = "center",
-  padding_left = 14,
-  padding_right = 14,
       width = popup_width - 20,
     },
   }

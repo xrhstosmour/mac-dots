@@ -33,7 +33,10 @@ local power_row = sbar.add("item", "wifi.power", {
   align = "left",
   padding_left = 14,
   padding_right = 14,
-  label = { string = "Wi-Fi: On" },
+  -- Leading status icon plus headline, barik's own popup row shape
+  -- (`NetworkPopup`: coloured icon + `.font(.headline)` text).
+  icon = { string = icons.wifi.connected, color = colors.blue, drawing = true },
+  label = { string = "Wi-Fi: On", font = { style = settings.font.style_map["Bold"] } },
 })
 
 local network_row = sbar.add("item", "wifi.network", {
@@ -42,7 +45,7 @@ local network_row = sbar.add("item", "wifi.network", {
   align = "left",
   padding_left = 14,
   padding_right = 14,
-  label = { string = "Network: ???" },
+  label = { color = colors.subtext, font = { size = 12.0 }, string = "Network: ???" },
 })
 
 local ip_row = sbar.add("item", "wifi.ip", {
@@ -51,7 +54,7 @@ local ip_row = sbar.add("item", "wifi.ip", {
   align = "left",
   padding_left = 14,
   padding_right = 14,
-  label = { string = "IP: ???" },
+  label = { color = colors.subtext, font = { size = 12.0 }, string = "IP: ???" },
 })
 
 local join_row = sbar.add("item", "wifi.join", {

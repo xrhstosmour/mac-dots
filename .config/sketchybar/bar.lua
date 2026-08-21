@@ -1,13 +1,15 @@
 local colors = require("colors")
 
--- barik's own layout constants (`Barik/Constants.swift`):
---   menuBarHeight = 55, menuBarHorizontalPadding = 25
--- The bar is deliberately taller than the notch strip, the widget row sits
--- centred inside it, which is what gives barik its airy look. The native menu
--- bar is hidden outright by `utilities/menu_bar.sh`, and
--- `settings/aerospace.toml` reserves this same height so tiled windows clear
--- it.
-local BAR_HEIGHT = 55
+-- Layout follows barik's own constants (`Barik/Constants.swift`:
+-- menuBarHeight = 55, menuBarHorizontalPadding = 25). barik itself exposes
+-- the height as a setting (`default`, `menu-bar`, or a float), and 55pt is
+-- taller than this bar needs, so it runs a little shorter while keeping the
+-- widget row centred and the same 25pt side padding.
+--
+-- The native menu bar is hidden outright by `utilities/menu_bar.sh`, and
+-- `settings/aerospace.toml` reserves this height so tiled windows clear it.
+-- Changing BAR_HEIGHT means changing that outer top gap to match.
+local BAR_HEIGHT = 40
 local HORIZONTAL_PADDING = 25
 
 sbar.bar({

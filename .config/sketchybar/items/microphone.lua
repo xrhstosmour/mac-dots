@@ -33,7 +33,8 @@ local status_row = sbar.add("item", "microphone.status", {
   align = "left",
   padding_left = 14,
   padding_right = 14,
-  label = { string = "Microphone: On" },
+  icon = { string = icons.mic.on, color = colors.orange, drawing = true },
+  label = { font = { style = settings.font.style_map["Bold"] }, string = "Microphone: On" },
 })
 
 local function refresh()

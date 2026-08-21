@@ -30,7 +30,8 @@ local power_row = sbar.add("item", "bluetooth.power", {
   align = "left",
   padding_left = 14,
   padding_right = 14,
-  label = { string = "Bluetooth: On" },
+  icon = { string = icons.bluetooth.on, color = colors.blue, drawing = true },
+  label = { font = { style = settings.font.style_map["Bold"] }, string = "Bluetooth: On" },
 })
 
 local paired_header = sbar.add("item", "bluetooth.paired_header", {

@@ -43,7 +43,8 @@ local header_row = sbar.add("item", "monitor.header", {
   align = "left",
   padding_left = 14,
   padding_right = 14,
-  label = { string = "CPU --%   ·   Memory --%", color = colors.subtext },
+  icon = { string = icons.cpu, color = colors.green, drawing = true },
+  label = { font = { style = settings.font.style_map["Bold"] }, string = "CPU --%   ·   Memory --%", color = colors.subtext },
 })
 
 local process_rows = {}

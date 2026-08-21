@@ -33,9 +33,11 @@ sbar.default({
   popup = {
     background = {
       border_width = 1,
-      -- barik's popup card: `.cornerRadius(40)` with `.shadow(radius: 30)`
-      -- over a `Color.black` fill (`MenuBarPopupView`).
-      corner_radius = 40,
+      -- barik uses `.cornerRadius(40)`, but its cards are always tall (25pt
+      -- padding around a multi-row list). At these row heights a 40pt radius
+      -- fully rounds a one-row popup into a lozenge, so this is the largest
+      -- radius that still reads as a card at every popup size.
+      corner_radius = 16,
       border_color = colors.popup.border,
       color = colors.popup.bg,
       shadow = { drawing = true },

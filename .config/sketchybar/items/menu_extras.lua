@@ -11,17 +11,40 @@ local settings = require("settings")
 -- They start hidden behind a chevron, the way macOS itself collapses overflow
 -- items, so the bar stays clean until you ask for them.
 
--- Skipped because this bar already replaces them with its own widgets, so
--- aliasing them too would show everything twice. `BentoBox-0` is Control
--- Centre itself.
-local REPLACED_BY_OWN_WIDGET = {
+-- Which items get mirrored.
+--
+-- macOS reports most status items as the generic "Control Center,Item-0",
+-- whether they belong to Apple (the input source picker, Control Centre's own
+-- modules) or to a third-party app, and the trailing index that disambiguates
+-- them shifts as apps come and go. So filtering by index or by "everything
+-- except Apple" cannot be made to stay correct across a reboot.
+--
+-- Instead only items that report a real, stable identifier of their own are
+-- mirrored. That is inherently the third-party apps, it never picks up the
+-- language picker or an Apple module, and it survives reindexing.
+local GENERIC_NAME = "Item%-0"
+
+-- Apple's own named modules, excluded because this bar already replaces them
+-- with its own widgets. `BentoBox-0` is Control Centre itself and
+-- `AudioVideoModule` is its screen-share/now-playing indicator.
+local APPLE_MODULES = {
   ["Clock"] = true,
   ["Battery"] = true,
   ["WiFi"] = true,
   ["Bluetooth"] = true,
   ["Sound"] = true,
   ["BentoBox-0"] = true,
+  ["AudioVideoModule"] = true,
 }
+
+local function should_mirror(_, name)
+  -- Nameless entries are skipped too. They are not status items at all but
+  -- an application's other windows (DockDoor reports two, one of them over a
+  -- thousand points wide), and they mirror as blank gaps.
+  if name == "" then return false end
+  if name:match("^" .. GENERIC_NAME .. "$") then return false end
+  return not APPLE_MODULES[name]
+end
 
 local chevron = sbar.add("item", "menu_extras.toggle", {
   position = "right",
@@ -71,9 +94,9 @@ local function build_aliases()
 
     for _, entry in ipairs(entries) do
       local without_index = entry:match("^(.*)%(%d+%)$") or entry
-      local _, name = without_index:match("^(.-),(.*)$")
+      local owner, name = without_index:match("^(.-),(.*)$")
 
-      if not REPLACED_BY_OWN_WIDGET[name] then
+      if owner and should_mirror(owner, name) then
         sbar.add("alias", entry, {
           position = "right",
           drawing = false,

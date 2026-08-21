@@ -16,7 +16,6 @@ local language = sbar.add("item", "language", {
   position = "right",
   icon = { drawing = false },
   label = { string = "?", font = { family = settings.font.numbers }, color = colors.text },
-  background = { color = colors.pill.bg, border_color = colors.pill.border, border_width = 1 },
   padding_left = 1,
   padding_right = 1,
 })
@@ -63,7 +62,7 @@ local function populate_sources()
         sbar.add("item", "language.source." .. id, {
           position = popup_position,
           width = 200,
-          align = "center",
+          align = "left",
           label = { string = label },
           click_script = "macism " .. id,
         })

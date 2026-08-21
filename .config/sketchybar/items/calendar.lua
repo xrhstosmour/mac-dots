@@ -15,7 +15,6 @@ local calendar = sbar.add("item", "calendar", {
     font = { family = settings.font.numbers },
     color = colors.text,
   },
-  background = { color = colors.pill.bg, border_color = colors.pill.border, border_width = 1 },
   padding_left = 1,
   padding_right = 1,
   update_freq = 30,

@@ -39,7 +39,6 @@ local camera = sbar.add("item", "indicators.camera", {
 })
 
 local indicators_bracket = sbar.add("bracket", "indicators.bracket", { microphone.name, camera.name }, {
-  background = { color = colors.pill.bg, border_color = colors.pill.border, border_width = 1 },
   drawing = false,
 })
 

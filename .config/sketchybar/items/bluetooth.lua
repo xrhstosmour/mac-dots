@@ -11,14 +11,13 @@ local bluetooth_icon = sbar.add("item", "bluetooth.icon", {
   -- its own icon font rather than inheriting the bar's default SF Pro.
   icon = { string = icons.bluetooth.on, color = colors.icon, font = { family = "FiraCode Nerd Font" } },
   label = { drawing = false },
-  background = { color = colors.pill.bg, border_color = colors.pill.border, border_width = 1 },
   padding_left = 1,
   padding_right = 1,
 })
 
 local bluetooth_bracket = sbar.add("bracket", "bluetooth.bracket", { bluetooth_icon.name }, {
   background = { color = colors.transparent },
-  popup = { align = "center" },
+  popup = { align = "left" },
 })
 
 sbar.add("item", { position = "right", width = settings.group_paddings })
@@ -28,7 +27,7 @@ local popup_position = "popup." .. bluetooth_bracket.name
 local power_row = sbar.add("item", "bluetooth.power", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   label = { string = "Bluetooth: On" },
 })
 
@@ -45,7 +44,7 @@ for index = 1, max_rows do
   paired_rows[index] = sbar.add("item", "bluetooth.paired." .. index, {
     position = popup_position,
     width = popup_width,
-    align = "center",
+    align = "left",
     drawing = false,
   })
 end
@@ -62,7 +61,7 @@ for index = 1, max_rows do
   nearby_rows[index] = sbar.add("item", "bluetooth.nearby." .. index, {
     position = popup_position,
     width = popup_width,
-    align = "center",
+    align = "left",
     drawing = false,
   })
 end

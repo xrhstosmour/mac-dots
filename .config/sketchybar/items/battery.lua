@@ -13,7 +13,7 @@ local battery = sbar.add("item", "battery", {
     string = "?%",
     font = { family = settings.font.numbers, size = 10.0 },
     color = colors.subtext,
-    align = "center",
+    align = "left",
     width = 28,
     padding_left = 0,
     padding_right = 0,
@@ -49,7 +49,7 @@ local nub = sbar.add("item", "battery.nub", {
 
 local battery_bracket = sbar.add("bracket", "battery.bracket", { battery.name, nub.name }, {
   background = { color = colors.transparent },
-  popup = { align = "center" },
+  popup = { align = "left" },
 })
 
 sbar.add("item", { position = "right", width = settings.group_paddings })
@@ -62,14 +62,14 @@ local popup_position = "popup." .. battery_bracket.name
 local remaining_row = sbar.add("item", "battery.remaining", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   label = { string = "Time remaining: --:--" },
 })
 
 local lowpower_row = sbar.add("item", "battery.lowpower", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   label = { string = "Low Power Mode: Off" },
 })
 

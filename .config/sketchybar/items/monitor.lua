@@ -30,8 +30,7 @@ local memory = sbar.add("item", "monitor.memory", {
 })
 
 local monitor_bracket = sbar.add("bracket", "monitor.bracket", { cpu.name, memory.name }, {
-  background = { color = colors.pill.bg, border_color = colors.pill.border, border_width = 1 },
-  popup = { align = "center" },
+  popup = { align = "left" },
 })
 
 sbar.add("item", { position = "right", width = settings.group_paddings })
@@ -41,7 +40,7 @@ local popup_position = "popup." .. monitor_bracket.name
 local header_row = sbar.add("item", "monitor.header", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   label = { string = "CPU --%   ·   Memory --%", color = colors.subtext },
 })
 
@@ -50,7 +49,7 @@ for index = 1, process_rows_count do
   process_rows[index] = sbar.add("item", "monitor.process." .. index, {
     position = popup_position,
     width = popup_width,
-    align = "center",
+    align = "left",
     label = { string = "", font = { family = settings.font.numbers } },
     drawing = false,
   })
@@ -59,7 +58,7 @@ end
 local open_row = sbar.add("item", "monitor.open", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   label = { string = "Open bottom", color = colors.subtext },
 })
 

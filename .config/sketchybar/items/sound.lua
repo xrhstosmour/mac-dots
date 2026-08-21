@@ -17,14 +17,13 @@ local volume_icon = sbar.add("item", "sound.icon", {
   position = "right",
   icon = { string = icons.volume._100, color = colors.icon },
   label = { drawing = false },
-  background = { color = colors.pill.bg, border_color = colors.pill.border, border_width = 1 },
   padding_left = 1,
   padding_right = 1,
 })
 
 local sound_bracket = sbar.add("bracket", "sound.bracket", { volume_icon.name }, {
   background = { color = colors.transparent },
-  popup = { align = "center" },
+  popup = { align = "left" },
 })
 
 sbar.add("item", { position = "right", width = settings.group_paddings })
@@ -38,7 +37,7 @@ local popup_position = "popup." .. sound_bracket.name
 local nowplaying_label = sbar.add("item", "sound.nowplaying", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   label = { string = "Nothing playing", max_chars = 26 },
 })
 
@@ -54,7 +53,7 @@ local nowplaying_label = sbar.add("item", "sound.nowplaying", {
 local controls_row = sbar.add("item", "sound.controls", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   icon = { drawing = false },
   label = {
     string = icons.media.back .. "    " .. icons.media.play .. "    " .. icons.media.forward,
@@ -82,7 +81,7 @@ sbar.add("item", "sound.separator", {
 local volume_percent_row = sbar.add("item", "sound.percent", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   label = { string = "Volume: ??%" },
 })
 
@@ -159,7 +158,7 @@ local function show_output_devices()
         sbar.add("item", "sound.device." .. index, {
           position = popup_position,
           width = popup_width,
-          align = "center",
+          align = "left",
           label = { string = device, color = color },
           click_script = "SwitchAudioSource -t output -s " .. shell.quote(device),
         })

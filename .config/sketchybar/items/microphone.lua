@@ -10,7 +10,6 @@ local mic_icon = sbar.add("item", "microphone.icon", {
   position = "right",
   icon = { string = icons.mic.on, color = colors.icon },
   label = { drawing = false },
-  background = { color = colors.pill.bg, border_color = colors.pill.border, border_width = 1 },
   padding_left = 1,
   padding_right = 1,
   update_freq = 10,
@@ -18,7 +17,7 @@ local mic_icon = sbar.add("item", "microphone.icon", {
 
 local microphone_bracket = sbar.add("bracket", "microphone.bracket", { mic_icon.name }, {
   background = { color = colors.transparent },
-  popup = { align = "center" },
+  popup = { align = "left" },
 })
 
 sbar.add("item", { position = "right", width = settings.group_paddings })
@@ -31,7 +30,7 @@ local popup_position = "popup." .. microphone_bracket.name
 local status_row = sbar.add("item", "microphone.status", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   label = { string = "Microphone: On" },
 })
 
@@ -67,7 +66,7 @@ local function show_input_devices()
         sbar.add("item", "microphone.device." .. index, {
           position = popup_position,
           width = popup_width,
-          align = "center",
+          align = "left",
           label = { string = device, color = color },
           click_script = "SwitchAudioSource -t input -s " .. shell.quote(device),
         })

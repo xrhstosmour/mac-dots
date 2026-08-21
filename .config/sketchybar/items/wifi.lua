@@ -11,7 +11,6 @@ local wifi_icon = sbar.add("item", "wifi.icon", {
   position = "right",
   icon = { string = icons.wifi.disconnected, color = colors.icon },
   label = { drawing = false },
-  background = { color = colors.pill.bg, border_color = colors.pill.border, border_width = 1 },
   padding_left = 1,
   padding_right = 1,
   -- SketchyBar's own `wifi_change` event has been non-functional since
@@ -21,7 +20,7 @@ local wifi_icon = sbar.add("item", "wifi.icon", {
 
 local wifi_bracket = sbar.add("bracket", "wifi.bracket", { wifi_icon.name }, {
   background = { color = colors.transparent },
-  popup = { align = "center" },
+  popup = { align = "left" },
 })
 
 sbar.add("item", { position = "right", width = settings.group_paddings })
@@ -31,35 +30,35 @@ local popup_position = "popup." .. wifi_bracket.name
 local power_row = sbar.add("item", "wifi.power", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   label = { string = "Wi-Fi: On" },
 })
 
 local network_row = sbar.add("item", "wifi.network", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   label = { string = "Network: ???" },
 })
 
 local ip_row = sbar.add("item", "wifi.ip", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   label = { string = "IP: ???" },
 })
 
 local join_row = sbar.add("item", "wifi.join", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   label = { string = "Join Other Network…" },
 })
 
 local settings_row = sbar.add("item", "wifi.settings", {
   position = popup_position,
   width = popup_width,
-  align = "center",
+  align = "left",
   label = { string = "Open Network Settings" },
 })
 

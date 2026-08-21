@@ -23,7 +23,7 @@ local volume_icon = sbar.add("item", "sound.icon", {
 
 local sound_bracket = sbar.add("bracket", "sound.bracket", { volume_icon.name }, {
   background = { color = colors.transparent },
-  popup = { align = "left" },
+  popup = { align = "right" },
 })
 
 sbar.add("item", { position = "right", width = settings.group_paddings })

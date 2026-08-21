@@ -20,7 +20,7 @@ local wifi_icon = sbar.add("item", "wifi.icon", {
 
 local wifi_bracket = sbar.add("bracket", "wifi.bracket", { wifi_icon.name }, {
   background = { color = colors.transparent },
-  popup = { align = "left" },
+  popup = { align = "right" },
 })
 
 sbar.add("item", { position = "right", width = settings.group_paddings })

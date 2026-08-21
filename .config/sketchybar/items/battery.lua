@@ -49,7 +49,7 @@ local nub = sbar.add("item", "battery.nub", {
 
 local battery_bracket = sbar.add("bracket", "battery.bracket", { battery.name, nub.name }, {
   background = { color = colors.transparent },
-  popup = { align = "left" },
+  popup = { align = "right" },
 })
 
 sbar.add("item", { position = "right", width = settings.group_paddings })

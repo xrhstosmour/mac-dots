@@ -30,7 +30,7 @@ local memory = sbar.add("item", "monitor.memory", {
 })
 
 local monitor_bracket = sbar.add("bracket", "monitor.bracket", { cpu.name, memory.name }, {
-  popup = { align = "left" },
+  popup = { align = "right" },
 })
 
 sbar.add("item", { position = "right", width = settings.group_paddings })

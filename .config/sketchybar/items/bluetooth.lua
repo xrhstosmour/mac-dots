@@ -17,7 +17,7 @@ local bluetooth_icon = sbar.add("item", "bluetooth.icon", {
 
 local bluetooth_bracket = sbar.add("bracket", "bluetooth.bracket", { bluetooth_icon.name }, {
   background = { color = colors.transparent },
-  popup = { align = "left" },
+  popup = { align = "right" },
 })
 
 sbar.add("item", { position = "right", width = settings.group_paddings })

@@ -22,7 +22,7 @@ local calendar = sbar.add("item", "calendar", {
 
 local calendar_bracket = sbar.add("bracket", "calendar.bracket", { calendar.name }, {
   background = { color = colors.transparent },
-  popup = { align = "center" },
+  popup = { align = "right" },
 })
 
 local popup_position = "popup." .. calendar_bracket.name

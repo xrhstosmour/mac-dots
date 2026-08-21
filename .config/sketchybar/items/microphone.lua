@@ -17,7 +17,7 @@ local mic_icon = sbar.add("item", "microphone.icon", {
 
 local microphone_bracket = sbar.add("bracket", "microphone.bracket", { mic_icon.name }, {
   background = { color = colors.transparent },
-  popup = { align = "left" },
+  popup = { align = "right" },
 })
 
 sbar.add("item", { position = "right", width = settings.group_paddings })

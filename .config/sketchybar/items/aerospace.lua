@@ -73,12 +73,12 @@ for index = 1, WORKSPACE_COUNT do
         -- `clip` shapes the image to the background's own rounded rect,
         -- without it a large source icon overflows past the pill edges
         -- uncropped. `scale` is a raw multiplier on the source image's own
-        -- pixel size, not a fit-to-frame fraction, 0.9 fills a 24pt row
-        -- without the icon reading as oversized, verified empirically against
-        -- a live render (SketchyBar's docs don't specify this).
-        height = 30,
+        -- pixel size, not a fit-to-frame fraction, 0.65 sits comfortably in the
+        -- pill without dominating it, verified empirically against a live
+        -- render (SketchyBar's docs don't specify this).
+        height = 24,
         clip = 1.0,
-        image = { scale = 0.9, drawing = true },
+        image = { scale = 0.65, drawing = true },
         -- barik drops a soft shadow under every window icon
         -- (`WindowView.shadow(color: .iconShadow, radius: 2)`).
         shadow = { drawing = true, color = colors.with_alpha(colors.black, 0.5), distance = 1, angle = 270 },
@@ -132,9 +132,10 @@ for index = 1, WORKSPACE_COUNT do
       color = colors.pill.bg,
       border_color = colors.pill.border,
       border_width = 1,
-      -- barik's `SpaceView`: 30pt tall, 8pt corner radius.
+      -- barik's `SpaceView` is 30pt tall at its 55pt bar; scaled to this
+      -- 40pt bar that becomes 26pt, same 8pt corner radius.
       corner_radius = 8,
-      height = 30,
+      height = 26,
     },
     drawing = false,
   })

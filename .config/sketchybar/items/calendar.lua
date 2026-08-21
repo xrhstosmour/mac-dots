@@ -11,7 +11,7 @@ local calendar = sbar.add("item", "calendar", {
   position = "right",
   icon = { drawing = false },
   label = {
-    string = os.date("%a %d, %H:%M"),
+    string = os.date("%a %d %b  %H:%M"),
     font = { family = settings.font.numbers },
     color = colors.text,
   },
@@ -148,7 +148,7 @@ local function hide_popup()
 end
 
 calendar:subscribe({ "routine", "forced", "system_woke" }, function()
-  calendar:set({ label = os.date("%a %d, %H:%M") })
+  calendar:set({ label = os.date("%a %d %b  %H:%M") })
   today = os.date("*t")
 end)
 

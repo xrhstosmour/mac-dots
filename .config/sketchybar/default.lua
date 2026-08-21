@@ -6,7 +6,9 @@ sbar.default({
   icon = {
     font = {
       family = settings.font.text,
-      style = settings.font.style_map["Semibold"],
+      -- Apple draws menu bar glyphs at a regular weight, semibold reads
+      -- noticeably heavier than the system bar it replaces.
+      style = settings.font.style_map["Regular"],
       size = 15.0,
     },
     color = colors.icon,
@@ -16,7 +18,7 @@ sbar.default({
   label = {
     font = {
       family = settings.font.text,
-      style = settings.font.style_map["Semibold"],
+      style = settings.font.style_map["Regular"],
       size = 13.0,
     },
     color = colors.text,

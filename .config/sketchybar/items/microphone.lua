@@ -31,6 +31,8 @@ local status_row = sbar.add("item", "microphone.status", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "Microphone: On" },
 })
 
@@ -67,6 +69,8 @@ local function show_input_devices()
           position = popup_position,
           width = popup_width,
           align = "left",
+  padding_left = 14,
+  padding_right = 14,
           label = { string = device, color = color },
           click_script = "SwitchAudioSource -t input -s " .. shell.quote(device),
         })

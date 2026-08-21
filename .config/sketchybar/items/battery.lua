@@ -14,6 +14,8 @@ local battery = sbar.add("item", "battery", {
     font = { family = settings.font.numbers, size = 10.0 },
     color = colors.subtext,
     align = "left",
+  padding_left = 14,
+  padding_right = 14,
     width = 28,
     padding_left = 0,
     padding_right = 0,
@@ -63,6 +65,8 @@ local remaining_row = sbar.add("item", "battery.remaining", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "Time remaining: --:--" },
 })
 
@@ -70,6 +74,8 @@ local lowpower_row = sbar.add("item", "battery.lowpower", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "Low Power Mode: Off" },
 })
 

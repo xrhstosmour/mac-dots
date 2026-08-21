@@ -35,6 +35,8 @@ local function popup_row(name, properties)
     label = {
       font = { family = settings.font.numbers },
       align = "center",
+  padding_left = 14,
+  padding_right = 14,
       width = popup_width - 20,
     },
   }
@@ -49,6 +51,8 @@ local month_header = popup_row("calendar.month", {
     string = "",
     font = { family = settings.font.numbers, style = settings.font.style_map["Bold"] },
     align = "center",
+  padding_left = 14,
+  padding_right = 14,
     width = popup_width - 20,
   },
 })
@@ -59,6 +63,8 @@ popup_row("calendar.weekdays", {
     color = colors.subtext,
     font = { family = settings.font.numbers },
     align = "center",
+  padding_left = 14,
+  padding_right = 14,
     width = popup_width - 20,
   },
 })
@@ -74,6 +80,8 @@ local open_row = popup_row("calendar.open", {
     color = colors.subtext,
     font = { family = settings.font.text },
     align = "center",
+  padding_left = 14,
+  padding_right = 14,
     width = popup_width - 20,
   },
 })

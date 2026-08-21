@@ -41,6 +41,8 @@ local header_row = sbar.add("item", "monitor.header", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "CPU --%   ·   Memory --%", color = colors.subtext },
 })
 
@@ -50,6 +52,8 @@ for index = 1, process_rows_count do
     position = popup_position,
     width = popup_width,
     align = "left",
+  padding_left = 14,
+  padding_right = 14,
     label = { string = "", font = { family = settings.font.numbers } },
     drawing = false,
   })
@@ -59,6 +63,8 @@ local open_row = sbar.add("item", "monitor.open", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "Open bottom", color = colors.subtext },
 })
 

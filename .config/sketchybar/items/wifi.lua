@@ -31,6 +31,8 @@ local power_row = sbar.add("item", "wifi.power", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "Wi-Fi: On" },
 })
 
@@ -38,6 +40,8 @@ local network_row = sbar.add("item", "wifi.network", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "Network: ???" },
 })
 
@@ -45,6 +49,8 @@ local ip_row = sbar.add("item", "wifi.ip", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "IP: ???" },
 })
 
@@ -52,6 +58,8 @@ local join_row = sbar.add("item", "wifi.join", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "Join Other Network…" },
 })
 
@@ -59,6 +67,8 @@ local settings_row = sbar.add("item", "wifi.settings", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "Open Network Settings" },
 })
 

@@ -63,6 +63,8 @@ local function populate_sources()
           position = popup_position,
           width = 200,
           align = "left",
+  padding_left = 14,
+  padding_right = 14,
           label = { string = label },
           click_script = "macism " .. id,
         })

@@ -38,6 +38,8 @@ local nowplaying_label = sbar.add("item", "sound.nowplaying", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "Nothing playing", max_chars = 26 },
 })
 
@@ -54,6 +56,8 @@ local controls_row = sbar.add("item", "sound.controls", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   icon = { drawing = false },
   label = {
     string = icons.media.back .. "    " .. icons.media.play .. "    " .. icons.media.forward,
@@ -82,6 +86,8 @@ local volume_percent_row = sbar.add("item", "sound.percent", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "Volume: ??%" },
 })
 
@@ -159,6 +165,8 @@ local function show_output_devices()
           position = popup_position,
           width = popup_width,
           align = "left",
+  padding_left = 14,
+  padding_right = 14,
           label = { string = device, color = color },
           click_script = "SwitchAudioSource -t output -s " .. shell.quote(device),
         })

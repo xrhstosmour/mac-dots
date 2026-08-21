@@ -28,6 +28,8 @@ local power_row = sbar.add("item", "bluetooth.power", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "Bluetooth: On" },
 })
 
@@ -35,6 +37,8 @@ local paired_header = sbar.add("item", "bluetooth.paired_header", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "My Devices", color = colors.subtext },
   drawing = false,
 })
@@ -45,6 +49,8 @@ for index = 1, max_rows do
     position = popup_position,
     width = popup_width,
     align = "left",
+  padding_left = 14,
+  padding_right = 14,
     drawing = false,
   })
 end
@@ -53,6 +59,8 @@ local nearby_header = sbar.add("item", "bluetooth.nearby_header", {
   position = popup_position,
   width = popup_width,
   align = "left",
+  padding_left = 14,
+  padding_right = 14,
   label = { string = "Discover New Devices", color = colors.subtext },
 })
 
@@ -62,6 +70,8 @@ for index = 1, max_rows do
     position = popup_position,
     width = popup_width,
     align = "left",
+  padding_left = 14,
+  padding_right = 14,
     drawing = false,
   })
 end

@@ -3,6 +3,7 @@
   "model": "sonnet",
   "effortLevel": "high",
   "theme": "dark",
+  "outputStyle": "Concise",
   "includeCoAuthoredBy": false,
   "preferredNotifChannel": "terminal_bell",
   "spinnerTipsEnabled": false,

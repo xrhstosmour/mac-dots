@@ -12,7 +12,7 @@ if echo "$host" | grep -qiE '(^|\.)github\.com$'; then
 elif echo "$host" | grep -qiE '(^|\.)phabricator\.'; then
   reason="Use the Phabricator MCP tools per the read-phabricator-task skill, not WebFetch."
 elif echo "$host" | grep -qiE '(^|\.)sentry\.io$'; then
-  reason="Use sentry-cli/curl per the read-sentry-issue skill, not WebFetch."
+  reason="Use the Sentry MCP tools per the read-sentry-issue skill, not WebFetch."
 elif echo "$host" | grep -qiE '(^|\.)grafana\.'; then
   reason="Use logcli per the search-grafana-logs skill, not WebFetch."
 else

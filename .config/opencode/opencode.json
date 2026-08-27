@@ -13,6 +13,11 @@
       "type": "remote",
       "url": "{env:PHABRICATOR_MCP_URL}",
       "enabled": true
+    },
+    "sentry": {
+      "type": "remote",
+      "url": "https://mcp.sentry.dev/mcp?skills=inspect",
+      "enabled": true
     }
   },
   "permission": {

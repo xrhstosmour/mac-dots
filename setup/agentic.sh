@@ -182,4 +182,15 @@ if (settings.statusLine && typeof settings.statusLine.command === "string") {
         log_info "Registering Phabricator MCP server..."
         claude mcp add --transport http phabricator "$PHABRICATOR_MCP_URL" -s user
     fi
+
+    # Sentry's official hosted MCP, OAuth handled lazily on first use, see the read-sentry-issue skill for the read-only scoping steps.
+    if ! command -v claude &>/dev/null; then
+        log_warning "Skipping Sentry MCP registration, 'claude' CLI not found."
+    elif claude mcp get sentry &>/dev/null; then
+        log_info "Sentry MCP server already registered, skipping."
+    else
+        log_info "Registering Sentry MCP server..."
+        claude mcp add --transport http sentry "https://mcp.sentry.dev/mcp?skills=inspect" -s user
+        log_warning "Uncheck everything except 'Inspect Issues & Events' on the consent screen."
+    fi
 fi

@@ -8,6 +8,13 @@
     "~/.config/opencode/instructions/versioning.md",
     "~/.config/opencode/instructions/communication.md"
   ],
+  "mcp": {
+    "phabricator": {
+      "type": "remote",
+      "url": "{env:PHABRICATOR_MCP_URL}",
+      "enabled": true
+    }
+  },
   "permission": {
     "external_directory": {
       "~/.config/agentic/**": "allow",

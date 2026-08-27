@@ -1,6 +1,6 @@
 ---
 name: read-phabricator-task
-description: Use when a `Phabricator` link like `https://phabricator.<sub>.<domain>/T<id>` appears, or when reading, searching, or analyzing Phabricator tasks via the Conduit API. Not for creating or editing tasks, use the `manage-phabricator-task` skill for that.
+description: Use when a `Phabricator` link like `https://phabricator.<sub>.<domain>/T<id>` appears, or when reading, searching, or analyzing Phabricator tasks via the official Phabricator MCP server. Not for creating or editing tasks, use the `manage-phabricator-task` skill for that.
 ---
 
 # Read Phabricator Task
@@ -8,38 +8,35 @@ description: Use when a `Phabricator` link like `https://phabricator.<sub>.<doma
 ## When to use
 
 - User shares a Phabricator task link like: `https://phabricator.<sub>.<domain>/T<id>`.
-- Reading, searching, or analyzing Phabricator tasks via the Conduit API.
+- Reading, searching, or analyzing Phabricator tasks via the official Phabricator MCP server.
 - User says "Phabricator" or "phab", and isn't asking to create or edit a task, see `manage-phabricator-task` for that.
 
-When you encounter a `https://phabricator.<sub>.<domain>/T<id>` link, use `curl` to fetch task details and related data via the `Conduit` API.
+When you encounter a `https://phabricator.<sub>.<domain>/T<id>` link, use the official Phabricator MCP server to fetch task details and related data.
 
 ## Required behavior
 
-- Always use Conduit API calls, `$PHAB/api/...`, first.
-- Do not use browser/web scraping for Phabricator task URLs.
+- Always use the Phabricator MCP tools first.
+- Do not scrape or fetch Phabricator task pages directly in a browser.
 - SSO-protected pages usually return a Google sign-in HTML page, not task content.
-- If API calls fail, troubleshoot token/auth first, then retry API calls.
+- If MCP calls fail, troubleshoot the MCP connection/auth first, then retry.
 
 ## Authentication
 
-1. Look for an environment variable named `$PHABRICATOR_TOKEN` or `$CONDUIT_TOKEN`.
-2. Look for a token in `~/.arcrc`:
+Use the official Phabricator MCP server only. Phabricator holds files, shared passwords, and secrets far beyond task content, so a manually managed credential is real exposure.
 
-  ```bash
-   jq -r '.hosts | to_entries[] | select(.key | test("phabricator")) | .value.token // empty' ~/.arcrc
-  ```
-
-3. Look for a token in 1Password: `op item get "Phabricator Token" --fields label=credential --reveal`.
-4. Ask the user to provide a token.
-
-After finding a token, verify it before task calls:
-
-```bash
-curl -s -X POST "$PHAB/api/user.whoami" \
-  -d api.token="$TOKEN" | jq .
-```
-
-If `error_code` is not null, token/auth is invalid and must be fixed first.
+- Discover the available tools with `ToolSearch` (query `"phabricator"` or `"maniphest"`), exact tool names depend on how the server was registered locally, do not hardcode a guess.
+- One-time setup, if the tools aren't found, resolve the server URL in this order, it's org-specific and must never be hardcoded or guessed:
+  1. `$PHABRICATOR_MCP_URL`, if already set in the session.
+  2. Derive it from `~/.arcrc`, standard `arc`/Phabricator tooling config, works for any org that has `arc` set up:
+     ```bash
+     PHAB_HOST=$(jq -r '.hosts | to_entries[] | select(.key | test("phabricator")) | .key' ~/.arcrc 2>/dev/null | head -1)
+     [ -n "$PHAB_HOST" ] && echo "${PHAB_HOST%/api/}/ai/mcp"
+     ```
+     `/ai/mcp` is the path convention this org's MCP is hosted at, try it first, but don't assume every org uses the identical path, if the resulting URL fails to connect, that's a sign to fall through to step 3 rather than retry blindly.
+  3. Ask the user for their organization's official Phabricator MCP URL.
+  Tell the user to run `claude mcp add --transport http phabricator <url> -s user` (Claude Desktop users can instead check the connectors marketplace for their org's Phabricator connector). This is a manual step the user runs themselves, not something to script.
+- No token is required. The first call opens a browser tab for login/authorize. Tokens are ephemeral and periodically expire, a re-authorize prompt mid-session is expected behavior, not a failure.
+- Never fall back to a stored Conduit token, a raw `curl` call to `$PHAB/api/...`, or a different Phabricator MCP server. If the official MCP misbehaves, loop in the platform team instead.
 
 ## Base URL
 
@@ -47,64 +44,9 @@ Derive the Phabricator base URL from the link you see:
 
 `https://phabricator.example.com/T67890` → `PHAB="https://phabricator.example.com"`
 
-The API base is `$PHAB/api/`.
-
-## Quick reliable flow, copy/paste
-
-Use this when starting from a task link and you need a robust path that avoids SSO HTML pages. Always use this block verbatim for token lookup. Do not write your own token resolution, partial implementations silently drop the 1Password fallback.
-
-```bash
-PHAB_LINK="https://phabricator.example.com/T241638"
-PHAB="${PHAB_LINK%%/T*}"
-ID="${PHAB_LINK#${PHAB}/T}"
-ID="${ID%%/}"
-
-TOKEN="${PHABRICATOR_TOKEN:-${CONDUIT_TOKEN:-}}"
-
-if [ -z "$TOKEN" ] && [ -f "$HOME/.arcrc" ]; then
-  TOKEN="$(jq -r '.hosts | to_entries[] | select(.key | test("phabricator")) | .value.token // empty' ~/.arcrc)"
-fi
-
-if [ -z "$TOKEN" ] && command -v op >/dev/null 2>&1; then
-  TOKEN="$(op item get "Phabricator Token" --fields label=credential --reveal 2>/dev/null || true)"
-fi
-
-[ -n "$TOKEN" ] || { echo "No Phabricator token found"; exit 1; }
-
-curl -s -X POST "$PHAB/api/maniphest.search" \
-  -d api.token="$TOKEN" \
-  -d "constraints[ids][0]=$ID" \
-  -d "attachments[projects]=1" \
-  -d "attachments[subscribers]=1" \
-  -d limit=1 | jq -r '
-if .error_code then
-  "ERROR: \(.error_code) \(.error_info // "")" | halt_error(1)
-elif (.result.data | length) == 0 then
-  "Task not found" | halt_error(1)
-else
-  .result.data[0] |
-  "T\(.id): \(.fields.name // "")",
-  "Status: \(.fields.status.name // "") | Priority: \(.fields.priority.name // "")",
-  "",
-  (.fields.description.raw // "")
-end
-'
-```
-
 ## Fetch a task by ID, T\<id\>
 
-Extract the numeric ID from the link, like `T242861` to `242861`.
-
-```bash
-PHAB="<base-url-from-link>"
-TOKEN="<token>"
-curl -s -X POST "$PHAB/api/maniphest.search" \
-  -d api.token="$TOKEN" \
-  -d "constraints[ids][0]=<id>" \
-  -d "attachments[projects]=1" \
-  -d "attachments[subscribers]=1" \
-  -d limit=1 | jq .
-```
+Extract the numeric ID from the link, like `T242861` to `242861`, and pass it to the MCP task-search tool (with `projects`/`subscribers` attachments included if the tool supports it). This is the robust path that avoids SSO HTML pages, always prefer it over a raw fetch of the task URL.
 
 Response fields of interest:
 
@@ -121,139 +63,48 @@ Response fields of interest:
 
 ## Compact task summary
 
-```bash
-PHAB="<base-url>" TOKEN="<token>" ID="<id>"
-curl -s -X POST "$PHAB/api/maniphest.search" \
-  -d api.token="$TOKEN" \
-  -d "constraints[ids][0]=$ID" \
-  -d limit=1 | jq -r '
-.result.data[0] |
-"T\(.id): \(.fields.name // "")",
-"  Status: \(.fields.status.name // "") | Priority: \(.fields.priority.name // "")",
-"  Created: \(.fields.dateCreated // "") | Modified: \(.fields.dateModified // "")",
-"",
-(.fields.description.raw // "")[:3000]
-'
-```
+Call the MCP task-search tool by ID and summarize: title, status, priority, created/modified dates, and the first ~3000 characters of the description.
 
 ## Task transactions, history and comments
 
-```bash
-PHAB="<base-url>" TOKEN="<token>" ID="<id>"
-curl -s -X POST "$PHAB/api/maniphest.gettasktransactions" \
-  -d api.token="$TOKEN" \
-  -d "ids[0]=$ID" | jq .
-```
+Call the MCP task-transactions/history tool by ID.
 
 Transaction types: `status`, `reassign`, `description`, `title`, `priority`, `core:edge`, `core:create`, `core:subscribers`, `core:space`.
 
 ## Resolve PHIDs to names
 
-```bash
-PHAB="<base-url>" TOKEN="<token>"
-curl -s -X POST "$PHAB/api/phid.query" \
-  -d api.token="$TOKEN" \
-  -d "phids[0]=<phid1>" \
-  -d "phids[1]=<phid2>" | jq -r '
-.result | to_entries[] | "\(.key): \(.value.fullName) (\(.value.typeName))"
-'
-```
+Call the MCP PHID-resolution tool with one or more PHIDs to get back full name and type for each.
 
 ## Search users
 
-```bash
-# By username, exact.
-curl -s -X POST "$PHAB/api/user.search" \
-  -d api.token="$TOKEN" \
-  -d "constraints[usernames][0]=<username>" \
-  -d limit=5 | jq .
-
-# By display name, fuzzy.
-curl -s -X POST "$PHAB/api/user.search" \
-  -d api.token="$TOKEN" \
-  -d "constraints[query]=<name>" \
-  -d limit=5 | jq -r '
-.result.data[] | "\(.fields.username // "-"), \(.fields.realName // "-"), PHID: \(.phid)"
-'
-```
+Call the MCP user-search tool, by exact username or by fuzzy display-name query. On this org's server it returns "not authorized" for every query shape, only self-lookup (who am I) works directly. To resolve someone else's username to a PHID, search tasks assigned to that username instead and read the owner PHID off a result, see `manage-phabricator-task`'s "Resolve a username to a PHID".
 
 ## Search projects
 
-```bash
-curl -s -X POST "$PHAB/api/project.search" \
-  -d api.token="$TOKEN" \
-  -d "constraints[query]=<name>" \
-  -d limit=5 | jq -r '
-.result.data[] | "\(.fields.name // "-"), \(.fields.slug // "-"), PHID: \(.phid)"
-'
-```
+Call the MCP project-search tool by name query.
 
 ## Search tasks
 
-```bash
-# By text query.
-curl -s -X POST "$PHAB/api/maniphest.search" \
-  -d api.token="$TOKEN" \
-  -d "constraints[query]=<search terms>" \
-  -d limit=10 | jq -r '
-.result.data[] | "T\(.id): \(.fields.name // "")",
-"  Status: \(.fields.status.name // ""), Owner PHID: \(.fields.ownerPHID // "null")",
-""
-'
-
-# By author PHID.
-curl -s -X POST "$PHAB/api/maniphest.search" \
-  -d api.token="$TOKEN" \
-  -d "constraints[authorPHIDs][0]=<phid>" \
-  -d limit=20 | jq -r '
-.result.data[] | "T\(.id): \(.fields.name // ""), \(.fields.status.name // "")"
-'
-
-# By status, open, inprogress, resolved, etc.
-curl -s -X POST "$PHAB/api/maniphest.search" \
-  -d api.token="$TOKEN" \
-  -d "constraints[statuses][0]=<status>" \
-  -d limit=20 | jq -r '
-.result.data[] | "T\(.id): \(.fields.name // ""), \(.fields.status.name // "")"
-'
-```
+Call the MCP task-search tool with the relevant constraint: free-text query, author PHID, or status (`open`, `inprogress`, `resolved`, etc.).
 
 ## Who am I?
 
-```bash
-curl -s -X POST "$PHAB/api/user.whoami" \
-  -d api.token="$TOKEN" | jq .
-```
+Call the MCP "who am I" tool to get the current authenticated user's PHID and username.
 
 ## Task URL format
 
 - Task links: `https://phabricator.<sub>.<domain>/T<id>`
 - User links: `https://phabricator.<sub>.<domain>/p/<username>/`
 - Project links: `https://phabricator.<sub>.<domain>/tag/<slug>/`
-- API takes numeric IDs, such as `242861`, not `T242861`.
+- The underlying API takes numeric IDs, such as `242861`, not `T242861`.
 
 ## Pagination
 
-```bash
-# Page 1, save cursor.
-curl -s -X POST "$PHAB/api/maniphest.search" \
-  -d api.token="$TOKEN" \
-  -d "constraints[statuses][0]=resolved" \
-  -d limit=100 > /tmp/page1.json
-AFTER=$(jq -r '.result.cursor.after // ""' /tmp/page1.json)
-
-# Page 2.
-curl -s -X POST "$PHAB/api/maniphest.search" \
-  -d api.token="$TOKEN" \
-  -d "constraints[statuses][0]=resolved" \
-  -d limit=100 \
-  -d "after=$AFTER" > /tmp/page2.json
-```
+For large result sets, pass the MCP search tool's cursor/page parameter (if it exposes one) to fetch subsequent pages, rather than assuming a single call returns everything.
 
 ## Notes
 
-- All API requests are `POST` with form-encoded data. Pass the token as `api.token=<token>`.
 - Timestamps are Unix epoch, seconds. Convert to ISO 8601 with `date -u -r <epoch> "+%Y-%m-%dT%H:%M:%SZ"`.
-- PHIDs are opaque internal identifiers, use `phid.query` to resolve them.
-- If you cannot find a token, ask the user for one or to set `$PHABRICATOR_TOKEN`.
-- If you see Google sign-in HTML, you are not using Conduit API correctly, or token is missing/invalid.
+- PHIDs are opaque internal identifiers, use the MCP PHID-resolution tool to resolve them.
+- If the MCP tools aren't available, tell the user to add the server rather than falling back to a token, see Authentication above.
+- If you see Google sign-in HTML, something is trying to fetch the page directly instead of going through the MCP tools, switch to the MCP tools.

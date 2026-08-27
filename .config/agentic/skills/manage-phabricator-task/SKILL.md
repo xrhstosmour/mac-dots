@@ -1,8 +1,10 @@
 ---
 name: manage-phabricator-task
 description: >
-  Create and edit Phabricator tasks via the Conduit API: new tasks, or updating
-  an existing task's status, title, description, owner, priority, or subscribers.
+  Create and edit Phabricator tasks via the official Phabricator MCP server: new
+  tasks, or updating an existing task's status, title, description, owner, priority,
+  project tags, or subscribers, added indirectly via @-mention, resolved from a
+  username where possible.
   Triggered when the user explicitly mentions Phabricator or "phab": "create phab
   task/ticket/issue", "update/edit phab task", "reassign/close/reopen task
   T<id>", "change priority on T<id>", or "/manage-phabricator-task".
@@ -16,44 +18,31 @@ description: >
 - User asks to update, edit, reassign, close, reopen, or change the status/priority of an existing Phabricator task.
 - Do NOT use for just reading existing tasks. Use the `read-phabricator-task` skill for that.
 
-## Prerequisites
+## Authentication
 
-Derive `$PHAB` in order:
-1. `$PHAB_URI` env var.
-2. `~/.arcrc` host key, strip the `/api/` suffix: `jq -r '.hosts | to_entries[] | select(.key | test("phabricator")) | .key' ~/.arcrc | sed 's|/api/||'`
-3. Ask the user.
+Use the official Phabricator MCP server only. Phabricator holds files, shared passwords, and secrets far beyond task content, so a manually managed credential is real exposure.
 
-Find `$TOKEN` in order. Always use this block verbatim, do not write your own token resolution, partial implementations silently drop the 1Password fallback:
+- Discover the available tools with `ToolSearch` (query `"phabricator"` or `"maniphest"`), exact tool names depend on how the server was registered locally, do not hardcode a guess.
+- One-time setup, if the tools aren't found: resolve the server URL exactly as described in the `read-phabricator-task` skill's Authentication section, `$PHABRICATOR_MCP_URL`, then `~/.arcrc`-derived, then ask the user, don't re-derive it a different way here.
+- No token is required. The first call opens a browser tab for login/authorize. Tokens are ephemeral and periodically expire, a re-authorize prompt mid-session is expected behavior, not a failure.
+- Never fall back to a stored Conduit token, a raw `curl` call to `$PHAB/api/...`, or a different Phabricator MCP server. If the official MCP misbehaves, loop in the platform team instead.
 
-```bash
-TOKEN="${PHABRICATOR_TOKEN:-${CONDUIT_TOKEN:-}}"
+## Known limitations
 
-if [ -z "$TOKEN" ] && [ -f "$HOME/.arcrc" ]; then
-  TOKEN="$(jq -r '.hosts | to_entries[] | select(.key | test("phabricator")) | .value.token // empty' ~/.arcrc)"
-fi
+Verified live against this MCP server, don't try to work around these:
 
-if [ -z "$TOKEN" ] && command -v op >/dev/null 2>&1; then
-  TOKEN="$(op item get "Phabricator Token" --fields label=credential --reveal 2>/dev/null || true)"
-fi
+- No user directory search. `pha_user_search` returns "not authorized" for every query shape tried, on an account that otherwise has full task read/write access. Treat it as unavailable, `pha_user_whoami` (self) is the only user-lookup tool that works directly. See "Resolve a username to a PHID" below for a working alternative.
+- No subscriber field on `pha_task_create`/`pha_task_update`, not a permissions issue, the field doesn't exist on those tools. `pha_task_update_relationships` only handles `subtask`/`parent` edges. The only way to subscribe someone is indirect: @-mentioning their `PHID-USER-...` in a description or comment auto-subscribes them.
 
-[ -n "$TOKEN" ] || { echo "No Phabricator token found"; exit 1; }
-```
+### Resolve a username to a PHID
 
-If all three lookups fail, ask the user for a token.
-
-Verify before proceeding:
-
-```bash
-curl -s -X POST "$PHAB/api/user.whoami" -d api.token="$TOKEN" | jq .
-```
-
-If `error_code` is not null, token/auth is invalid and must be fixed first.
+`pha_user_search` can't look up other people, but `pha_task_search_advanced` accepts plain usernames in its `assigned` filter and resolves them server-side. Call `pha_task_search_advanced(assigned=["<username>"], limit=1)` and read `ownerPHID` off the first result, that's the person's PHID. Use this for a subscriber, or an assignee other than self. If it comes back empty, that person has never owned a task and can't be resolved this way, ask for their `PHID-USER-...` directly or tell the user to add them manually after creation.
 
 ## Task creation workflow
 
 ### 1. Gather required fields
 
-- Tag, required: Phabricator project. Ask: "Which tag?"
+- Tag, required: Phabricator project. Ask: "Which tag?" Before asking, check the user's own last 2-3 authored tasks (`pha_task_search_advanced` with `author_phids=[<self-phid>]`, `order="newest"`, `limit=3`, `include_projects=true`) and offer any tags found there as quick options alongside "or something else". Resolve a chosen or typed name to a PHID with `pha_project_search` (`name_like=<text>`), show candidates and ask when there's no exact match.
 - Title, required: Short imperative phrase, max ~60 characters. No priority prefix, priority is a separate field. Do not wrap words in backticks, unlike commit messages, Phabricator titles are plain text. Example: Add dark mode toggle.
 
 ### 2. Gather optional fields
@@ -63,18 +52,12 @@ Ask all at once in a single message:
 - Description: auto-generate from git? y/n
 - Priority: P0–P4
 - Assignee: default self-assign
-- Subscribers
+- Subscribers: usernames, resolved to PHIDs, see "Resolve a username to a PHID" above
 - Status: default open
 - Parent task: TID
 - Reference links
 
-Resolve the current user's PHID for self-assignment:
-
-```bash
-curl -s -X POST "$PHAB/api/user.whoami" -d api.token="$TOKEN" | jq -r '.result.phid'
-```
-
-Use this PHID as the default assignee unless the user specifies someone else.
+Resolve the current user's PHID for self-assignment via `pha_user_whoami`. Use this PHID as the default assignee unless the user names someone else, in which case resolve their username the same way as subscribers.
 
 ### 3. Description generation
 
@@ -148,18 +131,9 @@ Show the generated description and ask for approval before proceeding.
 
 ### 4. Resolve PHIDs
 
-Run all resolutions in parallel, `&` + `wait`, when multiple are needed.
+Resolve project and parent-task PHIDs via `pha_project_search`/`pha_task_search_advanced` before creating, and any subscriber or non-self assignee usernames per "Resolve a username to a PHID" above, launch independent lookups concurrently when multiple are needed.
 
-```bash
-# Project.
-curl -s -X POST "$PHAB/api/project.search" -d api.token="$TOKEN" \
-  -d "constraints[query]=<name>" -d limit=5 \
-  | jq -r '.result.data[] | "\(.phid)  \(.fields.name)"'
-
-# User: endpoint user.search, constraint constraints[usernames][0]=<username>, limit=1.
-# Task, parent: endpoint maniphest.search, constraint constraints[ids][0]=<id>, limit=1.
-# All return .phid or .result.data[0].phid. Show candidates on no exact match.
-```
+Show candidates and ask when there's no exact match.
 
 ### 5. Preview and confirm
 
@@ -168,7 +142,7 @@ Tag:         <project-name>
 Title:       <title>
 Priority:    <priority>
 Assignee:    <username>, default: self
-Subscribers: <usernames>
+Subscribers: <usernames>, or none
 Status:      <status>
 Parent:      T<id>
 
@@ -179,75 +153,49 @@ Ask: "Ready to create?" Do NOT execute without explicit confirmation.
 
 ### 6. Execute creation
 
-```bash
-RESULT=$(curl -s -X POST "$PHAB/api/maniphest.edit" \
-  -d api.token="$TOKEN" \
-  -d output=json \
-  --data-urlencode "transactions[0][type]=title" \
-  --data-urlencode "transactions[0][value]=<title>" \
-  -d "transactions[1][type]=projects.set" \
-  -d "transactions[1][value][0]=<project-phid>" \
-  --data-urlencode "transactions[2][type]=description" \
-  --data-urlencode "transactions[2][value]=<description>")
+`pha_task_create` only accepts `title`, `description`, and `owner_phid`, nothing else, so this is always two calls, not one:
 
-ERROR=$(echo "$RESULT" | jq -r '.error_code // empty')
-if [ -n "$ERROR" ]; then
-  echo "Error: $(echo "$RESULT" | jq -r '.error_info // ""')"
-  exit 1
-fi
-TASK_ID=$(echo "$RESULT" | jq -r '.result.object.id')
-echo "Task created: $PHAB/T$TASK_ID"
-```
+1. If any subscribers were resolved, append one `@<phid>` mention per person to the end of the description, that's what auto-subscribes them, there's no separate field for it.
+2. `pha_task_create(title=..., description=..., owner_phid=<assignee-phid>)`. On success it returns the created task's `id`/`phid`, report the task back as `$PHAB/T<id>`. New tasks default to priority "Needs Triage", not Normal, and to no project tag at all.
+3. If a tag, non-default priority, or anything else was requested, immediately follow with `pha_task_update(task_id=<phid from step 2>, ...)` to set them, a task created without this call is missing its tag and sitting at "Needs Triage".
 
-Add optional transactions by appending `--data-urlencode "transactions[N][type]=<type>"` etc., incrementing `N`:
-
-| Field | type | value |
-|-------|------|-------|
-| Priority | `priority` | keyword, see table below |
-| Assignee | `owner` | `<assignee-phid>` |
-| Subscribers | `subscribers.add` | `value[0]=<phid>`, `value[1]=<phid>`, ... |
-| Status | `status` | `open`, `inprogress`, `resolved` |
-| Parent task | `parents.add` | `value[0]=<parent-phid>` |
+| Field | `pha_task_update` param |
+|-------|-------------------------|
+| Tag | `projects_add` (array of project PHIDs), or `projects_set` to overwrite |
+| Priority | `priority`, keyword, see table below |
+| Assignee | `owner_phid` |
+| Status | `status`: `open`, `inprogress`, `resolved` |
+| Parent task | use `pha_task_update_relationships` instead, `relationship_type="parent"` |
 
 ### 7. Error handling
 
-| Code | Cause | Fix |
-|------|-------|-----|
-| `ERR-CONDUIT-CORE` | Invalid PHID | Re-resolve the PHID |
-| `ERR-CONDUIT-ACCESS` | Token lacks permissions | Ask user for a different token |
-| `ERR-CONDUIT-UNABLE-TO-SERIALIZE` | Malformed payload | Check quotes and encoding |
-| Other | Unknown | Show full output, ask user how to proceed |
+The MCP tool surfaces Conduit errors in its response. Common cases:
+
+| Cause | Fix |
+|-------|-----|
+| Invalid PHID | Re-resolve the PHID |
+| Insufficient permissions | Tell the user, don't retry with a different auth path |
+| Malformed payload | Check the field values passed to the tool |
+| Priority rejected as invalid | You likely passed a display name (`"Normal"`) instead of the lowercase keyword (`normal`), see the priority table below |
+| Not authenticated / session expired | Re-run the tool, it should trigger the browser re-authorize flow |
+| Other | Show the full tool output, ask the user how to proceed |
 
 ## Update existing task
 
-Fetch the task first to confirm you have the right one and to show the user a before/after preview:
+Fetch the task first via `pha_task_get`, by numeric ID, to confirm you have the right one and to show the user a before/after preview.
 
-```bash
-curl -s -X POST "$PHAB/api/maniphest.search" \
-  -d api.token="$TOKEN" \
-  -d "constraints[ids][0]=<task-id>" \
-  -d limit=1 | jq .
-```
-
-Then apply the change:
-
-```bash
-curl -s -X POST "$PHAB/api/maniphest.edit" \
-  -d api.token="$TOKEN" \
-  -d "objectIdentifier=<task-id-or-phid>" \
-  --data-urlencode "transactions[0][type]=<type>" \
-  --data-urlencode "transactions[0][value]=<value>"
-```
-
-Common types: `status`, `title`, `description`, `owner`, `subscribers.add`, `subscribers.remove`.
+Then apply the change via `pha_task_update`, passing the task PHID and the field(s) to update: `status`, `title`, `description`, `owner_phid`, `priority`, `projects_add`/`projects_remove`/`projects_set`. Use `pha_task_add_comment` to add a comment instead of a field edit, or to add subscribers, resolve their PHIDs per "Resolve a username to a PHID" above and mention each one, `@<phid>`, in the comment.
 
 Show the user what will change and ask for confirmation before executing, same as task creation.
 
 ## Priority keyword mapping
 
+Keywords are strict and case-sensitive lowercase, the API rejects `"Normal"` and tells you the valid set on error: `unbreak`, `triage`, `high`, `normal`, `low`, `wish`.
+
 | Code | Name | Keyword |
 |------|------|---------|
 | P0 | Unbreak Now! | `unbreak` |
+| — | Needs Triage | `triage`, this is the default for new tasks |
 | P1 | High | `high` |
 | P2 | Normal | `normal` |
 | P3 | Low | `low` |

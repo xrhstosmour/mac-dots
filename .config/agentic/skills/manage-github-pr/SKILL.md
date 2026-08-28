@@ -270,7 +270,9 @@ pr_url=$(gh pr create \
 pr_number=$(echo "$pr_url" | grep -oE '/pull/[0-9]+$' | grep -oE '[0-9]+')
 ```
 
-#### Labels
+### 9. Labels
+
+Required for every PR you create, run it immediately after step 8, in the same turn, before reporting anything back. Applying no label because nothing matched is a valid outcome, treating this as optional detail and moving straight to the summary is not.
 
 Resolve the canonical repo explicitly first. A local `origin` URL left over from a GitHub rename or transfer can silently resolve `gh pr list` to the wrong or an empty repo, with no error, unlike `gh pr create`/`push`, which do surface a "repository moved" warning. Never rely on implicit repo resolution for this step.
 
@@ -301,15 +303,16 @@ echo "$subject" | grep -qE 'doc|readme' && has_label documentation && \
 
 If none of these match, or the repo has none of these labels, skip labels entirely.
 
-### 9. Summary
+### 10. Summary
 
 ```
 PR created: <url>
 Branch: feature/<name>
 Commits: <N>
+Labels: <applied labels, or "none matched">
 ```
 
-### 10. Trigger CI
+### 11. Trigger CI
 
 After creating the PR, check if the project has CI/CD workflows that do not start automatically on PR creation. Look for:
 
@@ -329,4 +332,5 @@ git push origin HEAD:tests/<branch-name>
 - Show commit plan and `PR` body before pushing or creating the `PR`.
 - On command failure: show the error, stop, and ask the user.
 - Only apply labels that already exist in the repo. Never create new labels.
+- Labels is a required step for every PR you create, run it right after `gh pr create`, in the same turn, don't stop at the returned URL and report done first.
 - `PR` is always created ready for review, not draft.

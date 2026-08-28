@@ -280,28 +280,26 @@ Resolve the canonical repo explicitly first. A local `origin` URL left over from
 repo="$(gh repo view --json nameWithOwner --jq .nameWithOwner)"
 ```
 
-Classify from this PR's own title and commit messages, never from label frequency in past PRs, that only reflects what happened to be common recently, not what this PR is. Works on the very first PR in a repo, since it doesn't depend on any label history. Only apply labels that already exist in the repo, never create new ones.
+Only apply labels that already exist in the repo, never create new ones:
 
 ```bash
-# Existing labels only, never create new ones. Avoid `mapfile`/arrays,
-# this must run under whatever `sh` a hook or CI step invokes, not just
-# an interactive bash 4+ shell.
-existing_labels="$(gh label list --repo "$repo" --json name --jq '.[].name')"
-has_label() { echo "$existing_labels" | grep -qx "$1"; }
-
-# Classify from this PR's own title and commit messages.
-subject="$(gh pr view "$pr_number" --repo "$repo" --json title,commits \
-  --jq '[.title, (.commits[].messageHeadline)] | join(" ")' | tr '[:upper:]' '[:lower:]')"
-
-echo "$subject" | grep -qE 'fix|bug' && has_label bug && \
-  gh pr edit "$pr_number" --repo "$repo" --add-label bug
-echo "$subject" | grep -qE 'add|implement|support|introduce' && has_label enhancement && \
-  gh pr edit "$pr_number" --repo "$repo" --add-label enhancement
-echo "$subject" | grep -qE 'doc|readme' && has_label documentation && \
-  gh pr edit "$pr_number" --repo "$repo" --add-label documentation
+gh label list --repo "$repo"
 ```
 
-If none of these match, or the repo has none of these labels, skip labels entirely.
+Do not classify with a keyword grep against the title, a specific, non-generic title (the style `versioning.md` asks for) often carries no literal "fix"/"bug"/"add" substring even when it clearly is one of those things. Pick the best-fitting existing label by judgment instead, grounded in two signals together:
+
+1. **This PR's actual content.** Its title, its commit messages, and why the change was made, the reasoning already established earlier in this conversation, not just literal words in the title.
+2. **This repo's own labeling precedent.** How labels have actually been applied to this user's recent PRs here, to learn the repo's conventions rather than guessing from generic label names:
+   ```bash
+   gh pr list --repo "$repo" --state all --limit 30 --json title,labels
+   ```
+   Find the closest precedent, a past PR describing a similar kind of change, a broken dependency restored, a new capability added, a docs-only edit, and see which label(s) it got, if any.
+
+Weigh both signals together and pick one best-fitting label. If no existing label clearly fits, or the repo has no labels, skip labeling and say so in the summary, don't force one just to fill the field.
+
+```bash
+gh pr edit "$pr_number" --repo "$repo" --add-label "<chosen label>"
+```
 
 ### 10. Summary
 
@@ -309,7 +307,7 @@ If none of these match, or the repo has none of these labels, skip labels entire
 PR created: <url>
 Branch: feature/<name>
 Commits: <N>
-Labels: <applied labels, or "none matched">
+Labels: <applied label, or "none fit">
 ```
 
 ### 11. Trigger CI

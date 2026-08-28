@@ -80,6 +80,12 @@ Supply chain: Flag new dependencies pulled from outside the project's package re
 
 Redirects: User-controlled redirect targets must be validated against an allowlist.
 
+Control relaxation: Treat a diff that weakens an existing security control, disabling a CSRF/CORS check, widening a permit or allow list, loosening a content-security-policy or frame-ancestors directive, adding an "allow other host" style override, as high severity by default, even before a concrete exploit chain is proven. Removing or loosening a guard is often riskier than never having had one, since it looks intentional.
+
+Existing code is not evidence of a safe pattern. Don't wave through a construct because it already ships and runs elsewhere in the codebase, judge it on its own merits like newly written code.
+
+Out-of-scope findings: If you notice a vulnerability unrelated to the diff under review, report it separately and explicitly, don't silently fix it inside this review's diff, that hides a real finding inside an unrelated change.
+
 ## Output
 
 1. Verdict (approve/request-changes/discuss)

@@ -10,6 +10,7 @@ AGENT_SOURCE_DIRECTORY="$AGENTIC_DIRECTORY/agents"
 source "$AGENTIC_SCRIPT_DIRECTORY/../helpers/logs.sh"
 source "$AGENTIC_SCRIPT_DIRECTORY/../helpers/brewfile.sh"
 source "$AGENTIC_SCRIPT_DIRECTORY/../helpers/symlink.sh"
+source "$AGENTIC_SCRIPT_DIRECTORY/../helpers/phabricator.sh"
 
 # Only set up the tools declared in the Brewfile. This runs before `brew bundle`,
 # so the Brewfile is the intent signal, not a runtime `command -v` check.
@@ -17,6 +18,8 @@ if [ ! -f "$MODELS_FILE_PATH" ]; then
     log_error "models.txt not found at ${MODELS_FILE_PATH}"
     exit 1
 fi
+
+PHABRICATOR_MCP_URL="${PHABRICATOR_MCP_URL:-$(derive_phabricator_mcp_url)}"
 
 if brewfile_declares opencode; then
     log_info "Injecting OpenCode agent models..."
@@ -72,6 +75,11 @@ if brewfile_declares opencode; then
     printf '  \"agent\": {\n%s\n  },\n' "${agent_json_block}" > "$agent_section_file"
     sed -i '' "/\"default_agent\": \"leader\",/r ${agent_section_file}" "$OPENCODE_CONFIGURATION_PATH"
     rm -f "$agent_section_file"
+
+    # OpenCode's `{env:VAR}` config substitution reads its own process environment at launch, it has no equivalent to deriving from `~/.arcrc` itself. Bake the already-derived URL into this deployed (non-tracked) copy directly instead. If nothing was derived, leave the placeholder, OpenCode resolves it to an empty string and that one server just won't connect, not a hard failure.
+    if [ -n "$PHABRICATOR_MCP_URL" ]; then
+        sed -i '' "s|{env:PHABRICATOR_MCP_URL}|${PHABRICATOR_MCP_URL}|" "$OPENCODE_CONFIGURATION_PATH"
+    fi
 
     log_info "Creating OpenCode symlinks..."
 
@@ -162,4 +170,27 @@ if (settings.statusLine && typeof settings.statusLine.command === "string") {
     create_symlink "$AGENTIC_DIRECTORY/commands"     "$HOME/.claude/commands"
     create_symlink "$AGENTIC_DIRECTORY/skills"       "$HOME/.claude/skills"
     create_symlink "$AGENTIC_DIRECTORY/instructions" "$HOME/.claude/rules/instructions"
+
+    # Phabricator MCP, OAuth handled lazily on first use, see the read-phabricator-task skill.
+    if ! command -v claude &>/dev/null; then
+        log_warning "Skipping Phabricator MCP registration, 'claude' CLI not found."
+    elif [ -z "$PHABRICATOR_MCP_URL" ]; then
+        log_warning "Skipping Phabricator MCP registration, no URL derived from '~/.arcrc' or 'PHABRICATOR_MCP_URL' environment variable."
+    elif claude mcp get phabricator &>/dev/null; then
+        log_info "Phabricator MCP server already registered, skipping."
+    else
+        log_info "Registering Phabricator MCP server..."
+        claude mcp add --transport http phabricator "$PHABRICATOR_MCP_URL" -s user
+    fi
+
+    # Sentry's official hosted MCP, OAuth handled lazily on first use, see the read-sentry-issue skill for the read-only scoping steps.
+    if ! command -v claude &>/dev/null; then
+        log_warning "Skipping Sentry MCP registration, 'claude' CLI not found."
+    elif claude mcp get sentry &>/dev/null; then
+        log_info "Sentry MCP server already registered, skipping."
+    else
+        log_info "Registering Sentry MCP server..."
+        claude mcp add --transport http sentry "https://mcp.sentry.dev/mcp?skills=inspect" -s user
+        log_warning "Uncheck everything except 'Inspect Issues & Events' on the consent screen."
+    fi
 fi

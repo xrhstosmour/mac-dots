@@ -1,6 +1,6 @@
 ---
 name: read-sentry-issue
-description: Use when a Sentry issue/event link appears, or when working with Sentry error tracking, authenticating, listing organizations/projects/issues, or fetching event/stacktrace details for an issue.
+description: Use when a Sentry issue/event link appears, or when working with Sentry error tracking via the official Sentry MCP server, listing organizations/projects/issues, or fetching event/stacktrace details for an issue.
 ---
 
 # Read Sentry Issue
@@ -13,93 +13,50 @@ description: Use when a Sentry issue/event link appears, or when working with Se
 
 ## Authentication
 
-Find `$TOKEN` in order. Always use this block verbatim, do not write your own token resolution, partial implementations silently drop the 1Password fallback:
+Use Sentry's official hosted MCP server. It needs no manually-issued token: the first call opens a browser to sign in, and Sentry's OAuth session is reused for later calls.
 
-```bash
-TOKEN=""
+- Discover the available tools with `ToolSearch` (query `"sentry"` or a specific tool name like `"get_issue_details"`), exact registered names depend on how the server was added locally, do not hardcode a guess.
+- One-time setup, if the tools aren't found: tell the user to run `claude mcp add --transport http sentry "https://mcp.sentry.dev/mcp?skills=inspect" -s user`, then `claude mcp login sentry` (same URL works for OpenCode or any other MCP-capable client, this is Sentry's own public endpoint, not org-specific).
+- The `?skills=inspect` URL param alone is NOT enough, verified live: Sentry's MCP always exposes a small fixed "core" tool set (`find_organizations`, `find_projects`, `search_issues`, `search_events`, `get_sentry_resource`, `search_sentry_tools`, `execute_sentry_tool`, plus `update_issue` and `analyze_issue_with_seer`) regardless of that param, it only narrows the secondary catalog reached through `search_sentry_tools`. The real read/write boundary is decided on the OAuth consent screen `claude mcp login sentry` opens in the browser. That screen shows four checkboxes, all checked by default:
 
-if [ -f "$HOME/.sentryclirc" ]; then
-  TOKEN="$(awk -F ' *= *' '/^\[auth\]/{f=1; next} /^\[/{f=0} f && /^token/{print $2; exit}' "$HOME/.sentryclirc")"
-fi
+  | Category | Tools | Read or write |
+  |----------|-------|----------------|
+  | Inspect Issues & Events | 37 | Read-only, keep checked |
+  | Seer | 11 | Runs Sentry's AI analysis, not a data mutation, but not needed for this skill, uncheck |
+  | Triage Issues | 17 | Resolve/assign/update issues, write, uncheck |
+  | Manage Projects & Teams | 15 | Create/modify projects/teams/DSNs, write, uncheck |
 
-TOKEN="${TOKEN:-$SENTRY_AUTH_TOKEN}"
+  Tell the user to uncheck everything except "Inspect Issues & Events" before clicking Approve. Confirmed after doing this correctly: `update_issue` and `analyze_issue_with_seer` disappear from the tool list entirely, and searching `search_sentry_tools` for write-shaped queries (`"update issue"`, `"create project"`, `"resolve assign"`) returns none, every result comes back tagged `readOnlyHint: true`. If a fresh login only shows one box, or the boxes differ from this, re-check before assuming it's still read-only, Sentry could change this screen.
+- Never fall back to a stored Sentry token (`sentry-cli`, `~/.sentryclirc`, or otherwise) or a raw `curl` call to the REST API. If the MCP misbehaves, tell the user rather than falling back.
 
-if [ -z "$TOKEN" ] && command -v op >/dev/null 2>&1; then
-  TOKEN="$(op item get "Sentry Token" --fields label=credential --reveal 2>/dev/null || true)"
-fi
+## Required behavior
 
-[ -n "$TOKEN" ] || { echo "No Sentry token found"; exit 1; }
-```
+- Always use the Sentry MCP tools first.
+- SSO-protected pages usually return a Google sign-in HTML page, not issue content, that's a sign something is bypassing the MCP tools.
 
-If all three lookups fail, ask the user to provide a token.
+## Tool reference
 
-## Commands
+The `sentry-mcp` server exposes a small set of tools directly and reaches the rest through a discovery layer, confirmed live against this server:
 
-```bash
-# Check if authenticated.
-sentry-cli info
+Directly available:
 
-# Login.
-sentry-cli login --auth-token <token>
+| Task | Tool |
+|------|------|
+| List organizations | `find_organizations` |
+| List projects for an org | `find_projects` |
+| Search/list issues, by query or status | `search_issues` |
+| Cross-issue event search/stats, natural language or Sentry query syntax | `search_events` |
+| Fetch an issue/event/trace/replay by URL or ID, auto-detects the type | `get_sentry_resource` |
+| Find any other operation, e.g. `"issue activity"`, `"stacktrace"`, `"breadcrumbs"` | `search_sentry_tools` |
+| Execute a tool found via `search_sentry_tools` | `execute_sentry_tool` |
 
-# List organization, projects, and issues.
-sentry-cli organizations list
+`get_sentry_resource` given a plain issue/event/trace/replay URL is usually the fastest path, it returned full issue details, the exception, and stacktrace in one call when tested against a real issue link. For anything not covered above, e.g. issue activity/history, breadcrumbs, tag value breakdown, user reports, docs search, call `search_sentry_tools` first to find the right tool and its schema, then `execute_sentry_tool` to run it. Don't assume a tool name and call it directly if it isn't in the list above, it likely isn't a top-level tool.
 
-# List projects for an organization.
-sentry-cli projects list -o <org>
+`search_events` is AI-powered and needs an LLM provider configured server-side, it may be unavailable depending on how the MCP server was deployed.
 
-# List unresolved issues for a project, with optional query.
-sentry-cli issues list -o <org> -p <proj> --query "<q>" --status unresolved --max-rows 20
-
-# Get details for an issue.
-sentry-cli issues list -o <org> -p <proj> -i <id>
-```
-
-## Fetch events for an issue
-
-```bash
-TOKEN=<token>
-curl -s -H "Authorization: Bearer $TOKEN" \
-  "https://sentry.io/api/0/organizations/<org>/issues/<issue_id>/events/?limit=10&full=true" \
-  | jq -r '
-.[] |
-"=== EVENT \(.id) \(.dateCreated) ===",
-"TAGS: \(.tags | map("\(.key)=\(.value)") | join(", "))",
-(.entries[] |
-  if .type == "exception" then
-    (.data.values[] |
-      "EXCEPTION: \(.type // "?") - \(.value // "?")",
-      (.stacktrace.frames[-8:][] |
-        "  \(.filename // "?"):\(.lineNo // "?") - \(.function // "?")"
-      )
-    )
-  elif .type == "request" then
-    "REQUEST URL: \(.data.url // "?")",
-    (.data.query // [] | map("  \(.[0]) = \(.[1])") | .[])
-  else empty
-  end
-),
-""
-'
-```
-
-## Analyze routes/params across events
-
-```bash
-TOKEN=<token>
-curl -s -H "Authorization: Bearer $TOKEN" \
-  "https://sentry.io/api/0/organizations/<org>/issues/<issue_id>/events/?limit=50&full=true" \
-  | jq -r '
-def route: .entries[] | select(.type == "request") | .data.query // [] | map("\(.[0])=\(.[1])") | join(" | ");
-[.[] | select(.entries | any(.type == "request")) | route] |
-group_by(.) | map({route: .[0], count: length}) | sort_by(-.count)[] |
-"  \(.route): \(.count) events"
-'
-```
+This skill is read-only. With only "Inspect Issues & Events" granted at login (see Authentication above), mutating tools like `add_issue_note`, `update_issue`, `create_project` aren't reachable at all. If a differently-scoped login ever makes one visible, don't call it, that's a sign the login needs to be redone with the write categories unchecked, not a green light to use it.
 
 ## Notes
 
-- `sentry-cli events list` doesn't filter by issue, use the REST API.
-- `full=true` required for stacktraces and request params.
-- URLs are organization-scoped: `/api/0/organizations/<org>/issues/<id>/events/`.
-- Token scopes: `event:read`, `org:read`, `project:read`.
+- Task/issue links: `https://sentry.io/organizations/<org>/issues/<id>/` or `<org>.sentry.io/issues/<id>/`.
+- If the MCP tools aren't available, tell the user to add the server rather than falling back to a token, see Authentication above.

@@ -6,6 +6,7 @@
 - Use commas, not dashes, hyphens, or parentheses, for lists, connecting ideas, and asides.
 - Do not use semicolons (`;`), em dashes (`—`), or the abbreviation `e.g.`.
 - Be compact, short, direct, no fluff, no preambles. Default to concise answers (about 3 to 7 lines) unless deeper detail is requested.
+- Do not hard-wrap prose, comments, or bullet text at a fixed column width. Write each paragraph or bullet as one continuous line and let the renderer/terminal soft-wrap.
 - Do not repeat the user request or restate unchanged context.
 - Use short checklists over long prose for plans and status updates.
 - Treat every explicit user instruction, link, and attachment as required context. If instructions conflict, call out the conflict briefly and follow the latest explicit direction when safe.

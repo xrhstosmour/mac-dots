@@ -61,38 +61,22 @@ Only ask the user when none of these can be inferred at all, when there's no pro
 
 ## Find the Loki endpoint
 
-1. If a project skill already names one, use it.
-2. Otherwise derive candidates from the Grafana host, internal Loki gateways are often named by swapping the `grafana.` subdomain for something like `loki.`, `loki-gateway.`, or `<env>-loki.`, on the same or a sibling internal domain.
-3. Verify a candidate is reachable and is actually Loki, no Grafana token needed for this:
+1. If `$LOKI_ADDR` or `$LOKI_URL` is already set, use it directly (`${LOKI_ADDR:-$LOKI_URL}`), skip everything else below. `LOKI_ADDR` is `logcli`'s own native env var for `--addr`, prefer it if both happen to be set.
+2. Otherwise, if a project skill already names one, use it.
+3. Otherwise derive candidates from the Grafana host, internal Loki gateways are often named by swapping the `grafana.` subdomain for something like `loki.`, `loki-gateway.`, or `<env>-loki.`, on the same or a sibling internal domain. This heuristic is unreliable, it failed to find the real endpoint on the first try in this org, don't be surprised if it needs a few tries or falls through to asking the user.
+4. Verify a candidate is reachable and is actually Loki, no Grafana token needed for this:
 
   ```bash
-  logcli --addr="$LOKI_ADDR" labels
+  logcli --addr="${LOKI_ADDR:-$LOKI_URL}" labels
   ```
 
   A real label list confirms it, and confirms Loki is reachable independently of whatever sits in front of Grafana's own UI. An error or an SSO redirect means try the next candidate.
 
-4. If no candidate works, ask the user for the address, `logcli` needs a working Loki endpoint to do anything.
+5. If no candidate works, ask the user for the address, `logcli` needs a working Loki endpoint to do anything.
 
 ## Authentication for Loki
 
-Try unauthenticated first, plenty of internal setups need nothing extra once the network path, VPN/WARP/etc., is up. If the instance does reject an unauthenticated request, `logcli` supports, roughly in order of likelihood for an internal setup:
-
-1. `$LOKI_BEARER_TOKEN` / `--bearer-token`
-2. `$LOKI_USERNAME` + `$LOKI_PASSWORD` / `--username` + `--password`, HTTP basic auth
-3. `$LOKI_ORG_ID` / `--org-id`, for multi-tenant Loki, needed alongside one of the above, not instead of it
-4. `--cert`/`--key`, mTLS client certificate, for zero-trust setups that authenticate the machine instead of a token
-
-For the bearer-token method, resolve `$LOKI_BEARER_TOKEN` in order. Always use this block verbatim, do not write your own token resolution, partial implementations silently drop the 1Password fallback:
-
-```bash
-LOKI_BEARER_TOKEN="${LOKI_BEARER_TOKEN:-}"
-
-if [ -z "$LOKI_BEARER_TOKEN" ] && command -v op >/dev/null 2>&1; then
-  LOKI_BEARER_TOKEN="$(op item get "Loki Token" --fields label=credential --reveal 2>/dev/null || true)"
-fi
-```
-
-If `$LOKI_BEARER_TOKEN` is still empty, and none of the other three methods above resolve either, ask the user for credentials.
+Try unauthenticated first, most internal setups need nothing extra once on VPN/WARP. If rejected, ask the user for credentials in the moment and use only what they hand you for that call (`--bearer-token`, `--username`/`--password`, `--org-id`, `--cert`/`--key`), never read one automatically. Don't persist or export it, `logcli` has no OAuth support, if the user needs this resolved automatically that's a platform-team conversation, not something to solve here.
 
 ## Discover the right label selector
 
@@ -100,20 +84,20 @@ The hint is whatever names the service, either the dashboard `$SLUG`, from a lin
 
 ```bash
 # All label names.
-logcli --addr="$LOKI_ADDR" labels
+logcli --addr="${LOKI_ADDR:-$LOKI_URL}" labels
 
 # Values for a label, filtered to the hint.
-logcli --addr="$LOKI_ADDR" labels namespace | grep -i "<hint>"
-logcli --addr="$LOKI_ADDR" labels container | grep -i "<hint>"
+logcli --addr="${LOKI_ADDR:-$LOKI_URL}" labels namespace | grep -i "<hint>"
+logcli --addr="${LOKI_ADDR:-$LOKI_URL}" labels container | grep -i "<hint>"
 
 # Confirm a concrete selector resolves to real streams before querying it.
-logcli --addr="$LOKI_ADDR" series '{namespace="<value>"}' --since=1h
+logcli --addr="${LOKI_ADDR:-$LOKI_URL}" series '{namespace="<value>"}' --since=1h
 ```
 
 ## Query for a string over a time range
 
 ```bash
-logcli --addr="$LOKI_ADDR" query --since=24h --limit=1000 -q -o raw \
+logcli --addr="${LOKI_ADDR:-$LOKI_URL}" query --since=24h --limit=1000 -q -o raw \
   '{namespace="<value>"} |= "<search string>"'
 ```
 

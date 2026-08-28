@@ -177,7 +177,7 @@ if (settings.statusLine && typeof settings.statusLine.command === "string") {
     elif [ -z "$PHABRICATOR_MCP_URL" ]; then
         log_warning "Skipping Phabricator MCP registration, no URL derived from '~/.arcrc' or 'PHABRICATOR_MCP_URL' environment variable."
     elif claude mcp get phabricator &>/dev/null; then
-        log_info "Phabricator MCP server already registered, skipping."
+        log_warning "Phabricator MCP server already registered, skipping."
     else
         log_info "Registering Phabricator MCP server..."
         claude mcp add --transport http phabricator "$PHABRICATOR_MCP_URL" -s user
@@ -187,7 +187,7 @@ if (settings.statusLine && typeof settings.statusLine.command === "string") {
     if ! command -v claude &>/dev/null; then
         log_warning "Skipping Sentry MCP registration, 'claude' CLI not found."
     elif claude mcp get sentry &>/dev/null; then
-        log_info "Sentry MCP server already registered, skipping."
+        log_warning "Sentry MCP server already registered, skipping."
     else
         log_info "Registering Sentry MCP server..."
         claude mcp add --transport http sentry "https://mcp.sentry.dev/mcp?skills=inspect" -s user

@@ -41,3 +41,7 @@ source $HOME/.config/fish/functions/emulators.fish
 source $HOME/.config/fish/functions/keybindings.fish
 source $HOME/.config/fish/functions/aliases.fish
 source $HOME/.config/fish/functions/agentic.fish
+
+# Puppeteer configuration for `M` series `MacBooks`.
+set -gx PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+set -gx PUPPETEER_EXECUTABLE_PATH (which chromium)

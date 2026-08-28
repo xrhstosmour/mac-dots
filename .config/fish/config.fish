@@ -45,3 +45,11 @@ source $HOME/.config/fish/functions/agentic.fish
 # Puppeteer configuration for `M` series `MacBooks`.
 set -gx PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 set -gx PUPPETEER_EXECUTABLE_PATH (which chromium)
+
+# Add `SDKMAN` support for `Fish` shell only at the end of this file.
+# Only in interactive shells, `bash -i` needs a real terminal and otherwise
+# prints "no job control" noise into non-interactive subshells (eg. `fzf` previews).
+set -gx SDKMAN_DIR "$HOME/.sdkman"
+if status is-interactive
+    test -s "$HOME/.sdkman/bin/sdkman-init.sh" && bash -i -c 'source "$HOME/.sdkman/bin/sdkman-init.sh"'
+end

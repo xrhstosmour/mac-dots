@@ -8,7 +8,6 @@ tap 'wickenico/wailbrew'
 # Install dependencies for various utilities and applications.
 brew 'aria2'
 brew 'atuin'
-brew 'avasilic/goto/goto-ssh', trusted: true
 brew 'bat'
 brew 'bottom'
 brew 'eva'
@@ -58,6 +57,7 @@ cask 'font-fira-code-nerd-font'
 cask 'google-chrome'
 cask 'google-drive'
 cask 'google-gemini'
+cask 'grafviktor/goto/goto-ssh-manager', trusted: true
 cask 'localsend'
 cask 'maccy'
 cask 'macfuse'

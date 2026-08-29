@@ -58,6 +58,7 @@ cask 'google-chrome'
 cask 'google-drive'
 cask 'google-gemini'
 cask 'grafviktor/goto/goto-ssh-manager', trusted: true
+cask 'libreoffice'
 cask 'localsend'
 cask 'maccy'
 cask 'macfuse'

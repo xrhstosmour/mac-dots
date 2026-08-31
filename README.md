@@ -1,3 +1,5 @@
+
+
 # macsify
 
 Opinionated `macOS` configuration via shell scripts.
@@ -52,6 +54,8 @@ Opinionated `macOS` configuration via shell scripts.
 ```bash
 ./install.sh
 ```
+
+This copies `.config/*` to `~/.config/`, then runs `setup/agentic.sh` and `configure.sh`.
 
 ## Post-Installation
 

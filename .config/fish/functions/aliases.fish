@@ -27,6 +27,8 @@ function aliases_cheat_sheet --description "Display all command abbreviations an
     echo "  - adc              Disable 'AirDrop'"
     echo "  - po               Shutdown system"
     echo "  - zzz              Sleep system"
+    echo "  - caff             Disable Amphetamine sleep"
+    echo "  - decaf            Enable Amphetamine sleep"
     echo "  - sc               Service control"
     echo "  - scsts            List services"
     echo "  - sci              Inspect service"

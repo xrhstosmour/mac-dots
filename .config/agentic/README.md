@@ -103,6 +103,7 @@ Skills are loaded by agents and triggered via commands.
 | `caveman` | `/caveman` | Ultra-compressed communication mode, cuts token usage by dropping filler while keeping technical accuracy |
 | `handoff` | `/handoff` | Compact conversation into a handoff document for fresh agent sessions |
 | `agent-models` | `/agent-models` | Research, rank, and apply model updates across all agents and configs for any provider |
+| `humanize` | `/humanize` | Rewrite AI-sounding text as natural human writing, English and Greek |
 
 ### Task Management Skills
 

@@ -17,6 +17,8 @@ abbr ado "defaults write com.apple.sharingd DiscoverableMode -string 'Everyone' 
 abbr adc "defaults write com.apple.sharingd DiscoverableMode -string 'Off' && killall sharingd"
 abbr po "sudo shutdown -h now"
 abbr zzz "sudo pmset sleepnow"
+abbr caff "disable_sleep"
+abbr decaf "enable_sleep"
 abbr sc "sudo launchctl"
 abbr scsts "sudo launchctl list"
 abbr sci "sudo launchctl print"

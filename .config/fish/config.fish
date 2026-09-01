@@ -38,6 +38,7 @@ source $HOME/.config/fish/functions/files.fish
 source $HOME/.config/fish/functions/git.fish
 source $HOME/.config/fish/functions/logs.fish
 source $HOME/.config/fish/functions/emulators.fish
+source $HOME/.config/fish/functions/sleep.fish
 source $HOME/.config/fish/functions/keybindings.fish
 source $HOME/.config/fish/functions/aliases.fish
 source $HOME/.config/fish/functions/agentic.fish

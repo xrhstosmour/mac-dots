@@ -22,6 +22,7 @@ APPLICATIONS_SOURCES=(
   "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/pl.maketheweb.TopNotch.plist.xml"
   "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/club.mediosz.SwipeAeroSpace.plist.xml"
   "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/flameshot.ini"
+  "$APPLICATIONS_SCRIPT_DIRECTORY/../settings/stege.toml"
 )
 
 APPLICATIONS_DESTINATIONS=(
@@ -32,6 +33,7 @@ APPLICATIONS_DESTINATIONS=(
   "$HOME/Library/Preferences/pl.maketheweb.TopNotch.plist"
   "$HOME/Library/Preferences/club.mediosz.SwipeAeroSpace.plist"
   "$HOME/.config/flameshot/flameshot.ini"
+  "$HOME/.config/stege/config.toml"
 )
 
 APPLICATIONS_NAMES=(
@@ -42,6 +44,7 @@ APPLICATIONS_NAMES=(
   "TopNotch"
   "SwipeAeroSpace"
   "Flameshot"
+  "Stege"
 )
 
 # Loop over all arrays in parallel.

@@ -1,0 +1,62 @@
+theme = "system"
+
+[widgets]
+displayed = [
+    "default.appleMenu",
+    "default.spaces",
+    "default.applicationMenu",
+    "spacer",
+    "default.reveal",
+    "default.keyboardLayout",
+    "default.display",
+    "default.audio",
+    "default.microphone",
+    "default.bluetooth",
+    "default.network",
+    "default.notifications",
+    "default.battery",
+    "divider",
+    "default.time",
+]
+
+[widgets.default.spaces]
+space.show-key = true
+window.show-title = true
+window.title.max-length = 50
+
+[widgets.default.applicationMenu]
+max-menus = 6
+show-application-name = true
+# "hover" reveals them while the pointer rests on the pill of the window that is
+# already focused, and drops them again as soon as it moves off. "click" does
+# the same swap on a click, "always" keeps every menu in the bar, "modifier"
+# holds them open while option is held.
+visibility = "hover"
+
+[widgets.default.monitor]
+show-network = true
+
+[widgets.default.audio]
+show-percentage = false
+
+[widgets.default.battery]
+show-percentage = true
+
+[widgets.default.time]
+format = "E d MMM  HH:mm"
+
+[widgets.default.time.popup]
+view-variant = "vertical"
+
+[bar.foreground]
+# A little taller than the system menu bar, which measures about 35 here.
+height = 44
+horizontal-padding = 12
+spacing = 10
+
+[bar.background]
+displayed = true
+# 7 is solid black. Matching the foreground height makes the notch disappear
+# into the bar instead of sitting in a translucent strip.
+blur = 7
+height = 44

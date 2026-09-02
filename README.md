@@ -15,6 +15,7 @@ Opinionated `macOS` configuration via shell scripts.
 | Development Languages | `Node.js`, `Python`, `Go`, `Java`, `Ruby`, `.NET` (via `mise`) |
 | Keyboard | Remapping with persistence (`kbcs` for cheat sheet) |
 | Shell Abbreviations | Custom aliases (`alcs` for cheat sheet) |
+| Menu Bar | `Stege`, replacing the system one, with the window manager's workspaces |
 | Display | Auto notch-hiding for `MacBook` Pro/Air (`TopNotch`) |
 | Clipboard | `Maccy` |
 | Screenshots | `Flameshot` |
@@ -79,6 +80,7 @@ mkdir -p ~/.config && cp -R .config/agentic ~/.config/ && bash setup/agentic.sh
 | `Google Drive` | | ✓ | | |
 | `Maccy` | | ✓ | | |
 | `SwipeAeroSpace` | | ✓ | | |
+| `Stege` | | ✓ | | |
 
 ### Keyboard Configuration
 

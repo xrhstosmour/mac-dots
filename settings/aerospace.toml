@@ -65,12 +65,17 @@ run = 'layout floating'
 preset = 'qwerty'
 
 # Gaps between each window.
+#
+# The top gap is the bar's height plus the ordinary gap, because `Stege`
+# replaces the system menu bar and draws over the top of the screen on every
+# display. At 5 the windows started inside it, so on any display the bar was
+# covering the first 44 points of whatever was tiled underneath.
 [gaps]
 inner.horizontal = 5
 inner.vertical = 5
 outer.left = 5
 outer.bottom = 5
-outer.top = 5
+outer.top = 49
 outer.right = 5
 
 # 'main' binding mode declaration.

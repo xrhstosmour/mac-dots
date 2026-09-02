@@ -16,7 +16,6 @@ Opinionated `macOS` configuration via shell scripts.
 | Keyboard | Remapping with persistence (`kbcs` for cheat sheet) |
 | Shell Abbreviations | Custom aliases (`alcs` for cheat sheet) |
 | Menu Bar | `Stege`, replacing the system one, with the window manager's workspaces |
-| Display | Auto notch-hiding for `MacBook` Pro/Air (`TopNotch`) |
 | Clipboard | `Maccy` |
 | Screenshots | `Flameshot` |
 | Keep Awake | `Amphetamine` |

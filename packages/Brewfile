@@ -4,6 +4,7 @@ cask_args appdir: '/Applications'
 # Install necessary `homebrew`, `macOS` and third party taps.
 tap 'buo/cask-upgrade', trusted: true
 tap 'wickenico/wailbrew'
+tap 'xrhstosmour/stege'
 
 # Install dependencies for various utilities and applications.
 brew 'aria2'
@@ -72,6 +73,7 @@ cask 'obsidian'
 cask 'rustdesk'
 cask 'signal'
 cask 'spotify'
+cask 'stege'
 cask 'syncthing-app'
 cask 'topnotch'
 cask 'utm'

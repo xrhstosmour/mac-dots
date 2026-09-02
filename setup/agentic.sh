@@ -287,7 +287,7 @@ if (settings.statusLine && typeof settings.statusLine.command === "string") {
     elif [ -z "$PHABRICATOR_MCP_URL" ]; then
         log_warning "Skipping Phabricator MCP registration, no URL derived from '~/.arcrc' or 'PHABRICATOR_MCP_URL' environment variable."
     else
-        register_mcp_server claude phabricator Phabricator --transport http phabricator "$PHABRICATOR_MCP_URL" -s user
+        register_mcp_server claude phabricator Phabricator --transport http phabricator "$PHABRICATOR_MCP_URL" -s user || true
     fi
 
     # Sentry's official hosted MCP, OAuth handled lazily on first use, see the read-sentry-issue skill for the read-only scoping steps.
@@ -433,7 +433,7 @@ EOF
         if [ -z "$PHABRICATOR_MCP_URL" ]; then
             log_warning "Skipping Phabricator MCP registration, no URL derived from '~/.arcrc' or 'PHABRICATOR_MCP_URL' environment variable."
         else
-            register_mcp_server copilot phabricator Phabricator --transport http phabricator "$PHABRICATOR_MCP_URL"
+            register_mcp_server copilot phabricator Phabricator --transport http phabricator "$PHABRICATOR_MCP_URL" || true
         fi
 
         if register_mcp_server copilot sentry Sentry --transport http sentry "https://mcp.sentry.dev/mcp?skills=inspect"; then

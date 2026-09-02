@@ -1,7 +1,7 @@
 # AGENTS.md
 
 Personal macOS dotfiles/configuration repository.
-Installed on a new machine via `install.sh`, which copies `.config/*` into `~/.config/`, runs `setup/agentic.sh`, then `configure.sh` (Homebrew, packages, `setup/*.sh`, `utilities/*.sh`).
+Installed on a new machine via `install.sh`, which copies `.config/*` into `~/.config/`, installs `Homebrew` and Brewfile dependencies, runs `setup/agentic.sh`, then `configure.sh` (developer tools, packages, `setup/*.sh`, `utilities/*.sh`).
 This file documents the repository itself. For the agentic (AI assistant) subsystem's own architecture, see `.config/agentic/README.md`, don't duplicate it here.
 
 ## Directory map
@@ -10,7 +10,7 @@ This file documents the repository itself. For the agentic (AI assistant) subsys
 | ---- | ------- |
 | `core/` | Shell constants shared across scripts |
 | `helpers/` | Shared shell functions: logging (`logs.sh`), prompts (`ui.sh`), Brewfile parsing (`brewfile.sh`) |
-| `setup/` | Installation steps run by `configure.sh` (Homebrew, developer tools, applications, shell, macOS preferences, agentic config) |
+| `setup/` | Installation steps, `homebrew.sh` and `agentic.sh` run directly by `install.sh`, the rest (developer tools, applications, shell, macOS preferences) run by `configure.sh` |
 | `utilities/` | macOS system preference scripts, one per domain (`dock.sh`, `finder.sh`, `keyboard.sh`, `trackpad.sh`, etc.) |
 | `settings/` | Third-party app config/preference files restored during install (`aerospace.toml`, `flameshot.ini`, `.plist.xml` files) |
 | `packages/` | `Brewfile` (Homebrew), `store_applications_ids.txt` (Mac App Store, via `mas`), `additional_packages.txt` (arbitrary install commands) |
@@ -47,3 +47,4 @@ Edits to this file must stay valid JSON before that injection, and must not touc
 
 No test suite.
 Verify by running the specific script that changed directly, most `setup/*.sh` and `utilities/*.sh` scripts are idempotent shell scripts safe to re-run. Use `brew bundle check --file=packages/Brewfile` to validate Brewfile changes without installing anything.
+`configure.sh` assumes `install.sh` already installed `Homebrew` and Brewfile dependencies, running it standalone on a machine without `Homebrew` on `PATH` fails inside `setup/developer.sh`.

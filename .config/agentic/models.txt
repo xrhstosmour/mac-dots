@@ -1,4 +1,4 @@
-# Per-agent model assignments for OpenCode and Claude Code.
+# Per-agent model assignments for OpenCode, Claude Code, Codex, and Copilot CLI.
 # Format: <tool>:<agent>:<field>:<value>
 # Use '-' as value placeholder when a field does not apply.
 # Updated by the agent-models skill. Read by setup/agentic.sh.
@@ -38,3 +38,28 @@ claude:designer:model:sonnet
 claude:designer:effort:medium
 claude:reviewer:model:opus
 claude:reviewer:effort:medium
+
+# Codex
+codex:leader:model:gpt-5.6
+codex:leader:effort:medium
+codex:architect:model:gpt-5.6
+codex:architect:effort:medium
+codex:implementor:model:gpt-5.6
+codex:implementor:effort:medium
+codex:clarifier:model:gpt-5.6
+codex:clarifier:effort:medium
+codex:tester:model:gpt-5.6-luna
+codex:tester:effort:low
+codex:designer:model:gpt-5.6
+codex:designer:effort:medium
+codex:reviewer:model:gpt-5.6
+codex:reviewer:effort:high
+
+# Copilot CLI
+copilot:leader:model:claude-sonnet-4.5
+copilot:architect:model:claude-sonnet-4.5
+copilot:implementor:model:claude-sonnet-4.5
+copilot:clarifier:model:claude-sonnet-4.5
+copilot:tester:model:claude-haiku-4.5
+copilot:designer:model:claude-sonnet-4.5
+copilot:reviewer:model:claude-opus-4.5

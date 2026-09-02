@@ -12,6 +12,39 @@ source "$AGENTIC_SCRIPT_DIRECTORY/../helpers/brewfile.sh"
 source "$AGENTIC_SCRIPT_DIRECTORY/../helpers/symlink.sh"
 source "$AGENTIC_SCRIPT_DIRECTORY/../helpers/phabricator.sh"
 
+# Extract the dedented body of an agent markdown file's `description:` frontmatter
+# field (a folded YAML block scalar), used to populate the description in
+# generated Codex/Copilot agent files. Frontmatter keys start at column 0, so a
+# `^[A-Za-z_-]+:` line with no leading whitespace ends the block, an indented
+# line like "  Examples:" inside the description does not.
+# Usage:
+#   extract_agent_description "$agent_file"
+extract_agent_description() {
+  awk '
+    /^---[[:space:]]*$/ {
+      dashes++
+      if (dashes == 2) exit
+      next
+    }
+    dashes == 1 {
+      if ($0 ~ /^description:/) { in_description = 1; next }
+      if (in_description && $0 ~ /^[A-Za-z_-]+:/) { in_description = 0 }
+      if (in_description) { sub(/^  /, ""); print }
+    }
+  ' "$1"
+}
+
+# Extract everything after an agent markdown file's frontmatter block, used as
+# the agent's system prompt/instructions in generated Codex/Copilot agent files.
+# Usage:
+#   extract_agent_body "$agent_file"
+extract_agent_body() {
+  awk '
+    /^---[[:space:]]*$/ { dashes++; next }
+    dashes >= 2 { print }
+  ' "$1"
+}
+
 # Only set up the tools declared in the Brewfile. This runs before `brew bundle`,
 # so the Brewfile is the intent signal, not a runtime `command -v` check.
 if [ ! -f "$MODELS_FILE_PATH" ]; then
@@ -192,5 +225,152 @@ if (settings.statusLine && typeof settings.statusLine.command === "string") {
         log_info "Registering Sentry MCP server..."
         claude mcp add --transport http sentry "https://mcp.sentry.dev/mcp?skills=inspect" -s user
         log_warning "Uncheck everything except 'Inspect Issues & Events' on the consent screen."
+    fi
+fi
+
+if brewfile_declares codex; then
+    log_info "Injecting Codex agent definitions..."
+
+    CODEX_DIRECTORY="$HOME/.codex"
+    rm -rf "$CODEX_DIRECTORY/agents"
+    mkdir -p "$CODEX_DIRECTORY/agents"
+
+    for agent_file in "$AGENT_SOURCE_DIRECTORY"/*.md; do
+        agent=$(basename "$agent_file" .md)
+        model=$(grep "^codex:${agent}:model:" "$MODELS_FILE_PATH" | cut -d: -f4- 2>/dev/null || true)
+        effort=$(grep "^codex:${agent}:effort:" "$MODELS_FILE_PATH" | cut -d: -f4- 2>/dev/null || true)
+
+        [ -z "$model" ] && { log_warning "SKIP ${agent}: no model in models.txt"; continue; }
+
+        description=$(extract_agent_description "$agent_file")
+        instructions=$(extract_agent_body "$agent_file")
+
+        {
+            printf 'name = "%s"\n' "$agent"
+            printf 'model = "%s"\n' "$model"
+            [ -n "$effort" ] && [ "$effort" != "-" ] && printf 'model_reasoning_effort = "%s"\n' "$effort"
+            printf "description = '''\n%s\n'''\n" "$description"
+            printf "developer_instructions = '''\n%s\n'''\n" "$instructions"
+        } >"$CODEX_DIRECTORY/agents/${agent}.toml"
+    done
+
+    log_info "Creating Codex symlinks..."
+
+    create_symlink "$AGENTIC_DIRECTORY/AGENTS.md" "$CODEX_DIRECTORY/AGENTS.md"
+    create_symlink "$AGENTIC_DIRECTORY/skills"    "$CODEX_DIRECTORY/skills"
+    create_symlink "$AGENTIC_DIRECTORY/commands"  "$CODEX_DIRECTORY/prompts"
+
+    log_info "Writing Codex hooks..."
+
+    # No `PreToolUse` web-fetch guard here: Codex has no built-in URL-fetch tool to
+    # gate, its `web_search` tool returns query snippets, not a fetched URL, so
+    # there's nothing for `webfetch-guard.sh` to match against.
+    cat >"$CODEX_DIRECTORY/hooks.json" <<'EOF'
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      { "hooks": [ { "type": "command", "command": "bash ~/.config/agentic/hooks/context-guard.sh" } ] }
+    ]
+  }
+}
+EOF
+
+    # Phabricator/Sentry MCP, mirrors the Claude Code block above.
+    if ! command -v codex &>/dev/null; then
+        log_warning "Skipping Phabricator/Sentry MCP registration, 'codex' CLI not found."
+    else
+        if [ -z "$PHABRICATOR_MCP_URL" ]; then
+            log_warning "Skipping Phabricator MCP registration, no URL derived from '~/.arcrc' or 'PHABRICATOR_MCP_URL' environment variable."
+        elif grep -q '^\[mcp_servers\.phabricator\]' "$CODEX_DIRECTORY/config.toml" 2>/dev/null; then
+            log_warning "Phabricator MCP server already registered, skipping."
+        else
+            log_info "Registering Phabricator MCP server..."
+            codex mcp add phabricator --url "$PHABRICATOR_MCP_URL"
+        fi
+
+        if grep -q '^\[mcp_servers\.sentry\]' "$CODEX_DIRECTORY/config.toml" 2>/dev/null; then
+            log_warning "Sentry MCP server already registered, skipping."
+        else
+            log_info "Registering Sentry MCP server..."
+            codex mcp add sentry --url "https://mcp.sentry.dev/mcp?skills=inspect"
+            log_warning "Uncheck everything except 'Inspect Issues & Events' on the consent screen."
+        fi
+    fi
+fi
+
+if brewfile_declares copilot-cli; then
+    log_info "Injecting Copilot CLI agent definitions..."
+
+    COPILOT_DIRECTORY="$HOME/.copilot"
+    rm -rf "$COPILOT_DIRECTORY/agents"
+    mkdir -p "$COPILOT_DIRECTORY/agents" "$COPILOT_DIRECTORY/hooks"
+
+    for agent_file in "$AGENT_SOURCE_DIRECTORY"/*.md; do
+        agent=$(basename "$agent_file" .md)
+        model=$(grep "^copilot:${agent}:model:" "$MODELS_FILE_PATH" | cut -d: -f4- 2>/dev/null || true)
+
+        [ -z "$model" ] && { log_warning "SKIP ${agent}: no model in models.txt"; continue; }
+
+        description=$(extract_agent_description "$agent_file")
+        instructions=$(extract_agent_body "$agent_file")
+
+        # Only `name`/`description`/`model` carry over. `disallowedTools`/`permission`
+        # are Claude/OpenCode-only fields, Copilot's `tools:` is an allowlist, not a
+        # denylist, so there's no faithful translation, these agents get all tools.
+        {
+            printf -- '---\n'
+            printf 'name: %s\n' "$agent"
+            printf 'description: >-\n'
+            printf '%s\n' "$description" | sed 's/^/  /'
+            printf 'model: %s\n' "$model"
+            printf -- '---\n'
+            printf '%s\n' "$instructions"
+        } >"$COPILOT_DIRECTORY/agents/${agent}.agent.md"
+    done
+
+    log_info "Creating Copilot CLI symlinks..."
+
+    create_symlink "$AGENTIC_DIRECTORY/AGENTS.md" "$COPILOT_DIRECTORY/copilot-instructions.md"
+    create_symlink "$AGENTIC_DIRECTORY/skills"    "$COPILOT_DIRECTORY/skills"
+
+    log_info "Writing Copilot CLI hooks..."
+
+    # PascalCase event names opt into Copilot's Claude-format matcher semantics, so
+    # `webfetch-guard.sh` reads the same `tool_name`/`tool_input.url` shape it
+    # already gets from Claude Code and Codex.
+    cat >"$COPILOT_DIRECTORY/hooks/agentic.json" <<'EOF'
+{
+  "version": 1,
+  "hooks": {
+    "PreToolUse": [
+      { "type": "command", "matcher": "WebFetch", "bash": "bash ~/.config/agentic/hooks/webfetch-guard.sh" }
+    ],
+    "UserPromptSubmit": [
+      { "type": "command", "bash": "bash ~/.config/agentic/hooks/context-guard.sh" }
+    ]
+  }
+}
+EOF
+
+    # Phabricator/Sentry MCP, mirrors the Claude Code block above.
+    if ! command -v copilot &>/dev/null; then
+        log_warning "Skipping Phabricator/Sentry MCP registration, 'copilot' CLI not found."
+    else
+        if [ -z "$PHABRICATOR_MCP_URL" ]; then
+            log_warning "Skipping Phabricator MCP registration, no URL derived from '~/.arcrc' or 'PHABRICATOR_MCP_URL' environment variable."
+        elif copilot mcp get phabricator &>/dev/null; then
+            log_warning "Phabricator MCP server already registered, skipping."
+        else
+            log_info "Registering Phabricator MCP server..."
+            copilot mcp add --transport http phabricator "$PHABRICATOR_MCP_URL"
+        fi
+
+        if copilot mcp get sentry &>/dev/null; then
+            log_warning "Sentry MCP server already registered, skipping."
+        else
+            log_info "Registering Sentry MCP server..."
+            copilot mcp add --transport http sentry "https://mcp.sentry.dev/mcp?skills=inspect"
+            log_warning "Uncheck everything except 'Inspect Issues & Events' on the consent screen."
+        fi
     fi
 fi

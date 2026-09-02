@@ -1,6 +1,6 @@
 # Agentic Configuration
 
-Shared AI configuration for OpenCode and Claude Code. Model assignments live in `models.txt`. Run `setup/agentic.sh` to apply.
+Shared AI configuration for OpenCode, Claude Code, Codex, and Copilot CLI. Model assignments live in `models.txt`. Run `setup/agentic.sh` to apply.
 
 ## Architecture
 
@@ -43,6 +43,21 @@ Shared AI configuration for OpenCode and Claude Code. Model assignments live in 
 ├── settings.json                  # Claude Code settings
 ├── agents/                        # Agent files with injected model/effort
 └── rules/instructions/ -> ~/.config/agentic/instructions/
+
+~/.codex/                          # Codex CLI-specific
+├── AGENTS.md -> ~/.config/agentic/AGENTS.md
+├── skills/ -> ~/.config/agentic/skills
+├── prompts/ -> ~/.config/agentic/commands
+├── agents/                        # Generated *.toml, one per agents/*.md
+├── hooks.json                     # Generated, see Hooks below
+└── config.toml                    # MCP servers, `codex mcp add` writes here
+
+~/.copilot/                        # Copilot CLI-specific
+├── copilot-instructions.md -> ~/.config/agentic/AGENTS.md
+├── skills/ -> ~/.config/agentic/skills
+├── agents/                        # Generated *.agent.md, one per agents/*.md
+├── hooks/agentic.json             # Generated, see Hooks below
+└── mcp-config.json                # MCP servers, `copilot mcp add` writes here
 ```
 
 ## Workflow
@@ -64,15 +79,18 @@ Shared AI configuration for OpenCode and Claude Code. Model assignments live in 
 
 ## Hooks
 
-| File | Purpose |
-| ---- | ------- |
-| `context-guard.sh` | Claude Code `UserPromptSubmit` hook. When the session's transcript is large or idle, instructs the model to inform the user and advise compacting, handoff, or a new session, it never invokes anything itself. A cooldown marker in the OS temp directory stops it from re-nudging every single turn |
-| `webfetch-guard.sh` | Claude Code `PreToolUse` hook, matcher: `WebFetch`. Denies fetches to `github.com`, `sentry.io`, and self-hosted `Phabricator`/`Grafana` hostnames with an actionable reason pointing at the right skill/CLI/MCP. `github.com`/`sentry.io` are also in `claude/settings.json`'s static `permissions.deny` as a fallback; self-hosted `Phabricator`/`Grafana` hostnames can't be expressed as a static domain rule, so those rely on this hook alone |
-| `opencode-context-guard.js` | OpenCode plugin equivalent, same thresholds using the session API's exact token counts instead of a byte-size estimate. Also blocks `WebFetch` on all 4 hosts, `github.com`, `phabricator.`, `sentry.io`, `grafana.`, regex covers self-hosted domains directly |
+| File | Wired into | Purpose |
+| ---- | ---------- | ------- |
+| `context-guard.sh` | Claude Code, Codex, Copilot CLI | `UserPromptSubmit` hook. When the session's transcript is large or idle, instructs the model to inform the user and advise compacting, handoff, or a new session, it never invokes anything itself. A cooldown marker in the OS temp directory stops it from re-nudging every single turn. Confirmed working for Codex, plain `stdout` on `UserPromptSubmit` is documented as added developer context (`developers.openai.com/codex/hooks.md`). Wired into Copilot CLI too, but unverified in practice, its own hooks reference notes that command-hook output on this event may be dropped outside SDK-programmatic hooks, empirically test before relying on it there, drop the entry if it turns out inert |
+| `webfetch-guard.sh` | Claude Code, Copilot CLI | `PreToolUse` hook, matcher: `WebFetch`. Denies fetches to `github.com`, `sentry.io`, and self-hosted `Phabricator`/`Grafana` hostnames with an actionable reason pointing at the right skill/CLI/MCP. `github.com`/`sentry.io` are also in `claude/settings.json`'s static `permissions.deny` as a fallback; self-hosted `Phabricator`/`Grafana` hostnames can't be expressed as a static domain rule, so those rely on this hook alone. Not wired into Codex, it has no built-in URL-fetch tool to gate, its `web_search` tool returns query snippets rather than a fetched URL. Copilot CLI reads it via a PascalCase `PreToolUse` event name, which opts into its documented Claude-format matcher/payload compatibility mode, no script changes needed |
+| `auto-session-title.sh` | Claude Code only | `UserPromptSubmit` hook, generates a session title via a headless `claude -p` call and writes Claude Code's own `custom-title` transcript format. Fundamentally Claude-specific, not portable |
+| `opencode-context-guard.js` | OpenCode | Plugin equivalent of `context-guard.sh`, same thresholds using the session API's exact token counts instead of a byte-size estimate. Also blocks `WebFetch` on all 4 hosts, `github.com`, `phabricator.`, `sentry.io`, `grafana.`, regex covers self-hosted domains directly |
+
+Codex treats `~/.codex/hooks.json` as a non-managed, user-level hook source: it won't run until reviewed and trusted once per machine via `/hooks` in the Codex CLI (this repo can install the file, it can't pre-trust it for you). Copilot CLI doesn't have this trust-gate for user-level hooks.
 
 ## Skills
 
-Skills are loaded by agents and triggered via commands.
+Skills are loaded by agents and triggered via commands. The `Command` column below maps to a `commands/*.md` slash command, symlinked into Claude Code and OpenCode as-is and into Codex as `~/.codex/prompts/`. Copilot CLI has no distinct commands/prompts concept, it only has skills (invocable directly as `/skill-name`) and custom agents (`/agent`), so there is no Copilot equivalent for this column, intentionally not ported.
 
 ### Workflow Skills
 
@@ -134,6 +152,8 @@ Agent system prompts live in `agents/`. Model assignments are in `models.txt` as
 
 - **OpenCode**: built into `opencode.json` via the `agent` section.
 - **Claude Code**: injected into each agent YAML frontmatter under `~/.claude/agents/`.
+- **Codex**: generated as one `.toml` file per agent under `~/.codex/agents/`, `name`/`model`/`description`/`developer_instructions` fields plus an optional `model_reasoning_effort` when `models.txt` sets one, `developer_instructions` is the agent's Markdown body.
+- **Copilot CLI**: generated as one `.agent.md` file per agent under `~/.copilot/agents/`, same YAML-frontmatter-plus-Markdown-body shape as the Claude Code source files. `disallowedTools`/`permission` (Claude/OpenCode-only, denylist-based) don't translate to Copilot's allowlist-based `tools:` field, so they're dropped, Copilot agents get access to all tools rather than the same restrictions Claude's `architect`/`reviewer`/etc. get.
 
 Built-in agents: `explore` and `compaction` use lowest-cost capable models.
 

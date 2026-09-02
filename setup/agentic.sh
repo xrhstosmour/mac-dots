@@ -45,6 +45,77 @@ extract_agent_body() {
   ' "$1"
 }
 
+# Runs a command with a timeout using bash builtins only, macOS ships no `timeout` binary and
+# this repo doesn't otherwise depend on `coreutils`. Sends SIGTERM after $1 seconds, escalates
+# to SIGKILL 5s later if the command ignored it, for example a CLI stuck reading `/dev/tty` in
+# raw mode. Returns 124 on timeout, matching GNU `timeout`'s convention, otherwise the command's
+# own exit status.
+# Usage:
+#   run_with_timeout <seconds> <command> [arguments...]
+run_with_timeout() {
+  local duration="$1"
+  shift
+
+  local timed_out_marker
+  timed_out_marker=$(mktemp)
+  rm -f "$timed_out_marker"
+
+  "$@" &
+  local command_pid=$!
+
+  (
+    sleep "$duration"
+    if kill -0 "$command_pid" 2>/dev/null; then
+      : >"$timed_out_marker"
+      kill -TERM "$command_pid" 2>/dev/null
+      sleep 5
+      kill -KILL "$command_pid" 2>/dev/null
+    fi
+  ) &
+  local watcher_pid=$!
+
+  wait "$command_pid" 2>/dev/null
+  local command_status=$?
+
+  kill "$watcher_pid" 2>/dev/null
+  wait "$watcher_pid" 2>/dev/null
+
+  if [ -f "$timed_out_marker" ]; then
+    rm -f "$timed_out_marker"
+    return 124
+  fi
+  return "$command_status"
+}
+
+# Registers an MCP server via `<cli> mcp get`/`mcp add`, hardened against a misresolved or
+# unauthenticated CLI throwing up an interactive prompt instead of failing: `</dev/null` forces
+# immediate EOF on a stdin-read prompt, `run_with_timeout` catches one that reads `/dev/tty`
+# directly instead. A timed-out check (exit 124) is logged and skipped rather than falling
+# through to `mcp add` and hanging again. `mcp add` failures are logged and skipped rather than
+# aborting the rest of the install. Returns 0 only when registration was attempted, so callers
+# can conditionally print a follow-up note.
+# Usage:
+#   register_mcp_server <cli> <name> <label> <mcp add arguments...>
+register_mcp_server() {
+  local cli="$1" name="$2" label="$3"
+  shift 3
+
+  run_with_timeout 30 "$cli" mcp get "$name" </dev/null &>/dev/null
+  local mcp_get_status=$?
+
+  if [ "$mcp_get_status" -eq 0 ]; then
+    log_warning "${label} MCP server already registered, skipping."
+    return 1
+  elif [ "$mcp_get_status" -eq 124 ]; then
+    log_warning "${label} MCP check timed out, skipping registration attempt."
+    return 1
+  fi
+
+  log_info "Registering ${label} MCP server..."
+  run_with_timeout 30 "$cli" mcp add "$@" </dev/null || log_warning "${label} MCP registration failed, register manually later."
+  return 0
+}
+
 # Only set up the tools declared in the Brewfile. This runs before `brew bundle`,
 # so the Brewfile is the intent signal, not a runtime `command -v` check.
 if [ ! -f "$MODELS_FILE_PATH" ]; then
@@ -205,25 +276,19 @@ if (settings.statusLine && typeof settings.statusLine.command === "string") {
     create_symlink "$AGENTIC_DIRECTORY/instructions" "$HOME/.claude/rules/instructions"
 
     # Phabricator MCP, OAuth handled lazily on first use, see the read-phabricator-task skill.
+    # See `register_mcp_server` above for the hardening applied to every `mcp` invocation below.
     if ! command -v claude &>/dev/null; then
         log_warning "Skipping Phabricator MCP registration, 'claude' CLI not found."
     elif [ -z "$PHABRICATOR_MCP_URL" ]; then
         log_warning "Skipping Phabricator MCP registration, no URL derived from '~/.arcrc' or 'PHABRICATOR_MCP_URL' environment variable."
-    elif claude mcp get phabricator &>/dev/null; then
-        log_warning "Phabricator MCP server already registered, skipping."
     else
-        log_info "Registering Phabricator MCP server..."
-        claude mcp add --transport http phabricator "$PHABRICATOR_MCP_URL" -s user
+        register_mcp_server claude phabricator Phabricator --transport http phabricator "$PHABRICATOR_MCP_URL" -s user
     fi
 
     # Sentry's official hosted MCP, OAuth handled lazily on first use, see the read-sentry-issue skill for the read-only scoping steps.
     if ! command -v claude &>/dev/null; then
         log_warning "Skipping Sentry MCP registration, 'claude' CLI not found."
-    elif claude mcp get sentry &>/dev/null; then
-        log_warning "Sentry MCP server already registered, skipping."
-    else
-        log_info "Registering Sentry MCP server..."
-        claude mcp add --transport http sentry "https://mcp.sentry.dev/mcp?skills=inspect" -s user
+    elif register_mcp_server claude sentry Sentry --transport http sentry "https://mcp.sentry.dev/mcp?skills=inspect" -s user; then
         log_warning "Uncheck everything except 'Inspect Issues & Events' on the consent screen."
     fi
 fi
@@ -275,7 +340,8 @@ if brewfile_declares codex; then
 }
 EOF
 
-    # Phabricator/Sentry MCP, mirrors the Claude Code block above.
+    # Phabricator/Sentry MCP, mirrors the Claude Code block above, including the
+    # `</dev/null`/`timeout`/fail-soft hardening on every `mcp` invocation.
     if ! command -v codex &>/dev/null; then
         log_warning "Skipping Phabricator/Sentry MCP registration, 'codex' CLI not found."
     else
@@ -285,14 +351,14 @@ EOF
             log_warning "Phabricator MCP server already registered, skipping."
         else
             log_info "Registering Phabricator MCP server..."
-            codex mcp add phabricator --url "$PHABRICATOR_MCP_URL"
+            run_with_timeout 30 codex mcp add phabricator --url "$PHABRICATOR_MCP_URL" </dev/null || log_warning "Phabricator MCP registration failed, register manually later."
         fi
 
         if grep -q '^\[mcp_servers\.sentry\]' "$CODEX_DIRECTORY/config.toml" 2>/dev/null; then
             log_warning "Sentry MCP server already registered, skipping."
         else
             log_info "Registering Sentry MCP server..."
-            codex mcp add sentry --url "https://mcp.sentry.dev/mcp?skills=inspect"
+            run_with_timeout 30 codex mcp add sentry --url "https://mcp.sentry.dev/mcp?skills=inspect" </dev/null || log_warning "Sentry MCP registration failed, register manually later."
             log_warning "Uncheck everything except 'Inspect Issues & Events' on the consent screen."
         fi
     fi
@@ -352,24 +418,20 @@ if brewfile_declares copilot-cli; then
 }
 EOF
 
-    # Phabricator/Sentry MCP, mirrors the Claude Code block above.
+    # Phabricator/Sentry MCP, mirrors the Claude Code block above, a `copilot` binary resolved
+    # from an unrelated install (for example a bundled editor extension) can throw up an
+    # interactive prompt instead of failing outright, see `register_mcp_server` above for the
+    # hardening applied to every `mcp` invocation below.
     if ! command -v copilot &>/dev/null; then
         log_warning "Skipping Phabricator/Sentry MCP registration, 'copilot' CLI not found."
     else
         if [ -z "$PHABRICATOR_MCP_URL" ]; then
             log_warning "Skipping Phabricator MCP registration, no URL derived from '~/.arcrc' or 'PHABRICATOR_MCP_URL' environment variable."
-        elif copilot mcp get phabricator &>/dev/null; then
-            log_warning "Phabricator MCP server already registered, skipping."
         else
-            log_info "Registering Phabricator MCP server..."
-            copilot mcp add --transport http phabricator "$PHABRICATOR_MCP_URL"
+            register_mcp_server copilot phabricator Phabricator --transport http phabricator "$PHABRICATOR_MCP_URL"
         fi
 
-        if copilot mcp get sentry &>/dev/null; then
-            log_warning "Sentry MCP server already registered, skipping."
-        else
-            log_info "Registering Sentry MCP server..."
-            copilot mcp add --transport http sentry "https://mcp.sentry.dev/mcp?skills=inspect"
+        if register_mcp_server copilot sentry Sentry --transport http sentry "https://mcp.sentry.dev/mcp?skills=inspect"; then
             log_warning "Uncheck everything except 'Inspect Issues & Events' on the consent screen."
         fi
     fi

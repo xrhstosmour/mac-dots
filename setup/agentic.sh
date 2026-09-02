@@ -116,8 +116,8 @@ register_mcp_server() {
   return 0
 }
 
-# Only set up the tools declared in the Brewfile. This runs before `brew bundle`,
-# so the Brewfile is the intent signal, not a runtime `command -v` check.
+# Only set up the tools declared in the Brewfile. `install.sh` runs `brew bundle` before
+# this script, so the Brewfile is the intent signal, not a runtime `command -v` check.
 if [ ! -f "$MODELS_FILE_PATH" ]; then
     log_error "models.txt not found at ${MODELS_FILE_PATH}"
     exit 1
@@ -201,12 +201,15 @@ if brewfile_declares opencode; then
 
     # `opencode-status-hud`'s own local-install default is `~/.config/opencode/plugins`, which
     # OpenCode does not auto-load. Force it into the same directory as `agentic-reminder.js` above.
+    # `mise`-installed `node`/`npm` come from `configure.sh`, which runs after this script, so
+    # this still no-ops on a first-time install, re-run `install.sh` afterward, idempotent, to
+    # pick it up.
     if command -v npm &>/dev/null; then
         if ! command -v opencode-status-hud &>/dev/null; then
             log_info "Installing opencode-status-hud plugin..."
-            npm install -g opencode-status-hud
+            npm install -g opencode-status-hud || log_warning "opencode-status-hud install failed, install manually later."
         fi
-        opencode-status-hud install --mode local --plugin-dir "$HOME/.config/opencode/plugin"
+        opencode-status-hud install --mode local --plugin-dir "$HOME/.config/opencode/plugin" || log_warning "opencode-status-hud plugin registration failed, run manually later."
     else
         log_warning "Skipping 'opencode-status-hud' plugin installation as 'npm' not found!"
     fi
@@ -244,6 +247,8 @@ effort: ${effort}" "$HOME/.claude/agents/${agent}.md"
     # `claude/settings.json` bakes an absolute `claude-hud` runtime path into `statusLine.command`.
     # That path is machine and user specific, so re-detect it here instead of trusting whatever
     # was last committed, otherwise a path from one machine silently breaks the HUD on another.
+    # Same `mise`-installed `node`/`bun` gap as `opencode-status-hud` above, not available yet
+    # on a first-time install, re-run `install.sh` after `configure.sh` completes to pick it up.
     log_info "Re-detecting claude-hud runtime path..."
     hud_runtime_path=$(command -v bun || command -v node || true)
     if [ -n "$hud_runtime_path" ]; then

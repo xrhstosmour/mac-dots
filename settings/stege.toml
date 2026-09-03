@@ -7,6 +7,7 @@ displayed = [
     "default.applicationMenu",
     "spacer",
     "default.reveal",
+    "default.privacy",
     "default.keyboardLayout",
     "default.display",
     "default.audio",
@@ -18,6 +19,16 @@ displayed = [
     "divider",
     "default.time",
 ]
+
+# Orange for the microphone, green for the camera, purple for the screen being
+# recorded. macOS draws its own dot in the very corner above every window, but
+# it is one dot for all three and it half covers the clock, so this says which
+# device is actually in use. Dots rather than icons, matching the system's own.
+# Set always-show to keep all three drawn, dimmed, so nothing in the bar moves
+# when one lights up.
+[widgets.default.privacy]
+style = "dot"
+always-show = false
 
 [widgets.default.spaces]
 space.show-key = true

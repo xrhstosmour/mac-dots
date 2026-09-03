@@ -1,6 +1,32 @@
 theme = "system"
 
+# System-wide shortcuts, resolved after the modifier swap, so what is written
+# here is what macOS receives rather than which key is under the finger. `ctrl`
+# is the key third from the left. `toggle-shortcut`, which hides the bar
+# entirely, is deliberately not set: the chevron already hands back the system
+# bar and a whole bar disappearing by accident is worse than reaching for it.
+#
+# `ctrl+r` was the obvious pick for reveal and is taken twice over, by
+# `aerospace.toml`'s `layout tiles horizontal vertical` and by five `Visual
+# Studio Code` bindings including Find & Replace. `ctrl+u` costs only VS Code's
+# `cursorUndo`, and `ctrl+m` only its `toggleTabFocusMode`, an accessibility
+# toggle. Nothing in `AeroSpace` claims either.
+
+# The other applications' status items, the row behind the chevron.
+reveal-shortcut = "ctrl+u"
+
+# The frontmost application's menu titles, in place of the workspace pills and
+# held there. Pressing it again puts the row away, and so does switching
+# application. The titles are clicked, not walked with the keyboard, see
+# https://github.com/xrhstosmour/stege/issues/218
+menu-shortcut = "ctrl+m"
+
 [widgets]
+# The bar, left to right. "spacer" pushes what follows to the right, "divider"
+# draws a rule. Left out on purpose: `default.monitor` (CPU, memory and network
+# throughput), `default.privacy` (whether anything is using the microphone or
+# camera), `default.stayawake` and `default.updates`, none of which earn their
+# width here.
 displayed = [
     "default.appleMenu",
     "default.spaces",
@@ -20,6 +46,16 @@ displayed = [
 ]
 
 [widgets.default.reveal]
+# Draws the icons in one colour rather than their own. "colour" is the default.
+# icon-style = "mono"
+
+# Keeps the row open until it is asked to close, rather than when the pointer
+# leaves.
+# sticky = true
+
+# Always in the bar, never behind the chevron.
+# always-show = ["Docker"]
+
 # Never shown behind the chevron. `1Password` is driven by its own shortcuts,
 # `AeroSpace` by the keyboard and by the workspace pills at the left of the bar,
 # and `Amphetamine` is set once and left alone, so none of the three is worth a
@@ -32,12 +68,17 @@ displayed = [
 hidden = ["1Password", "AeroSpace", "Amphetamine"]
 
 [widgets.default.spaces]
+# The workspace number or letter.
 space.show-key = true
+# The focused window's title.
 window.show-title = true
 window.title.max-length = 50
+# For applications whose title never says which window it is:
+# window.title.always-display-app-name-for = ["Mail", "Chrome"]
 
 [widgets.default.applicationMenu]
 max-menus = 6
+# The first menu drawn bold, the way macOS does.
 show-application-name = true
 # "hover" reveals them while the pointer rests on the pill of the window that is
 # already focused, and drops them again as soon as it moves off. "click" does
@@ -46,18 +87,38 @@ show-application-name = true
 visibility = "hover"
 
 [widgets.default.monitor]
+# Read even though the widget is not in the bar, because the `Wi-Fi` popup
+# shows the same throughput figures.
 show-network = true
 
 [widgets.default.audio]
+# The icon already conveys the level.
 show-percentage = false
+# "speaker" is the default.
+# glyph = "waves"
+# The one network request Stege makes.
+# fetch-artwork = false
 
 [widgets.default.battery]
+# The number inside the battery.
 show-percentage = true
+# "inside" is the default, "off" draws no glyph.
+# style = "beside"
+# warning-level = 30
+# critical-level = 10
 
 [widgets.default.time]
 format = "E d MMM  HH:mm"
+# On by default, needs Calendar permission.
+# calendar.show-events = true
+# calendar.countdown = true
+# Only these calendars.
+# calendar.allow-list = ["Home"]
+# Every calendar but these.
+# calendar.deny-list = ["Work"]
 
 [widgets.default.time.popup]
+# "box" is the other one.
 view-variant = "vertical"
 
 [bar.foreground]

@@ -9,16 +9,14 @@ theme = "system"
 # `ctrl+r` was the obvious pick for reveal and is taken twice over, by
 # `aerospace.toml`'s `layout tiles horizontal vertical` and by five `Visual
 # Studio Code` bindings including Find & Replace. What replaced it is the key
-# that draws the chevron itself. Written `ctrl+shift+,` because the parser names
-# a key by its unshifted character, and `<` is the comma key with shift under
-# this layout, checked with `UCKeyTranslate` rather than assumed. It costs one
-# `Visual Studio Code` binding, `inPlaceReplace.up`, and `ctrl+m` costs one
-# more, `toggleTabFocusMode`, an accessibility toggle. Nothing in `AeroSpace`
-# claims either.
+# that draws the chevron, without the shift that would make it a literal `<`.
+# Nothing in `AeroSpace` claims either of these. In `Visual Studio Code`
+# `ctrl+,` is Settings and `ctrl+m` is `toggleTabFocusMode`, so Settings is the
+# one real cost and is still on the menu under Code.
 
 # The other applications' status items, the row behind the chevron, on the key
 # that draws it.
-reveal-shortcut = "ctrl+shift+,"
+reveal-shortcut = "ctrl+,"
 
 # The frontmost application's menu titles, in place of the workspace pills and
 # held there. Pressing it again puts the row away, and so does switching

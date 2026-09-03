@@ -15,7 +15,7 @@ Opinionated `macOS` configuration via shell scripts.
 | Development Languages | `Node.js`, `Python`, `Go`, `Java`, `Ruby`, `.NET` (via `mise`) |
 | Keyboard | Remapping with persistence (`kbcs` for cheat sheet) |
 | Shell Abbreviations | Custom aliases (`alcs` for cheat sheet) |
-| Menu Bar | `Stege`, replacing the system one, with the window manager's workspaces |
+| Menu Bar | `Stege` |
 | Clipboard | `Maccy` |
 | Screenshots | `Flameshot` |
 | Keep Awake | `Amphetamine` |

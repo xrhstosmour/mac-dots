@@ -55,13 +55,13 @@ Opinionated `macOS` configuration via shell scripts.
 
 ### Agentic Setup Only
 
-To pull just the shared `AI` configuration from this repo, agents, instructions, skills, commands, and hooks for `OpenCode`, `Claude Code`, `Codex`, and `Copilot CLI`, without the rest of macsify's `macOS` configuration:
+To pull just the shared `AI` config, agents, instructions, skills, commands, and hooks for `OpenCode`, `Claude Code`, `Codex`, and `Copilot CLI`, without the rest of macsify:
 
 ```bash
 mkdir -p ~/.config && cp -R .config/agentic ~/.config/ && bash setup/agentic.sh
 ```
 
-[`packages/Brewfile`](packages/Brewfile) still gates which tools get wired up, `setup/agentic.sh` only configures a tool if its `brew`/`cask` line is present and uncommented there, so trim that file to just the `AI` tools wanted first if not all four apply. Agent file generation, symlinks, and hooks run regardless of whether the tool CLI is installed, the tool CLIs themselves (`opencode`, `claude`, `codex`, `copilot`) only need to already be installed for that block's `Phabricator`/`Sentry` MCP registration step to run.
+`setup/agentic.sh` only wires up a tool if its `brew`/`cask` line in [`packages/Brewfile`](packages/Brewfile) is present and uncommented, so trim that file to the wanted `AI` tools first.
 
 ## Post-Installation
 

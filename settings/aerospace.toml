@@ -66,16 +66,23 @@ preset = 'qwerty'
 
 # Gaps between each window.
 #
-# The top gap is the bar's height plus the ordinary gap, because `Stege`
-# replaces the system menu bar and draws over the top of the screen on every
-# display. At 5 the windows started inside it, so on any display the bar was
-# covering the first 44 points of whatever was tiled underneath.
+# `Stege` replaces the system menu bar and draws a 44 point bar over the top of
+# every display, the same height on all of them, so the top gap has to clear it.
+# At 5 the windows started inside it.
+#
+# The top gap is per monitor because AeroSpace measures it from the screen's
+# visible frame rather than from the screen, and macOS does not hold back the
+# same amount above it everywhere. The built-in display reserves 32 points for
+# the notch band whether or not the menu bar is hidden, so a flat 49 put windows
+# 81 points down, leaving 37 points of nothing under a 44 point bar. 17 there
+# lands them at 49, the bar plus the ordinary gap. External monitors have no
+# notch and nothing is held back, so they need the full 49.
 [gaps]
 inner.horizontal = 5
 inner.vertical = 5
 outer.left = 5
 outer.bottom = 5
-outer.top = 49
+outer.top = [{ monitor.built-in = 17 }, 49]
 outer.right = 5
 
 # 'main' binding mode declaration.

@@ -62,6 +62,8 @@ function aliases_cheat_sheet --description "Display all command abbreviations an
     echo "  - fm               Open TUI file manager"
     echo "  - oc               Open OpenCode CLI"
     echo "  - ocl              List OpenCode sessions"
+    echo "  - cc               Run Claude Code in plan mode"
+    echo "  - ccy              Run Claude Code, skipping permissions"
     echo "  - c                Open VS Code"
     echo "  - cl               Clear screen"
     echo "  - eva <expr>       Calculate expression"

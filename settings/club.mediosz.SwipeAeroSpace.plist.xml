@@ -9,7 +9,7 @@
 	<key>fingers</key>
 	<string>Three</string>
 	<key>menuBarExtraIsInserted</key>
-	<true/>
+	<false/>
 	<key>natrual</key>
 	<true/>
 	<key>swipeUpOverview</key>

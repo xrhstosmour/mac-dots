@@ -8,8 +8,6 @@
 	<string>{"carbonModifiers":2048,"carbonKeyCode":35}</string>
 	<key>KeyboardShortcuts_popup</key>
 	<string>{"carbonKeyCode":9,"carbonModifiers":2560}</string>
-	<key>NSStatusItem Visible Item-0</key>
-	<true/>
 	<key>NSStatusItem VisibleCC Item-1</key>
 	<false/>
 	<key>NSWindow Frame SUUpdateAlert</key>
@@ -57,7 +55,7 @@
 	<key>showFooter</key>
 	<true/>
 	<key>showInStatusBar</key>
-	<true/>
+	<false/>
 	<key>showSearch</key>
 	<true/>
 	<key>showTitle</key>

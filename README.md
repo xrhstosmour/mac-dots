@@ -113,6 +113,12 @@ mkdir -p ~/.config && cp -R .config/agentic ~/.config/ && bash setup/agentic.sh
 
 - Disable **`True Tone`**
 
+### Calendar
+
+`System Settings → Internet Accounts`:
+
+- Add your accounts (`iCloud`, `Google`, etc.) so events show up in the time widget's popup.
+
 ### `Finder`
 
 Open `Finder` and configure sidebar:

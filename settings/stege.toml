@@ -19,6 +19,18 @@ displayed = [
     "default.time",
 ]
 
+[widgets.default.reveal]
+# Never shown behind the chevron. `1Password` is driven by its own shortcuts,
+# `AeroSpace` by the keyboard and by the workspace pills at the left of the bar,
+# and `Amphetamine` is set once and left alone, so none of the three is worth a
+# place in a row that exists to hand back what hiding the system menu bar took
+# away.
+#
+# Names rather than bundle identifiers, which Stege matches whole and without
+# regard to case. Right-clicking an icon in the row and choosing Hide writes
+# into this same list.
+hidden = ["1Password", "AeroSpace", "Amphetamine"]
+
 [widgets.default.spaces]
 space.show-key = true
 window.show-title = true

@@ -25,6 +25,10 @@ apply_menu_bar_configuration() {
     log_info "Showing 'Bluetooth' icon in the 'Menu Bar'..."
     defaults write com.apple.controlcenter Bluetooth -int 18
 
+    # Hide the default `macOS` menu bar, `Stege` replaces it.
+    log_info "Hiding the default 'macOS' menu bar..."
+    defaults write NSGlobalDomain _HIHideMenuBar -bool true
+
     log_success "'Menu Bar' configuration applied successfully."
     log_divider
 }

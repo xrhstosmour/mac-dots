@@ -26,10 +26,7 @@ menu-shortcut = "ctrl+m"
 
 [widgets]
 # The bar, left to right. "spacer" pushes what follows to the right, "divider"
-# draws a rule. Left out on purpose: `default.monitor` (CPU, memory and network
-# throughput), `default.privacy` (whether anything is using the microphone or
-# camera), `default.stayawake` and `default.updates`, none of which earn their
-# width here.
+# draws a rule.
 displayed = [
     "default.appleMenu",
     "default.spaces",
@@ -88,11 +85,6 @@ show-application-name = true
 # the same swap on a click, "always" keeps every menu in the bar, "modifier"
 # holds them open while option is held.
 visibility = "hover"
-
-[widgets.default.monitor]
-# Read even though the widget is not in the bar, because the `Wi-Fi` popup
-# shows the same throughput figures.
-show-network = true
 
 [widgets.default.audio]
 # The icon already conveys the level.

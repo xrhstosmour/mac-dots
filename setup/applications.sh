@@ -31,7 +31,7 @@ APPLICATIONS_DESTINATIONS=(
   "$HOME/Library/Containers/org.p0deje.Maccy/Data/Library/Preferences/org.p0deje.Maccy.plist"
   "$HOME/Library/Preferences/club.mediosz.SwipeAeroSpace.plist"
   "$HOME/.config/flameshot/flameshot.ini"
-  "$HOME/.stege-config.toml"
+  "$HOME/.config/stege/config.toml"
 )
 
 APPLICATIONS_NAMES=(

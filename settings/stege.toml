@@ -18,6 +18,10 @@ theme = "system"
 # that draws it.
 reveal-shortcut = "ctrl+,"
 
+# Closes that same row on its own, regardless of `reveal-shortcut` above, on
+# the key beside it.
+reveal-hide-shortcut = "ctrl+."
+
 # The frontmost application's menu titles, in place of the workspace pills and
 # held there. Pressing it again puts the row away, and so does switching
 # application. The titles are clicked, not walked with the keyboard, see

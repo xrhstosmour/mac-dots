@@ -15,7 +15,8 @@ theme = "system"
 # one real cost and is still on the menu under Code.
 
 # The other applications' status items, the row behind the chevron, on the key
-# that draws it.
+# that draws it. Only opens the row: `reveal-hide-shortcut` is the only key
+# that closes it again.
 reveal-shortcut = "ctrl+,"
 
 # Closes that same row on its own, regardless of `reveal-shortcut` above, on
@@ -25,8 +26,9 @@ reveal-hide-shortcut = "ctrl+."
 # The frontmost application's menu titles, in place of the workspace pills and
 # held there. Pressing it again puts the row away, and so does switching
 # application. The titles are clicked, not walked with the keyboard, see
-# https://github.com/xrhstosmour/stege/issues/218
-menu-shortcut = "ctrl+m"
+# https://github.com/xrhstosmour/stege/issues/218. Left unset: not worth a key
+# for a row that cannot be walked once it is open.
+# menu-shortcut = "ctrl+m"
 
 [widgets]
 # The bar, left to right. "spacer" pushes what follows to the right, "divider"
@@ -37,10 +39,8 @@ displayed = [
     "default.applicationMenu",
     "spacer",
     "default.reveal",
-    "default.keyboardLayout",
     "default.display",
     "default.audio",
-    "default.microphone",
     "default.bluetooth",
     "default.network",
     "default.notifications",
@@ -49,13 +49,22 @@ displayed = [
     "default.time",
 ]
 
+[widgets.default.appleMenu]
+icon-size = 14
+# About, Settings, Sleep, Lock, Log Out, not the full system menu.
+short-menu = true
+
 [widgets.default.reveal]
+mode = "extras"
+icon-size = 18
 # Draws the icons in one colour rather than their own. "colour" is the default.
-# icon-style = "mono"
+icon-style = "colour"
 
 # Keeps the row open until it is asked to close, rather than when the pointer
 # leaves.
-# sticky = true
+sticky = true
+return-threshold = 80
+timeout = 10
 
 # Always in the bar, never behind the chevron.
 # always-show = ["Docker"]
@@ -89,41 +98,67 @@ show-application-name = true
 # the same swap on a click, "always" keeps every menu in the bar, "modifier"
 # holds them open while option is held.
 visibility = "hover"
+# Only read when visibility = "modifier", which this is not. Kept set for
+# whenever it changes back.
+modifier-key = "option"
+
+[widgets.default.notifications]
+show-control-centre = false
+# Off because remembering writes every notification's title, subtitle and body
+# to ~/Library/Preferences in plaintext.
+remember-between-launches = false
+
+[widgets.default.display]
+# The icon already conveys the level.
+show-percentage = false
 
 [widgets.default.audio]
 # The icon already conveys the level.
 show-percentage = false
 # "speaker" is the default.
-# glyph = "waves"
+glyph = "speaker"
 # The one network request Stege makes.
-# fetch-artwork = false
+fetch-artwork = true
+
+[widgets.default.keyboardLayout]
+# "Greek" rather than "GR". Configured but not currently in `displayed`, kept
+# for when it goes back in.
+show-full-name = false
+
+[widgets.default.bluetooth]
+show-battery = true
+hide-when-off = false
+
+[widgets.default.network]
+show-name = false
+hide-when-disconnected = false
 
 [widgets.default.battery]
-# The number inside the battery.
-show-percentage = true
 # "inside" is the default, "off" draws no glyph.
-# style = "beside"
-# warning-level = 30
-# critical-level = 10
+style = "inside"
+show-percentage = true
+warning-level = 30
+critical-level = 10
 
 [widgets.default.time]
 format = "E d MMM  HH:mm"
-# On by default, needs Calendar permission.
-# calendar.show-events = true
-# calendar.countdown = true
+calendar.format = "HH:mm"
+calendar.show-events = true
+calendar.countdown = true
 # Only these calendars.
 # calendar.allow-list = ["Home"]
 # Every calendar but these.
 # calendar.deny-list = ["Work"]
 
 [widgets.default.time.popup]
-# "box" is the other one.
-view-variant = "vertical"
+# "vertical" is the other one.
+view-variant = "box"
 
 [bar.foreground]
 # A little taller than the system menu bar, which measures about 35 here.
 height = 44
 horizontal-padding = 12
+trailing-padding = 12
 spacing = 10
 
 [bar.background]

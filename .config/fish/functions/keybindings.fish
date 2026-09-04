@@ -66,6 +66,8 @@ function keybindings_cheat_sheet --description "Display all keybindings with des
     echo "  - Key 2 + \\                      Lock screen"
     echo "  - Key 2 + Esc                    Shutdown"
     echo "  - Key 2 + ]                      Restart"
+    echo "  - Key 3 + ,                      Reveal hidden menu bar icons"
+    echo "  - Key 3 + M                      Show frontmost app's menu titles"
     echo ""
 
     # Service Mode.
